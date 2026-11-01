@@ -1,0 +1,115 @@
+{
+ "CS2_24": {
+  "n": 0,
+  "fail": [
+   "no valid cycles"
+  ]
+ },
+ "CS2_25": {
+  "n": 0,
+  "fail": [
+   "no valid cycles"
+  ]
+ },
+ "CS2_3": {
+  "n": 188,
+  "cap0": 1.152,
+  "Ich": 0.68,
+  "Idis": 0.68,
+  "fail": [
+   ">=400 cycles",
+   "charge ~0.55A",
+   "discharge ~1.1A"
+  ]
+ },
+ "CS2_33": {
+  "n": 766,
+  "cap0": 1.155,
+  "Ich": 1.01,
+  "Idis": 0.55,
+  "fail": [
+   "charge ~0.55A",
+   "discharge ~1.1A"
+  ]
+ },
+ "CS2_34": {
+  "n": 772,
+  "cap0": 1.15,
+  "Ich": 0.84,
+  "Idis": 0.55,
+  "fail": [
+   "charge ~0.55A",
+   "discharge ~1.1A"
+  ]
+ },
+ "CS2_35": {
+  "n": 922,
+  "cap0": 1.128,
+  "Ich": 1.0,
+  "Idis": 1.1,
+  "fail": [
+   "charge ~0.55A"
+  ]
+ },
+ "CS2_36": {
+  "n": 909,
+  "cap0": 1.134,
+  "Ich": 1.01,
+  "Idis": 1.1,
+  "fail": [
+   "charge ~0.55A"
+  ]
+ },
+ "CS2_37": {
+  "n": 985,
+  "cap0": 1.124,
+  "Ich": 1.01,
+  "Idis": 1.1,
+  "fail": [
+   "charge ~0.55A"
+  ]
+ },
+ "CS2_38": {
+  "n": 1052,
+  "cap0": 1.129,
+  "Ich": 0.99,
+  "Idis": 1.1,
+  "fail": [
+   "charge ~0.55A"
+  ]
+ },
+ "CS2_5": {
+  "n": 3,
+  "fail": [
+   "no valid cycles"
+  ]
+ },
+ "CS2_6": {
+  "n": 20,
+  "cap0": 1.454,
+  "Ich": 0.55,
+  "Idis": 0.22,
+  "fail": [
+   ">=400 cycles",
+   "cap0 in [1.0,1.25]",
+   "discharge ~1.1A",
+   "reaches 80%"
+  ]
+ },
+ "CS2_7": {
+  "n": 106,
+  "cap0": 1.118,
+  "Ich": 0.55,
+  "Idis": 0.55,
+  "fail": [
+   ">=400 cycles",
+   "discharge ~1.1A"
+  ]
+ },
+ "CS2_9": {
+  "n": 0,
+  "fail": [
+   "no valid cycles"
+  ]
+ }
+}

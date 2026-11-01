@@ -1,0 +1,22 @@
+/home/user/paper/bench/bench3_small.py:30: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  mod = train_kf(Xtr, b, s, 200); H = B.pgib_hi(mod, Xte).numpy(); s2 = float(torch.exp(2*mod.lsB)); Hs_.append(H); s2s_.append(s2); record('PGIB-KF-HI', H, s2, cal['fuse'], s); record('PGIB-KF-HI|nofuse', H, s2, cal['nofuse'], s)
+/home/user/paper/bench/bench3_small.py:30: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  mod = train_kf(Xtr, b, s, 200); H = B.pgib_hi(mod, Xte).numpy(); s2 = float(torch.exp(2*mod.lsB)); Hs_.append(H); s2s_.append(s2); record('PGIB-KF-HI', H, s2, cal['fuse'], s); record('PGIB-KF-HI|nofuse', H, s2, cal['nofuse'], s)
+calce CS2_35 done 248s beta 3.0 (31.622776601683793, 0.25, 1)
+calce CS2_36 done 258s beta 0.3 (1.0, 0.5, 1)
+calce CS2_37 done 232s beta 3.0 (10.0, 0.25, 1)
+calce CS2_38 done 233s beta 0.03 (31.622776601683793, 0.25, 1)
+/home/user/paper/bench/bench3_small.py:30: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  mod = train_kf(Xtr, b, s, 200); H = B.pgib_hi(mod, Xte).numpy(); s2 = float(torch.exp(2*mod.lsB)); Hs_.append(H); s2s_.append(s2); record('PGIB-KF-HI', H, s2, cal['fuse'], s); record('PGIB-KF-HI|nofuse', H, s2, cal['nofuse'], s)
+/home/user/paper/bench/bench3_small.py:30: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  mod = train_kf(Xtr, b, s, 200); H = B.pgib_hi(mod, Xte).numpy(); s2 = float(torch.exp(2*mod.lsB)); Hs_.append(H); s2s_.append(s2); record('PGIB-KF-HI', H, s2, cal['fuse'], s); record('PGIB-KF-HI|nofuse', H, s2, cal['nofuse'], s)
+calce6 CS2_34 done 611s beta 3.0 (10.0, 0.25, 1)
+calce6 CS2_33 done 613s beta 3.0 (31.622776601683793, 0.25, 1)
+calce6 CS2_35 done 559s beta 0.3 (100.0, 0.25, 1)
+calce6 CS2_36 done 563s beta 0.03 (1.0, 0.5, 1)
+calce6 CS2_37 done 567s beta 3.0 (100.0, 0.25, 1)
+calce6 CS2_38 done 568s beta 3.0 (10.0, 0.25, 1)

@@ -1,0 +1,29 @@
+/home/user/paper/bench/bench3_small.py:30: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  mod = train_kf(Xtr, b, s, 200); H = B.pgib_hi(mod, Xte).numpy(); s2 = float(torch.exp(2*mod.lsB)); Hs_.append(H); s2s_.append(s2); record('PGIB-KF-HI', H, s2, cal['fuse'], s); record('PGIB-KF-HI|nofuse', H, s2, cal['nofuse'], s)
+/home/user/paper/bench/bench3_small.py:30: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  mod = train_kf(Xtr, b, s, 200); H = B.pgib_hi(mod, Xte).numpy(); s2 = float(torch.exp(2*mod.lsB)); Hs_.append(H); s2s_.append(s2); record('PGIB-KF-HI', H, s2, cal['fuse'], s); record('PGIB-KF-HI|nofuse', H, s2, cal['nofuse'], s)
+nasa B0005 done 250s beta 3.0 (31.622776601683793, 0.5, 0)
+nasa B0006 done 286s beta 0.3 (10.0, 1, 0)
+nasa B0007 done 225s beta 3.0 (31.622776601683793, 1, 0)
+nasa B0018 done 255s beta 3.0 (31.622776601683793, 1, 0)
+/home/user/paper/bench/bench3_small.py:30: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  mod = train_kf(Xtr, b, s, 200); H = B.pgib_hi(mod, Xte).numpy(); s2 = float(torch.exp(2*mod.lsB)); Hs_.append(H); s2s_.append(s2); record('PGIB-KF-HI', H, s2, cal['fuse'], s); record('PGIB-KF-HI|nofuse', H, s2, cal['nofuse'], s)
+femto3 Bearing3_2 done 58s beta 3.0 (100.0, 0.5, 1)
+/home/user/paper/bench/bench3_small.py:30: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  mod = train_kf(Xtr, b, s, 200); H = B.pgib_hi(mod, Xte).numpy(); s2 = float(torch.exp(2*mod.lsB)); Hs_.append(H); s2s_.append(s2); record('PGIB-KF-HI', H, s2, cal['fuse'], s); record('PGIB-KF-HI|nofuse', H, s2, cal['nofuse'], s)
+femto3 Bearing3_1 done 122s beta 3.0 (100.0, 1, 0)
+femto3 Bearing3_3 done 109s beta 3.0 (100.0, 0.5, 0)
+/home/user/paper/bench/bench3_small.py:30: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  mod = train_kf(Xtr, b, s, 200); H = B.pgib_hi(mod, Xte).numpy(); s2 = float(torch.exp(2*mod.lsB)); Hs_.append(H); s2s_.append(s2); record('PGIB-KF-HI', H, s2, cal['fuse'], s); record('PGIB-KF-HI|nofuse', H, s2, cal['nofuse'], s)
+/home/user/paper/bench/bench3_small.py:30: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  mod = train_kf(Xtr, b, s, 200); H = B.pgib_hi(mod, Xte).numpy(); s2 = float(torch.exp(2*mod.lsB)); Hs_.append(H); s2s_.append(s2); record('PGIB-KF-HI', H, s2, cal['fuse'], s); record('PGIB-KF-HI|nofuse', H, s2, cal['nofuse'], s)
+ims IMS_T1B3 done 309s beta 3.0 (100.0, 0.5, 0)
+ims IMS_T1B4 done 315s beta 3.0 (100.0, 0.5, 0)
+ims IMS_T3B3 done 200s beta 3.0 (31.622776601683793, 1, 0)
+ims IMS_T2B1 done 341s beta 3.0 (10.0, 1, 0)

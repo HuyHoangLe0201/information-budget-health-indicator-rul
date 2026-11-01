@@ -1,0 +1,9 @@
+FD004 fixed configs {'PGIB-KF-HI': ('kf', 0.03), 'PGIB-KFR-HI': ('kfr', 0.03), 'PGIB-HI': ('win', 0.03)}
+/home/user/paper/bench/run_cmapss6.py:29: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  s2 = float(torch.exp(2*mod.lsB)); Hs.append(Ht); s2s.append(s2); rec(name, Ht, s2, params, s)
+PGIB-KF-HI done 1727s
+PGIB-KFR-HI done 3371s
+PGIB-HI done 3429s
+vae done 4248s
+done 4248s

@@ -1,0 +1,614 @@
+\documentclass{iopjournal}
+\usepackage{amsmath,amssymb,amsthm,booktabs,graphicx,xcolor,adjustbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,decorations.pathreplacing,calc,fit,backgrounds,shadows}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\theoremstyle{definition}
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Binfo}{\mathcal{B}_{\mathrm{info}}}
+\newcommand{\Istate}{\mathcal{I}_{\mathrm{state}}}
+\newcommand{\Ikin}{\mathcal{I}_{\mathrm{kin}}}
+\newcommand{\etaPIE}{\eta_{\mathrm{info}}}
+\DeclareMathOperator{\Mon}{Mon}
+\DeclareMathOperator{\Var}{Var}
+
+\begin{document}
+\articletype{Paper}
+
+\title{Information Budgets of Trajectory Health Indicators for Remaining Useful Life Prediction}
+
+\author{Anonymous authors}
+
+\keywords{information budget, health indicator, remaining useful life, information theory, monotonicity, information bottleneck, first hitting time, prognostics}
+
+
+\begin{abstract}
+Health indicators (HIs) for remaining useful life (RUL) prediction are usually constructed by optimising geometric criteria, such as monotonicity, trendability and prognosability, or by training an encoder. Neither approach states how much information about the RUL an HI can retain. We model HI construction as a Markov chain from latent degradation to sensors to HI, and bound the mean squared error of any RUL predictor below by the entropy power of the RUL given the HI. The bound defines an information efficiency, converts the error of any predictor into a certified lower bound on the retained information, and accounts for the age, which every predictor knows. We show that a pointwise squeeze of the HI loses state information while monotonicity saturates; that, for Wiener degradation with an unobserved inspection state, the error splits into an aleatoric floor and an epistemic term that grows with the information lost; that a static scalar HI inflates the bound by a factor determined by the angle between its weights and the optimal weights, which rotate from velocity to level as the remaining life shrinks, so that no static scalar HI is optimal over the whole life; and that a regime-blind read-out has an error floor. Simulations on exactly solvable models agree with these results. We further show that an integrating encoder accumulates error that an observation correction removes. Experiments on batteries, bearings and turbofan engines support these consequences but show no learned encoder to be superior to simple indicators.
+\end{abstract}
+
+
+\section{Introduction}
+Prognostics and health management (PHM) predicts the remaining useful life (RUL) of components such as batteries, bearings and aero-engines, and underpins condition-based maintenance \cite{si2011,lei2018,javed2017,zio2022}. Methods are conventionally divided into physics-based, data-driven and hybrid \cite{javed2017,liao2014}, and recent work is dominated by deep networks that map sensor histories to the RUL end to end \cite{li2018,fink2020}. An established alternative compresses the monitoring data into a scalar \emph{health indicator} (HI) and extrapolates it to a failure threshold $D_{\rm fail}$. An HI can be inspected by an engineer, the threshold gives the end of life (EOL) a physical meaning, and, when the HI is modelled as a stochastic process, the RUL is a first hitting time (FHT) with a known distribution \cite{whitmore1995,lee2006,si2011}. Recent studies in this journal follow the same line \cite{wang2026jrse,gu2025,bisoyi2026}, within the wider scope of reliability science \cite{aven2021,sun2025}.
+
+HIs are usually selected by \emph{geometric} criteria. Coble and Hines \cite{coble2009} formalised monotonicity (balance of positive and negative increments), prognosability (spread of end-of-life values relative to the range travelled) and trendability (agreement of the functional form across units) and optimised them with a genetic algorithm. Variants are common: trendability is often implemented as the correlation with time \cite{javed2013,zhang2016}, and a criterion based on ranking mutual information has been proposed for building a monotonic HI \cite{qian2015}. Coble and Hines themselves note that the no-self-healing assumption behind monotonicity fails for batteries \cite{coble2009}. HIs may also be learned by recurrent networks \cite{guo2017}, autoencoders and their regularised variants \cite{kingma2014,higgins2017}, or regressions on engineered features \cite{severson2019}. In both cases an HI is judged by its shape or by the accuracy of the predictor built on it \cite{saxena2008metrics}. Neither judgement indicates how much information about the RUL the HI \emph{could} have preserved, and neither separates the quality of the HI from that of the predictor.
+
+Probabilistic RUL prediction from an HI is mostly built on Wiener degradation, whose first passage time is inverse Gaussian \cite{folks1978,chhikara1989,tweedie1957}, with measurement error \cite{whitmore1995,tang2014}, random unit-specific drift \cite{gebraeel2005,wang2010}, nonlinear drift \cite{si2012} or threshold regression \cite{lee2006}, applied to batteries \cite{tang2014}, bearings \cite{medjaher2012} and highly reliable products \cite{ye2015} (reviews: \cite{zhang2018,si2011}). Two features are important for what follows: the drift varies between units, and the degradation level at inspection is inferred from the sensors rather than observed. The RUL uncertainty then has an aleatoric part (future randomness) and an epistemic part (incomplete knowledge of state and parameters) \cite{sankararaman2013,sankararaman2015,hullermeier2021,kendall2017}; deep ensembles are a common way to represent the latter \cite{lakshminarayanan2017}.
+
+Information theory \cite{shannon1948,cover2006} enters learning mainly through the information bottleneck \cite{tishby2000}, which has variational forms \cite{alemi2017,poole2019}, links to invariance \cite{achille2018}, nonlinear extensions \cite{kolchinsky2019} and critics \cite{saxe2019}. Estimating entropy and mutual information from samples is difficult: low-dimensional estimators exist \cite{vasicek1976,kraskov2004}, but their bias and variance are large in general \cite{paninski2003}, and a distribution-free, high-confidence lower bound on mutual information cannot exceed order $\ln N$ for $N$ samples \cite{mcallester2020}. Limits on estimator accuracy are usually stated through Cram\'er--Rao bounds, in their Bayesian form due to van Trees \cite{vantrees1968,gill1995,tichavsky1998}. The entropy-power bound used in this paper is the information-theoretic counterpart of these bounds and holds for arbitrary densities \cite{cover2006} (Remark~\ref{rem:bcrb}).
+
+The literature thus offers geometric and accuracy-based ways of judging an HI, a mature probabilistic theory of the RUL \emph{given} an HI, and general information-theoretic tools. In the sources we searched (bibliographic databases and the references above; this is not an exhaustive survey) we did not find a theory that connects them, that is, a bound on the RUL error that depends on the HI only through the information it retains, a statement of what the geometric criteria do and do not measure in these terms, and an account of what a \emph{scalar, static} indicator loses when the degradation velocity varies in time or the sensors respond to the operating regime. A companion study \cite{anon2026a} analysed what a static, per-snapshot projection of a multichannel signal retains about the degradation state. Here we analyse the HI \emph{trajectory}, with its level, velocity, between-unit variability and operating regime. Two further studies by the same authors address how many run-to-failure trajectories \cite{anon2026b} and which charging-phase features \cite{anon2026c} are needed; the present paper addresses how much \emph{information} an HI can at best retain. Figure~\ref{fig:framework} shows the setting and where each result applies.
+
+\begin{figure}[t]
+\centering
+\resizebox{\textwidth}{!}{\input{figs/fig_framework}}
+\caption{Framework of the paper. The HI is constructed from the sensors, which are driven by the same latent state as the true RUL, and the predictor uses the HI and the age. The data processing inequality gives an information budget; the red boxes list the operations of HI construction whose information loss is quantified.}
+\label{fig:framework}
+\end{figure}
+
+The contributions of the paper are:
+\begin{enumerate}
+\item an \textbf{information budget}: an entropy-power bound on the RUL error in terms of the mutual information $I(T_t;H_{1:t})$ between the RUL and the HI, an efficiency $\etaPIE$ that scores an HI before a predictor is trained, a certificate that turns any held-out error into a lower bound on retained information, age-aware versions of both, and a state--kinematic decomposition (Section~\ref{sec:limits});
+\item \textbf{why geometric criteria do not measure information}: a pointwise squeeze loses state information while monotonicity saturates at a value set by the template (Section~\ref{sec:paradox});
+\item a \textbf{physics-constrained budget} for Wiener degradation with an unobserved inspection state: an HI-independent aleatoric floor plus an epistemic term amplified by information loss, and an exact non-Gaussianity gap (Section~\ref{sec:physbound});
+\item an \textbf{angular loss law}: a static scalar HI inflates the bound by $1+\rho\sin^2\psi$, where $\psi$ is the angle between its weights and the optimal weights and $\rho$ a signal-to-noise ratio, because the optimal weights rotate from velocity to level; no static scalar HI is therefore optimal over the whole life, and a regime-blind read-out has an error floor (Section~\ref{sec:angular});
+\item \textbf{consequences for estimators}: an exact path-space bottleneck objective, and a proof that an integrating encoder accumulates error that an observation correction removes (Section~\ref{sec:pgib}), examined on batteries, bearings and turbofan engines with a conservative protocol (Section~\ref{sec:empirical}).
+\end{enumerate}
+The ingredients are classical: the data processing inequality, the chain rules, the maximum-entropy property of the Gaussian and the entropy-power bound \cite{cover2006}; the inverse-Gaussian law \cite{chhikara1989}; Gaussian conditioning \cite{bishop2006}; the Kalman filter \cite{kalman1960,durbin2012}; and the variational bottleneck bound \cite{alemi2017}. What is new is their use as a budget for the HI-construction step, and the specific results listed above. Each proof states which classical facts it uses and where they can be found, and Sections~\ref{sec:paradox} to \ref{sec:angular} each end with a numerical check on an exactly solvable model.
+
+
+\section{Information budget of a health indicator}
+\label{sec:limits}
+\subsection{Setting}
+Let $T_t>0$ be the true RUL at inspection time (age) $t$, $\mathbf{X}_{1:t}\in\mathbb{R}^{d\times t}$ the accumulated history of $d$ sensors, and $H_{1:t}=f_\theta(\mathbf{X}_{1:t})$ the HI trajectory produced by a map $f_\theta$ with parameters $\theta$. Throughout, $h(\cdot)$ is differential entropy, $I(\cdot\,;\cdot)$ is mutual information (both in nats), $\E$ and $\Var$ are expectation and variance, and $\mathcal N(\mu,\sigma^2)$ is the normal distribution. Any RUL estimator $\hat T_t=g(H_{1:t})$ obeys the Markov chain $T_t \to \mathbf{X}_{1:t}\to H_{1:t}\to \hat T_t$, because the latent degradation state drives both $T_t$ and $\mathbf{X}_{1:t}$. The data processing inequality (DPI) \cite[Sect.~2.8]{cover2006} gives
+\begin{equation}
+I(T_t;\mathbf{X}_{1:t}) \ge I(T_t;H_{1:t}) \ge I(T_t;\hat T_t),
+\label{eq:dpi}
+\end{equation}
+with equality in the first inequality if and only if $H_{1:t}$ is a sufficient statistic of $\mathbf{X}_{1:t}$ for $T_t$ \cite[Sect.~2.9]{cover2006}.
+
+\begin{theorem}[Entropy-power bound on RUL error]
+\label{thm:bound}
+Assume that $h(T_t)$ and $I(T_t;\mathbf{X}_{1:t})$ are finite. For every estimator $\hat T_t=g(H_{1:t})$ with finite second moment, the mean squared error (MSE) satisfies
+\begin{equation}
+\E\big[(T_t-\hat T_t)^2\big]\;\ge\;\Binfo(H_{1:t}) := \frac{1}{2\pi e}\exp\!\big(2h(T_t\mid H_{1:t})\big)=\frac{1}{2\pi e}\exp\!\big(2h(T_t)-2I(T_t;H_{1:t})\big).
+\end{equation}
+Moreover $\Binfo(H_{1:t})\ge \mathcal{B}_{\min}:=\frac{1}{2\pi e}e^{2h(T_t\mid \mathbf{X}_{1:t})}$ and
+\begin{equation}
+\Binfo(H_{1:t})/\mathcal{B}_{\min}=\exp\!\big(2\,(1-\etaPIE(H_{1:t}))\,I(T_t;\mathbf{X}_{1:t})\big),\qquad \etaPIE(H_{1:t}):=\frac{I(T_t;H_{1:t})}{I(T_t;\mathbf{X}_{1:t})}\in[0,1].
+\end{equation}
+\end{theorem}
+\begin{proof}
+Let $E=T_t-g(H_{1:t})$. Differential entropy is translation invariant \cite[Sect.~8.6]{cover2006}, so $h(E\mid H_{1:t})=h(T_t\mid H_{1:t})$ ($g(H_{1:t})$ is constant given $H_{1:t}$). Conditioning does not increase entropy \cite[Sect.~2.6]{cover2006}, so $h(E\mid H_{1:t})\le h(E)$, and the Gaussian maximises entropy at fixed second moment \cite[Sect.~8.6]{cover2006}, so $h(E)\le \tfrac12\ln(2\pi e\,\E[E^2])$. Combining the three relations gives $\E[E^2]\ge \frac{1}{2\pi e}e^{2h(T_t\mid H_{1:t})}$. The identity $h(T_t\mid H_{1:t})=h(T_t)-I(T_t;H_{1:t})$ (definition of mutual information) gives the second form. By (\ref{eq:dpi}), $h(T_t\mid H_{1:t})\ge h(T_t\mid\mathbf{X}_{1:t})$, and the ratio follows from $h(T_t\mid H_{1:t})-h(T_t\mid \mathbf{X}_{1:t})=I(T_t;\mathbf{X}_{1:t})-I(T_t;H_{1:t})$.
+\end{proof}
+\begin{proposition}[Certified information]
+\label{cor:cert}
+Under the assumptions of Theorem~\ref{thm:bound}, any estimator $\hat T_t=g(H_{1:t})$ with mean squared error $\varepsilon^2$ certifies
+\begin{equation}
+I(T_t;H_{1:t})\;\ge\;h(T_t)-\tfrac12\ln\!\big(2\pi e\,\varepsilon^2\big).
+\end{equation}
+\end{proposition}
+\begin{proof}
+Rearrange $\varepsilon^2\ge\frac1{2\pi e}\exp(2h(T_t)-2I(T_t;H_{1:t}))$ from Theorem~\ref{thm:bound}.
+\end{proof}
+\begin{proposition}[Age-aware bound]
+\label{prop:age}
+The age $t$ is always available to a predictor. For every estimator $\hat T_t=g(H_{1:t},t)$, $\E[(T_t-\hat T_t)^2]\ge\frac1{2\pi e}\exp\!\big(2h(T_t\mid H_{1:t},t)\big)$, and the information that the HI adds to the age is
+\begin{equation}
+I(T_t;H_{1:t},t)=I(T_t;t)+I(T_t;H_{1:t}\mid t),\qquad I(T_t;H_{1:t}\mid t)\ge\E_t\,h(T_t\mid t)-\tfrac12\ln\!\big(2\pi e\,\varepsilon^2\big),
+\end{equation}
+where $\varepsilon^2$ is the MSE of any estimator that uses $H_{1:t}$ and $t$.
+\end{proposition}
+\begin{proof}
+Apply Theorem~\ref{thm:bound} conditionally on $t$ and average. The chain rule of mutual information \cite[Sect.~2.5]{cover2006} gives the decomposition. For the inequality, Theorem~\ref{thm:bound} conditionally on $t$ yields $I(T_t;H_{1:t}\mid t=\tau)\ge h(T_t\mid t=\tau)-\tfrac12\ln(2\pi e\,\varepsilon_\tau^2)$ with $\varepsilon_\tau^2$ the conditional MSE; averaging over $\tau$ and using Jensen's inequality for the concave logarithm \cite[Sect.~2.6]{cover2006}, $\E_\tau\ln\varepsilon_\tau^2\le\ln\E_\tau\varepsilon_\tau^2=\ln\varepsilon^2$, gives the stated bound.
+\end{proof}
+\begin{remark}[Relation to the Bayesian Cram\'er--Rao bound]
+\label{rem:bcrb}
+Let $J(h)$ be the Fisher information, with respect to location, of the posterior density $p(T_t\mid H_{1:t}=h)$. Under the regularity conditions of the van Trees inequality \cite{vantrees1968,gill1995} every estimator satisfies $\E[(T_t-\hat T_t)^2]\ge 1/\E_H[J(H)]$. Stam's inequality \cite{stam1959} states that $e^{2h(T_t\mid H=h)}/(2\pi e)\ge 1/J(h)$ for every $h$. Taking the geometric mean over $h$ and using that the geometric mean of $1/J$ is at least the reciprocal of the arithmetic mean of $J$,
+\begin{equation}
+\Binfo(H_{1:t})=\exp\!\Big(\E_H\ln\frac{e^{2h(T_t\mid H=h)}}{2\pi e}\Big)\;\ge\;\exp\!\Big(\E_H\ln\frac1{J(H)}\Big)\;\ge\;\frac{1}{\E_H[J(H)]},
+\end{equation}
+so, wherever the Bayesian Cram\'er--Rao bound applies, the entropy-power bound is not weaker, and it requires no differentiability of the densities. For posterior filtering the Fisher-information route is developed in \cite{tichavsky1998}.
+\end{remark}
+Theorem~\ref{thm:bound} is the classical entropy-power bound on the error of an estimator \cite[Sect.~8.6]{cover2006}, used here to turn HI construction into an information budget. It is tight only if the posterior of $T_t$ is Gaussian and is otherwise conservative (Section~\ref{sec:physnum}); $\Binfo$ equals $\mathcal B_{\min}$ exactly when $\etaPIE=1$.
+
+Proposition~\ref{prop:age} shows that the relevant baseline for an HI is the RUL given the age, not the marginal distribution of the RUL. A sensor-free predictor that uses only the age is therefore a necessary reference (Appendix~\ref{app:data}). Proposition~\ref{cor:cert} gives a quantity that can be computed from real data, since it needs only the one-dimensional entropy $h(T_t)$ and the held-out MSE of a predictor. It is a monotone transform of the MSE and therefore ranks HIs in the same order as the MSE; it is the information-theoretic reading of the error, not independent evidence, and it is vacuous (negative) when the predictor is poor. The efficiency $\etaPIE$ could in principle be estimated before any predictor is trained, but mutual-information estimates are unreliable on small data sets \cite{paninski2003,mcallester2020} (Appendix~\ref{app:p1}).
+
+\subsection{Trajectory decomposition}
+\begin{proposition}[State--kinematic decomposition]
+\label{prop:decomp}
+Let $\Delta H_k=H_k-H_{k-1}$ denote the increments of the HI. The map $H_{1:t}\mapsto (H_t,\Delta H_{2:t})$ is a linear bijection, hence
+\begin{equation}
+I(T_t;H_{1:t})=\underbrace{I(T_t;H_t)}_{\Istate(t)}+\underbrace{I(T_t;\Delta H_{2:t}\mid H_t)}_{\Ikin(t)} .
+\end{equation}
+\end{proposition}
+\begin{proof}
+The map has a unit-determinant matrix, so $h(\mathbf A\mathbf Y)=h(\mathbf Y)+\ln|\det\mathbf A|$ \cite[Sect.~8.6]{cover2006} and mutual information is unchanged ($H_k=H_t-\sum_{j=k+1}^{t}\Delta H_j$ gives the inverse). The identity is then the chain rule of mutual information \cite[Sect.~2.5]{cover2006}.
+\end{proof}
+\begin{remark}
+The decomposition is an identity; its content lies in which operations remove which part. If the drift is constant, $H_t/t$ is a sufficient statistic for the drift, and $\Ikin$ about the drift is zero. Kinematic information is non-trivial when the velocity varies in time, for example under a state-dependent drift or a random-walk velocity, as in late-life acceleration.
+\end{remark}
+
+\section{Geometric criteria do not measure information}
+\label{sec:paradox}
+The geometric criteria of Coble and Hines \cite{coble2009} are computed from the shape of the HI. Monotonicity is $\Mon(H_{1:t})=|\sum_{k=1}^{t-1}\mathrm{sgn}(H_{k+1}-H_k)|/(t-1)$, the balance of positive and negative increments. Prognosability is $\mathrm{Pro}=\exp(-\mathrm{std}(H_{\rm end})/\mathrm{mean}|H_{\rm end}-H_{\rm start}|)$, where the standard deviation and the mean are taken over units, $H_{\rm start}$ and $H_{\rm end}$ being the first and last values of each unit. In the benchmarks, $\mathrm{Tre}$ is the absolute correlation of the HI with time, as in \cite{javed2013} (and, under the name correlation, in \cite{zhang2016}); it differs from the trendability of Coble and Hines, which measures the agreement of the functional form across units \cite{coble2009}.
+
+A strictly monotone bijection $\varrho$ satisfies $I(T_t;\varrho(H_{1:t}))=I(T_t;H_{1:t})$, so information can be lost only through non-injective operations or noise. We therefore consider $\tilde H_{1:t}=\mathcal S(H_{1:t},\xi)$, where $\xi$ is independent of everything else. We call $\mathcal S$ a \emph{squeeze} when it contracts the HI towards a template trajectory.
+
+\begin{theorem}[Information inflation under squeezing]
+\label{thm:paradox}
+(a) For any such $\mathcal S$, $T_t\to H_{1:t}\to\tilde H_{1:t}$ is Markov, so $I(T_t;\tilde H_{1:t})\le I(T_t;H_{1:t})$ and
+\begin{equation}
+\Binfo(\tilde H_{1:t})/\Binfo(H_{1:t})=\exp\!\big(2[I(T_t;H_{1:t})-I(T_t;\tilde H_{1:t})]\big)\ge 1 .
+\end{equation}
+(b) If $\mathcal S$ acts pointwise in time, $\tilde H_k=\phi_k(H_k,\xi_k)$, then
+\begin{equation}
+\begin{gathered}\ln\frac{\Binfo(\tilde H_{1:t})}{\Binfo(H_{1:t})}=2\big(\Delta\Istate+\Delta\Ikin\big),\\ \Delta\Istate:=\Istate(H)-\Istate(\tilde H)\ge0,\quad \Delta\Ikin:=\Ikin(H)-\Ikin(\tilde H),\end{gathered}
+\end{equation}
+and $\Delta\Ikin$ has no definite sign in general: kinematic information alone does not determine the inflation.\\
+(c) Let the HI be the latent degradation level $D_k$ observed with Gaussian noise, $H_k=D_k+\xi^{(1)}_k$, where $D_k$ is linear-Gaussian, and let the squeeze with strength $\gamma\in[0,1)$ and template (mean trajectory) $m_k=\E[D_k]$ be
+\begin{equation}
+\tilde H_k^{\gamma}=m_k+(1-\gamma)(H_k-m_k)+\xi^{(2)}_k,\qquad \xi^{(2)}_k\sim\mathcal N(0,\sigma_2^2)\ \text{independent and identically distributed (i.i.d.)}
+\end{equation}
+For every linear functional $\vartheta$ of the latent state (for example the current velocity), write $\Istate^\vartheta(\gamma)=I(\vartheta;\tilde H^\gamma_t)$, $\Ikin^\vartheta(\gamma)=I(\vartheta;\Delta\tilde H^\gamma_{2:t}\mid\tilde H^\gamma_t)$ and $\mathcal I^\vartheta_{\rm tot}(\gamma)=I(\vartheta;\tilde H^\gamma_{1:t})$. Then $\mathcal I^\vartheta_{\rm tot}$ and $\Istate^\vartheta$ are non-increasing in $\gamma$, and
+\begin{equation}
+0\le\Istate^\vartheta(\gamma),\ \Ikin^\vartheta(\gamma)\le\mathcal I^\vartheta_{\rm tot}(\gamma)\xrightarrow[\gamma\to1]{}0,
+\end{equation}
+so both components vanish, although $\Ikin^\vartheta$ need not be monotone. If the template has constant increment $\Delta m$, then as $t\to\infty$ and $\gamma\to 1$,
+\begin{equation}
+\Mon(\tilde H^{\gamma}_{1:t})\to \Mon_\infty=2\Phi_{\mathcal N}\!\big(\Delta m/(\sqrt2\,\sigma_2)\big)-1,
+\end{equation}
+where $\Phi_{\mathcal N}$ is the standard normal distribution function; the limit does not depend on the unit's own degradation.
+\end{theorem}
+\begin{proof}
+(a) $\tilde H$ is a randomised function of $H$ only, so the Markov property holds and the DPI gives the first claim; the ratio follows from the definition of $\Binfo$. (b) Apply Proposition~\ref{prop:decomp} to $H$ and to $\tilde H$ and take the difference in (a). Because $\tilde H_t=\phi_t(H_t,\xi_t)$ is a randomised function of $H_t$ alone, the DPI gives $I(T_t;\tilde H_t)\le I(T_t;H_t)$, that is, $\Delta\Istate\ge0$. For non-pointwise operators (for example smoothing over history) even this sign can fail. (c) With $\lambda=1-\gamma>0$, $\tilde H^\gamma$ is an invertible affine image of $(H-m)+\xi^{(2)}/\lambda$, that is, of $H$ observed through additive Gaussian noise of variance $\sigma_2^2/\lambda^2$. For $\gamma_2>\gamma_1$ the noise of the second channel is the first plus independent Gaussian noise, so the DPI \cite[Sect.~2.8]{cover2006} gives monotonicity of $\mathcal I_{\rm tot}^\vartheta$ and, applying the same argument to the scalar observation at time $t$, of $\Istate^\vartheta$. Since $\Istate^\vartheta=I(\vartheta;\tilde H_t)\le I(\vartheta;\tilde H_{1:t})$ and $\Ikin^\vartheta=\mathcal I_{\rm tot}^\vartheta-\Istate^\vartheta\le\mathcal I_{\rm tot}^\vartheta$, both are dominated by $\mathcal I_{\rm tot}^\vartheta$. As $\lambda\to0$ the noise variance diverges, and the mutual information of a Gaussian channel, $\tfrac12\ln(1+\mathrm{SNR})$ per scalar observation with signal-to-noise ratio SNR \cite[Chap.~9]{cover2006}, vanishes. For the limit of $\Mon$, as $\lambda\to0$ the increments converge to $\Delta m+\xi^{(2)}_{k+1}-\xi^{(2)}_k$, a stationary 1-dependent sequence. The indicators of a positive increment at odd $k$ involve disjoint pairs of the $\xi^{(2)}$ and are therefore i.i.d., as are those at even $k$, so the strong law of large numbers \cite[Chap.~2]{durrett2010} applies to each subsequence and the fraction of positive increments tends to $p=\Phi_{\mathcal N}(\Delta m/(\sqrt2\sigma_2))$ and $\Mon\to|2p-1|$.
+\end{proof}
+Part (c) shows that the geometric score and the information content are decoupled. Once the squeeze is strong, $\Mon$ saturates at a value set by the template and the noise, while the information available for RUL prediction keeps falling and the bound $\Binfo$ keeps rising. Part (b) separates two ways of losing information; in the numerical check below, the kinematic part even increases while the state part collapses.
+
+\subsection{Numerical check}
+\label{sec:paradoxnum}
+The latent state is a local linear trend, $D_k=D_{k-1}+V_{k-1}+\sigma_Bw_k$ and $V_k=V_{k-1}+\sigma_V\zeta_k$, with level $D_k$, velocity $V_k$, independent standard normal noises $w_k,\zeta_k$ and $V_0\sim\mathcal N(\bar v,\sigma_{v0}^2)$. The raw HI is $H_k=D_k+\xi^{(1)}_k$ with measurement noise $\xi^{(1)}_k\sim\mathcal N(0,\sigma_1^2)$, and the squeeze is that of Theorem~\ref{thm:paradox}(c) with noise standard deviation $\sigma_2$. The parameters are $\bar v=2$, $\sigma_{v0}=0.25$, $\sigma_V=0.03$, $\sigma_B=0.5$, $\sigma_1=2$, $\sigma_2=0.6$, failure threshold $D_{\rm fail}=200$ and inspection at $t=50$. The information about $V_t$ is exact from the Kalman covariances \cite{kalman1960,durbin2012}. For the RUL, the Bayes-optimal estimator is the posterior mean from $300$ exact posterior draws per unit, $h(T_t\mid\tilde H)$ is estimated with the Vasicek estimator \cite{vasicek1976}, and $\sqrt{\Binfo}$ is the square root of the average of the pointwise entropy powers. Errors are reported as root mean squared error (RMSE); each setting uses $400$ test units and three seeds.
+
+\begin{table}
+\caption{Squeezing experiment (mean over three seeds; $\pm$: standard deviation). Information about $V_t$ in nats, errors in cycles.}
+\centering
+\small
+\input{results/tab_exp1}
+\label{tab:exp1}
+\end{table}
+
+\begin{figure}[!tb]
+\centering
+\includegraphics[width=\textwidth]{figs/fig_paradox}
+\caption{Squeezing experiment. (a) HI paths of 14 units, coloured by the true RUL. (b) Monotonicity and efficiency. (c) Information about $V_t$. (d) Bound and RMSE (error bars: standard deviation over seeds). The values of $\gamma$ are equally spaced.}
+\label{fig:paradox}
+\end{figure}
+
+Monotonicity saturates at the predicted value $\Mon_\infty=0.981$ for $\gamma\ge0.9$, while the efficiency falls from $0.85$ to $0.09$ and the Bayes-optimal RMSE nearly doubles ($9.3$ to $17.8$ cycles). The bound stays below the Bayes-optimal error in every run. The state information falls monotonically, whereas the kinematic information first rises and then falls, so the inflation at $\gamma=0.9$ and $0.97$ is driven by the loss of state information. The empirical RMSE varies strongly between seeds because of the heavy right tail of the RUL, and the posterior-based Bayes RMSE is the reliable summary.
+
+\section{A physics-constrained error budget}
+\label{sec:physbound}
+Assume that after inspection the latent degradation follows $dD_s=\mu\,ds+\sigma_B\,dW_s$, $\mu>0$ unit-specific (the random-effect formulation of \cite{gebraeel2005,wang2010}), with absorbing threshold $D_{\rm fail}$. The prognostically relevant latent state is $\mathbf z=(D_t,\mu)$, where the inspection level $D_t$ is \emph{not} observed directly but only through $\mathbf{X}_{1:t}$. With $a=D_{\rm fail}-D_t>0$, the RUL is conditionally inverse-Gaussian \cite{folks1978,tweedie1957}, $T_t\mid\mathbf z\sim\mathcal{IG}(m(\mathbf z),\,a^2/\sigma_B^2)$ with mean $m(\mathbf z)=a/\mu$ and variance $a\sigma_B^2/\mu^3$ \cite{chhikara1989}, and $T_t$ is independent of $\mathbf{X}_{1:t}$ (hence of $H_{1:t}$) given $\mathbf z$. Here $\mathcal{IG}(\text{mean},\text{shape})$ denotes the inverse Gaussian distribution. Define the information efficiency about the mean RUL $m=m(\mathbf z)$ as $\eta_m(H):=I(m;H_{1:t})/I(m;\mathbf{X}_{1:t})\in[0,1]$.
+
+\begin{theorem}[Physics-constrained bound]
+\label{thm:physics}
+Assume $h(m\mid\mathbf{X}_{1:t})$ and $I(m;\mathbf{X}_{1:t})$ are finite. For any estimator $\hat T_t=g(H_{1:t})$ with finite second moment,
+\begin{equation}
+\E[(T_t-\hat T_t)^2]\;\ge\;\underbrace{\E\!\left[\frac{a\,\sigma_B^2}{\mu^3}\right]}_{\mathcal{E}_{\rm aleatoric}}+\underbrace{\E_{H}\!\left[\frac{e^{2h(m\mid H_{1:t}=h)}}{2\pi e}\right]}_{\mathcal{E}_{\rm epistemic}},
+\end{equation}
+and the epistemic term obeys
+\begin{equation}
+\mathcal{E}_{\rm epistemic}\;\ge\;\frac{1}{2\pi e}\exp\!\Big(2h(m\mid\mathbf{X}_{1:t})+2\big(1-\eta_m(H)\big)\,I(m;\mathbf{X}_{1:t})\Big).
+\end{equation}
+The aleatoric term does not depend on the HI.
+\end{theorem}
+\begin{proof}
+Since $\E[T_t-m(\mathbf z)\mid\mathbf z,H_{1:t}]=0$ and $T_t$ is conditionally independent of $H_{1:t}$ given $\mathbf z$, the cross term vanishes and
+$\E[(T_t-\hat T_t)^2]=\E[\Var(T_t\mid\mathbf z)]+\E[(m(\mathbf z)-\hat T_t)^2]$, the usual split of the squared error into an irreducible and an estimation part \cite[Sect.~1.5.5]{bishop2006}. The first term is $\E[a\sigma_B^2/\mu^3]$. For the second, apply Theorem~\ref{thm:bound} conditionally on $H_{1:t}=h$ to the target $m(\mathbf z)$, which gives $\E[(m-\hat T_t)^2\mid H=h]\ge e^{2h(m\mid H=h)}/(2\pi e)$, and average over $h$. For the second inequality, the exponential is convex, so (Jensen \cite[Sect.~2.6]{cover2006}) $\E_H[e^{2h(m\mid H=h)}]\ge e^{2h(m\mid H)}$ with $h(m\mid H)=\E_H h(m\mid H=h)$; and $m\to\mathbf{X}_{1:t}\to H_{1:t}$ is Markov, so $h(m\mid H)=h(m)-I(m;H)=h(m\mid\mathbf{X})+I(m;\mathbf{X})-I(m;H)=h(m\mid\mathbf{X})+(1-\eta_m)I(m;\mathbf{X})$.
+\end{proof}
+\begin{remark}
+Conditioning on $D_t$ and changing variables would give $h(m\mid H)=h(\mu\mid H)+\E\ln(a/\mu^2)$. In the constant-drift model, $D_t/t$ is then a sufficient statistic for $\mu$ and the resulting bound no longer depends on the HI. The HI matters through the joint uncertainty about the level and the drift, which is why Theorem~\ref{thm:physics} is stated for the latent pair $\mathbf z$. The second inequality of the theorem (the Jensen form) is weaker than the first but depends on the HI only through $\eta_m$.
+\end{remark}
+
+\begin{proposition}[Non-Gaussianity gap]
+\label{prop:gap}
+Let $\hat m_H=\E[m\mid H]$ be the Bayes-optimal estimator of $m$ and let $D_h:=D_{\rm KL}\big(p(m\mid H=h)\,\|\,\mathcal N(\E[m\mid h],\Var(m\mid h))\big)\ge0$ be the Kullback--Leibler (KL) divergence of the posterior from the Gaussian with the same mean and variance. Then
+\begin{equation}
+\E\big[(m-\hat m_H)^2\big]-\E_H\!\left[\frac{e^{2h(m\mid H=h)}}{2\pi e}\right]=\E_H\!\Big[\Var(m\mid H)\big(1-e^{-2D_H}\big)\Big]\ \ge0,
+\end{equation}
+with equality if and only if $p(m\mid H)$ is Gaussian almost surely.
+\end{proposition}
+\begin{proof}
+For a density $p$ with mean $\mu_p$ and variance $\sigma_p^2$ and the Gaussian $q=\mathcal N(\mu_p,\sigma_p^2)$, $\int p\ln q=-\tfrac12\ln(2\pi\sigma_p^2)-\tfrac12$ because $q$ depends on $x$ only through the first two moments of $p$. Hence $D_{\rm KL}(p\|q)=-h(p)+\tfrac12\ln(2\pi e\sigma_p^2)$ (the identity behind the maximum-entropy property of the Gaussian \cite[Sect.~8.6]{cover2006}), that is, $e^{2h(p)}/(2\pi e)=\sigma_p^2e^{-2D_{\rm KL}(p\|q)}$. Apply this to $p=p(m\mid H=h)$, use $\E[(m-\hat m_H)^2\mid H=h]=\Var(m\mid h)$, which holds because the posterior mean is the Bayes-optimal estimator under squared loss \cite[Sect.~1.5.5]{bishop2006}, and average over $h$. The right-hand side vanishes if and only if $D_H=0$ almost surely, that is, if and only if the posterior is Gaussian.
+\end{proof}
+
+\subsection{Numerical check}
+\label{sec:physnum}
+The drift is $\mu\sim\mathcal N(1,0.22^2)$, truncated to $\mu>0.3$ and $a>1$ (which keeps posterior sampling exact), with $\sigma_B=0.85$, $D_{\rm fail}=100$ and $t=50$. The raw sensor is $X_k=D_k+\xi_k$ with $\xi_k\sim\mathcal N(0,\sigma_\xi^2)$ and $\sigma_\xi=1.5$. HIs with decreasing information are $H^{\varsigma}_k=X_k+\varsigma\zeta_k$ with independent standard normal $\zeta_k$ and $\varsigma\in\{0,2,4,8,16,32\}$; each is a degraded version of $X$. The posterior of $(D_t,\mu)$ given $H^\varsigma$ is Gaussian (Kalman filter on $(D,\mu)$), and $m=a/\mu$ is evaluated on $1500$ posterior draws for each of $1500$ test units; $h(m\mid H)$ and $h(m)$ are estimated with the Vasicek estimator. The Bayes-optimal error is $\E[\Var(T_t\mid\mathbf z)]+\E[\Var(m\mid H)]$, and the empirical error against simulated first-passage times is also reported.
+
+\begin{table}
+\caption{Physics-constrained bound. $\mathcal E_{\rm ale}$, $\mathcal E_{\rm epi}$: aleatoric and epistemic terms (cycles$^2$); $I$ in nats; errors in cycles.}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{results/tab_exp2}}
+\label{tab:exp2}
+\end{table}
+
+\begin{figure}[!tb]
+\centering
+\includegraphics[width=\textwidth]{figs/fig_bound}
+\caption{Physics-constrained bound as the HI loses information (decreasing $\eta_m$). (a) RMSE of the bounds and estimators. (b) Epistemic term; the shaded area is the non-Gaussianity gap.}
+\label{fig:bound}
+\end{figure}
+
+The aleatoric term is constant ($\approx63.8$ cycles$^2$), whereas the epistemic term grows as $\eta_m$ falls from $1$ to $0.38$. The pointwise bound stays below the Bayes-optimal error at every noise level (RMSE $11.8$ against $12.3$ cycles for $\varsigma=0$, and $18.1$ against $19.6$ for $\varsigma=32$). The exact epistemic variance exceeds the pointwise value because the posterior of $m$ is not Gaussian; the mean KL divergence in Proposition~\ref{prop:gap} is about $0.07$ nats at $\varsigma=0$. The marginal density (\ref{eq:mixig}) of Section~\ref{sec:pgib}, which mixes the inverse-Gaussian law over the Gaussian drift, agrees with numerical integration of the mixture to within $0.31\%$. The entropy estimates carry Monte Carlo error that we did not quantify, so gaps of a few per cent should not be over-interpreted.
+
+\section{Scalar indicators at the trajectory level}
+\label{sec:angular}
+Theorem~\ref{thm:physics} concerns the information budget of an arbitrary HI. We now ask what a \emph{scalar}, \emph{static} HI loses when the degradation velocity varies in time. The loss has the same $\sin^2$ structure as the projection-misalignment loss at the snapshot level in \cite{anon2026a}, but it acts along the \emph{temporal} direction (level versus velocity).
+
+\paragraph{Setting.} Let $\mathbf z=(D_t,V_t)^\top$ be the level and the velocity at inspection time $t$, with Gaussian prior $\mathcal N(\mathbf z_0,\boldsymbol\Sigma)$, observed through $\mathbf{X}_{1:t}$ in a linear-Gaussian model (for example the local-linear-trend state space \cite{harvey1989,durbin2012} of Section~\ref{sec:paradoxnum} with Gaussian sensor noise). The posterior is $\mathcal N(\hat{\mathbf z},\mathbf P)$ where $\hat{\mathbf z}=\E[\mathbf z\mid\mathbf{X}_{1:t}]$ and $\mathbf P$ does not depend on the data (as for the covariance recursion of the Kalman filter \cite{kalman1960,durbin2012}); $\hat{\mathbf z}\sim\mathcal N(\mathbf z_0,\boldsymbol\Lambda)$ with $\boldsymbol\Lambda=\boldsymbol\Sigma-\mathbf P\succ0$ (law of total variance \cite[Sect.~1.5.5]{bishop2006}), and $\hat{\mathbf z}$ is a sufficient statistic of $\mathbf{X}_{1:t}$ for $\mathbf z$. The target is the frozen-velocity RUL $m(\mathbf z)=(D_{\rm fail}-D_t)/V_t$. At the operating point $\hat{\mathbf z}$ its gradient is
+\begin{equation}
+\mathbf g=\nabla m(\hat{\mathbf z})=-\frac{1}{\hat V_t}\Big(1,\ \frac{a}{\hat V_t}\Big)^{\!\top},\qquad a=D_{\rm fail}-\hat D_t,
+\end{equation}
+and $m_L(\mathbf z)=m(\hat{\mathbf z})+\mathbf g^\top(\mathbf z-\hat{\mathbf z})$ is the linearised target. A scalar HI built from the sufficient statistic is $h_{\mathbf u}=\mathbf u^\top\hat{\mathbf z}$. Define the signal-to-noise ratio $\rho=\mathbf g^\top\boldsymbol\Lambda\mathbf g/\mathbf g^\top\mathbf P\mathbf g$ and the $\boldsymbol\Lambda$-angle $\psi\in[0,\pi/2]$ between $\mathbf g$ and $\mathbf u$,
+\begin{equation}
+\cos\psi=\frac{|\mathbf g^\top\boldsymbol\Lambda\mathbf u|}{\sqrt{(\mathbf g^\top\boldsymbol\Lambda\mathbf g)(\mathbf u^\top\boldsymbol\Lambda\mathbf u)}}.
+\end{equation}
+
+\begin{lemma}[Reduction to functionals of $\hat{\mathbf z}$]
+\label{lem:reduce}
+For every scalar linear functional $w^\top\mathbf{X}_{1:t}$ there is $\mathbf u$ such that $\mathrm{corr}(m_L,w^\top\mathbf{X})^2\le\mathrm{corr}(m_L,\mathbf u^\top\hat{\mathbf z})^2$. Hence no scalar linear HI is more informative about $m_L$ than the best $h_{\mathbf u}$. Here $\mathrm{corr}$ denotes the correlation coefficient.
+\end{lemma}
+\begin{proof}
+Let $\mathbf C=\mathrm{Cov}(\mathbf z,\mathbf{X})$ and $\mathbf V=\Var(\mathbf{X})$, so $\hat{\mathbf z}=\mathbf z_0+\mathbf C\mathbf V^{-1}(\mathbf{X}-\E\mathbf{X})$ and $\boldsymbol\Lambda=\mathbf C\mathbf V^{-1}\mathbf C^\top$. Put $\mathbf u=\boldsymbol\Lambda^{-1}\mathbf Cw$. Then $\mathrm{Cov}(\hat{\mathbf z},w^\top\mathbf{X})=\mathbf C\mathbf V^{-1}\mathbf Vw=\mathbf Cw=\boldsymbol\Lambda\mathbf u$, so $w^\top\mathbf{X}=\mathbf u^\top\hat{\mathbf z}+e$ with $e$ uncorrelated with $\hat{\mathbf z}$ and, since $\mathrm{Cov}(\mathbf z,w^\top\mathbf{X})=\mathbf Cw=\boldsymbol\Lambda\mathbf u=\mathrm{Cov}(\mathbf z,\mathbf u^\top\hat{\mathbf z})$, also uncorrelated with $\mathbf z$. Therefore $\mathrm{Cov}(m_L,w^\top\mathbf{X})=\mathrm{Cov}(m_L,\mathbf u^\top\hat{\mathbf z})=\mathbf g^\top\boldsymbol\Lambda\mathbf u$ while $\Var(w^\top\mathbf{X})=\mathbf u^\top\boldsymbol\Lambda\mathbf u+\Var(e)\ge\Var(\mathbf u^\top\hat{\mathbf z})$, which gives the claim.
+\end{proof}
+
+\begin{theorem}[Angular loss law]
+\label{thm:angular}
+In the setting above, for every $\mathbf u\ne0$:\\
+(a) $\Var(m_L\mid h_{\mathbf u})=\mathbf g^\top\mathbf P\mathbf g+(\mathbf g^\top\boldsymbol\Lambda\mathbf g)\sin^2\psi$.\\
+(b) For the linearised target, with $I(m_L;\mathbf{X}_{1:t})=\tfrac12\ln(1+\rho)$,
+\begin{equation}
+\frac{\Binfo(h_{\mathbf u})}{\mathcal B_{\min}}=1+\rho\sin^2\psi,\qquad \eta_m(h_{\mathbf u})=1-\frac{\ln(1+\rho\sin^2\psi)}{\ln(1+\rho)} .
+\end{equation}
+(c) $\eta_m(h_{\mathbf u})=1$ if and only if $\mathbf u\parallel\mathbf g$; the HI $h_{\mathbf g}=\mathbf g^\top\hat{\mathbf z}$ is information-lossless for $m_L$ and is, by Lemma~\ref{lem:reduce}, the best scalar linear HI of $\mathbf{X}_{1:t}$.
+\end{theorem}
+\begin{proof}
+(a) Because $\mathbf z=\hat{\mathbf z}+\boldsymbol\varepsilon$ with $\boldsymbol\varepsilon\sim\mathcal N(0,\mathbf P)$ independent of $\hat{\mathbf z}$, we have $\mathrm{Cov}(\mathbf z,\hat{\mathbf z})=\boldsymbol\Lambda$ and $\Var(\mathbf g^\top\mathbf z)=\mathbf g^\top\boldsymbol\Sigma\mathbf g=\mathbf g^\top\boldsymbol\Lambda\mathbf g+\mathbf g^\top\mathbf P\mathbf g$. The pair $(\mathbf g^\top\mathbf z,h_{\mathbf u})$ is jointly Gaussian with $\mathrm{Cov}=\mathbf g^\top\boldsymbol\Lambda\mathbf u$ and $\Var(h_{\mathbf u})=\mathbf u^\top\boldsymbol\Lambda\mathbf u$, so the Gaussian conditioning formula \cite[Sect.~2.3]{bishop2006} gives
+$\Var(m_L\mid h_{\mathbf u})=\mathbf g^\top\boldsymbol\Lambda\mathbf g+\mathbf g^\top\mathbf P\mathbf g-(\mathbf g^\top\boldsymbol\Lambda\mathbf u)^2/(\mathbf u^\top\boldsymbol\Lambda\mathbf u)=\mathbf g^\top\mathbf P\mathbf g+\mathbf g^\top\boldsymbol\Lambda\mathbf g\,(1-\cos^2\psi)$.\\
+(b) In the linearised model the conditional law of $m_L$ is Gaussian, so the entropy power equals the variance. Taking the ratio of (a) to the case $h=\hat{\mathbf z}$, for which $\Var(m_L\mid\hat{\mathbf z})=\mathbf g^\top\mathbf P\mathbf g$, gives the first formula. Moreover, by the formula for the mutual information of jointly Gaussian variables \cite[Chap.~8]{cover2006}, $I(m_L;\mathbf{X})=\tfrac12\ln(\Var(m_L)/\mathbf g^\top\mathbf P\mathbf g)=\tfrac12\ln(1+\rho)$ and $I(m_L;h_{\mathbf u})=\tfrac12\ln\big((1+\rho)/(1+\rho\sin^2\psi)\big)$; their ratio is $\eta_m$.\\
+(c) $\sin^2\psi=0$ iff $\boldsymbol\Lambda^{1/2}\mathbf g\parallel\boldsymbol\Lambda^{1/2}\mathbf u$ iff $\mathbf u\parallel\mathbf g$ since $\boldsymbol\Lambda\succ0$. For $\mathbf u=\mathbf g$ the loss vanishes, and Lemma~\ref{lem:reduce} shows that no scalar linear functional of $\mathbf{X}$ can do better.
+\end{proof}
+
+\begin{corollary}[No static scalar HI is optimal over the whole life]
+\label{cor:rotation}
+Let $\mathbf g_1,\mathbf g_2$ be the gradients at two inspection stages with information matrices $\boldsymbol\Lambda_1,\boldsymbol\Lambda_2$ and ratios $\rho_1,\rho_2>0$. If $\mathbf g_1\not\parallel\mathbf g_2$, then for every fixed $\mathbf u$ the bound is inflated at one of the two stages, $\max_j\rho_j\sin^2\psi_j(\mathbf u)\ge\delta>0$, where $\delta$ depends only on $(\mathbf g_j,\boldsymbol\Lambda_j,\rho_j)$. If $\boldsymbol\Lambda_1=\boldsymbol\Lambda_2$, then $\delta\ge\min_j\rho_j\,\sin^2(\psi_{12}/2)$ with $\psi_{12}$ the $\boldsymbol\Lambda$-angle between $\mathbf g_1$ and $\mathbf g_2$. A phase-adaptive HI $h_t=\mathbf g_t^\top\hat{\mathbf z}_t$ has no inflation at any stage.
+\end{corollary}
+\begin{proof}
+By Theorem~\ref{thm:angular}(c), inflation at stage $j$ vanishes only for $\mathbf u\parallel\mathbf g_j$, so it vanishes at both stages only if $\mathbf g_1\parallel\mathbf g_2$. The map $\mathbf u\mapsto\max_j\rho_j\sin^2\psi_j(\mathbf u)$ is continuous and positive on the unit circle, hence has a positive minimum $\delta$. For the quantitative statement note that the $\boldsymbol\Lambda$-angle between lines satisfies the triangle inequality $\psi_{12}\le\psi_1+\psi_2$. Indeed, for unit vectors $a,b$ in the $\boldsymbol\Lambda$-inner product the angle $\arccos\langle a,b\rangle$ is the geodesic distance on the unit sphere, which is a metric, and the angle between the lines through $a$ and $b$ is $\min_{s=\pm1}\arccos\langle a,sb\rangle$. Choose the sign of the representative of $\mathbf u$ so that its angle to the representative of $\mathbf g_1$ is $\psi_1$, then the sign of the representative of $\mathbf g_2$ so that its angle to that of $\mathbf u$ is $\psi_2$; the spherical triangle inequality bounds the angle between the representatives of $\mathbf g_1$ and $\mathbf g_2$ by $\psi_1+\psi_2$, and $\psi_{12}$ is not larger. Therefore $\max_j\psi_j\ge\psi_{12}/2$ and $\sin^2$ is increasing on $[0,\pi/2]$. The last sentence is Theorem~\ref{thm:angular}(c) applied at each stage.
+\end{proof}
+
+\begin{corollary}[Rotation of the optimal weights]
+\label{cor:weights}
+In the coordinates $(D_t,V_t)$ the optimal direction is $\mathbf g_t\propto(1,\hat\tau_t)^\top$ with $\hat\tau_t=a_t/\hat V_t$ the current frozen-velocity RUL (in steps). The optimal scalar HI therefore weights the velocity estimate $\hat\tau_t$ times more than the level estimate; the weight moves from the velocity (early life, $\hat\tau_t$ large) to the level (end of life, $\hat\tau_t\to0$), and the Euclidean angle between the optimal directions at RULs $\tau_1,\tau_2$ is $|\arctan\tau_1-\arctan\tau_2|$.
+\end{corollary}
+Corollary~\ref{cor:weights} explains why an indicator built from a level-like feature, for example the first principal component of cumulative-damage features, loses information early in life, and why a velocity-like feature loses it late in life. It is the temporal counterpart of the snapshot-level rotation of the signal direction. It also motivates the predictor of Section~\ref{sec:pgib}, which uses both the smoothed HI level and its windowed slope: this pair estimates the two-dimensional sufficient statistic $\hat{\mathbf z}$.
+
+
+\subsection{Numerical check}
+\label{sec:angnum}
+The model is the local linear trend of Section~\ref{sec:paradoxnum} with the raw sensor and $D_{\rm fail}=200$. The posterior of $\mathbf z=(D_t,V_t)$ is Gaussian, and $\boldsymbol\Lambda$ is strongly anisotropic (eigenvalues $0.004$ and $204$). For each of $500$ units, the exact entropy power of the \emph{nonlinear} target $m=(D_{\rm fail}-D_t)/V_t$ given $h_{\mathbf u}$ is estimated from the exact conditional Gaussian of $\mathbf z$ ($2000$ draws, Vasicek estimator) and compared with $1+\rho\sin^2\psi$ evaluated at each unit's own gradient. As a sanity check, in the constant-drift model of Section~\ref{sec:physnum}, $\boldsymbol\Lambda$ is effectively of rank one and the predicted inflation is $1.000$ for every $\mathbf u$ (Monte Carlo: $1.000$ to $1.003$), as the remark after Theorem~\ref{thm:physics} implies.
+
+\begin{table}
+\caption{Inflation of the bound at $t=50$: prediction (Theorem~\ref{thm:angular}) against Monte Carlo, mean over $500$ units. The static HI uses the gradient at the prior mean.}
+\centering\small
+\input{results/tab_exp3}
+\label{tab:exp3}
+\end{table}
+
+\begin{figure}[!tb]
+\centering
+\includegraphics[width=\textwidth]{figs/fig_angular}
+\caption{Angular loss law for scalar HIs. (a) Inflation of the bound: prediction (lines) and Monte Carlo (markers). (b) Angle to the optimal direction $\mathbf g_t$. (c) Information efficiency $\eta_m$. The static HI is aligned at $t^\ast=50$.}
+\label{fig:angular}
+\end{figure}
+
+At $t=50$ the predicted inflation agrees with the Monte Carlo value to within $1\%$ for all four indicators (Table~\ref{tab:exp3}). Figure~\ref{fig:angular} illustrates Corollary~\ref{cor:rotation}: the static HI aligned at $t^\ast=50$ is lossless at $t=25$ and $50$ but inflates the bound by $40\%$ at $t=75$, the level-only HI by $33$ to $36\%$ and the velocity-only HI by a factor of $5$, whereas the phase-adaptive HI shows no inflation at any stage.
+
+\subsection{Regime leakage}
+\label{sec:regimeleak}
+When the sensors are recorded under several operating regimes, the sensor responds to the degradation with a regime-dependent offset and gain, whereas the degradation process itself is the same. The following statement quantifies what a regime-blind read-out loses.
+
+\begin{proposition}[Regime leakage floor]
+\label{prop:regime}
+Let a latent level $D$ with mean $\bar d$ and variance $v$ be observed through a sensor as $x=a_rD+b_r+\varepsilon$, where the regime $r$ takes $R$ values with probabilities $\pi_r$ independently of $D$ and of the noise $\varepsilon$ (variance $\sigma^2$); $a_r$ and $b_r$ are the gain and offset of regime $r$. Put $\bar a=\E a_r$, $V_x=\E[a_r^2]\E[D^2]-(\bar a\bar d)^2+\Var(b_r)+2\bar d\,\mathrm{Cov}(a_r,b_r)+\sigma^2$. The best regime-blind linear read-out of $D$ from $x$ has mean squared error
+\begin{equation}
+\mathrm{MSE}_{\rm blind}=v-\frac{\bar a^2v^2}{V_x},\qquad\text{and}\qquad \mathrm{MSE}_{\rm blind}\xrightarrow[\sigma\to0]{}\ \frac{v\,[\Var(a_r)\,v+\Var(\bar d a_r+b_r)]}{\bar a^2v+\Var(a_r)\,v+\Var(\bar d a_r+b_r)}\ >0
+\end{equation}
+unless the regimes agree in $a_r$ and in $\bar d a_r+b_r$, whereas a read-out that knows the regime has $\mathrm{MSE}_{\rm aware}=\sigma^2\sum_r\pi_r/a_r^2\to0$.
+\end{proposition}
+\begin{proof}
+Because $D$ and $r$ are independent, $\mathrm{Cov}(D,x)=\bar a\,v$, and $\Var(x)=\Var(a_rD)+\Var(b_r)+2\bar d\,\mathrm{Cov}(a_r,b_r)+\sigma^2=V_x$, since $\mathrm{Cov}(a_rD,b_r)=\bar d\,\mathrm{Cov}(a_r,b_r)$ and $\Var(a_rD)=\E[a_r^2]\E[D^2]-(\bar a\bar d)^2$; the best linear predictor of $D$ from $x$ has error $v-\mathrm{Cov}(D,x)^2/\Var(x)$ (the conditional variance of a Gaussian pair with the same second moments \cite[Sect.~2.3]{bishop2006}). For the limit use $\E[a_r^2]\E[D^2]-(\bar a\bar d)^2=\bar a^2v+\Var(a_r)(v+\bar d^2)$ and $\Var(a_r)\bar d^2+\Var(b_r)+2\bar d\mathrm{Cov}(a_r,b_r)=\Var(\bar d a_r+b_r)$, so that at $\sigma=0$, $V_x=\bar a^2v+\Var(a_r)v+\Var(\bar d a_r+b_r)$. Given the regime, the read-out $(x-b_r)/a_r$ is unbiased with variance $\sigma^2/a_r^2$.
+\end{proof}
+Normalising the sensors within each regime removes the regime offsets but not the regime-dependent gains, so the floor remains. In a numerical example with six regimes ($a_r\in[0.6,1.6]$, $b_r\in[-0.5,0.6]$, $v=0.08$), the formula and a simulation agree on $\mathrm{MSE}_{\rm blind}=0.060$ at $\sigma=0$, so that only $25\%$ of $\Var(D)$ is explained, whereas the regime-aware read-out has an error that tends to zero (Figure~\ref{fig:regime}).
+\begin{figure}[!tb]
+\centering
+\includegraphics[width=\textwidth]{figs/fig_regime}
+\caption{Regime leakage in the six-regime example. (a) Sensor read-out against latent level for each regime. (b) Error of the regime-blind and regime-aware read-outs: formula (lines) and simulation (markers).}
+\label{fig:regime}
+\end{figure}
+
+
+\section{Consequences for estimators}
+\label{sec:pgib}
+The results above concern information budgets and the structure of scalar indicators. This section derives what they imply for RUL estimators and describes the estimators used in the empirical assessment. The path-space objective and the error-accumulation result follow from the theory; the architectures and the calibration are design choices.
+
+\subsection{Path-space objective}
+We seek a causal stochastic encoder, the \emph{physics-guided information bottleneck} (PGIB), $q_\theta(H_{1:t}\mid\mathbf{X}_{1:t})=\prod_{k=1}^{t}q_\theta(H_k\mid H_{k-1},\mathbf{X}_{1:k})$, whose increments are Gaussian, $\mathcal N\big(H_{k-1}+u_\theta(\mathbf{X}_{1:k})\Delta t,\;s_\theta^2(\mathbf{X}_{1:k})\Delta t\big)$, with a positive velocity $u_\theta$ (enforced by a softplus output) and a variance $s_\theta^2$. The encoder is regularised towards a physics prior $p_\vartheta(H_{1:t})=\prod_k\mathcal N\big(H_{k-1}+\eta(H_{k-1};\vartheta)\Delta t,\;\sigma_B^2\Delta t\big)$, $H_0\equiv0$, where $\Delta t$ is the time step, $\eta$ a state-dependent drift with parameters $\vartheta$, and $\sigma_B$ the diffusion coefficient.
+
+\begin{proposition}[Compression bound and path-space KL]
+\label{prop:kl}
+For any prior $p_\vartheta$, $I(\mathbf{X}_{1:t};H_{1:t})\le \E_{\mathbf{X}}\big[D_{\rm KL}(q_\theta(H_{1:t}\mid\mathbf{X}_{1:t})\,\|\,p_\vartheta(H_{1:t}))\big]$, and for the Gaussian factorisation above the divergence is exactly
+\begin{equation}
+D_{\rm KL}=\frac12\sum_{k=1}^{t}\E_{q_\theta(H_{k-1}\mid\mathbf{X}_{1:k-1})}\!\left[\frac{s_\theta^2}{\sigma_B^2}-1-\ln\frac{s_\theta^2}{\sigma_B^2}+\frac{(u_\theta-\eta(H_{k-1};\vartheta))^2\,\Delta t}{\sigma_B^2}\right].
+\end{equation}
+\end{proposition}
+\begin{proof}
+The first claim is the standard variational upper bound of the information bottleneck \cite{tishby2000,alemi2017,poole2019}: $I(\mathbf{X};H)=\E_{\mathbf{X}}D_{\rm KL}(q(H\mid\mathbf{X})\|q(H))\le\E_{\mathbf{X}}D_{\rm KL}(q(H\mid\mathbf{X})\|p(H))$ because the difference is $D_{\rm KL}(q(H)\|p(H))\ge0$. The chain rule of the KL divergence \cite[Sect.~2.5]{cover2006} over the causal factorisation gives $\sum_k\E_{q(H_{k-1}\mid\cdot)}D_{\rm KL}(q(H_k\mid H_{k-1},\mathbf{X}_{1:k})\|p_\vartheta(H_k\mid H_{k-1}))$, and the Gaussian KL with means differing by $(u_\theta-\eta)\Delta t$ and variances $s_\theta^2\Delta t$, $\sigma_B^2\Delta t$ yields the summand (the Gaussian KL of the variational autoencoder \cite{kingma2014}).
+\end{proof}
+The training objective is $\mathcal{L}_{\rm PGIB}=\mathcal{L}_{\rm FHT}+\beta\,D_{\rm KL}$, where $\beta$ weights the compression term and $\mathcal{L}_{\rm FHT}$ is the negative log-likelihood of the observed failure time under the predictive law below, a variational surrogate for $-I(T_t;H_{1:t})$ in the sense of \cite{alemi2017} (Algorithm~1 in Appendix~\ref{app:data}).
+
+\subsection{Predictive law}
+Let the posterior of the unit's drift $\mu$ given the HI increments be $\mathcal N(\hat\mu_t,\sigma_{\mu,t}^2)$ (conjugate update). Marginalising the inverse-Gaussian law over $\mu$ (a Gaussian integral; random-drift Wiener models are treated in \cite{gebraeel2005,wang2010}) gives
+\begin{equation}
+p(T_t=\tau\mid H_{1:t})=\frac{a}{\sqrt{2\pi\tau^3(\sigma_B^2+\sigma_{\mu,t}^2\tau)}}\exp\!\left(-\frac{(a-\hat\mu_t\tau)^2}{2\tau(\sigma_B^2+\sigma_{\mu,t}^2\tau)}\right),\qquad a=D_{\rm fail}-\hat D_t .
+\label{eq:mixig}
+\end{equation}
+Here $\sigma_B^2$ is the aleatoric and $\sigma_{\mu,t}^2\tau$ the epistemic contribution to the effective diffusion; as $t$ grows $\sigma_{\mu,t}^2\to0$ and (\ref{eq:mixig}) reduces to the inverse-Gaussian law. It is a defective density, the missing mass being the probability of a non-positive drift, and $\hat D_t$ is the filtered state rather than the raw HI value, which avoids the degeneracies of non-monotone paths. The law was checked against numerical integration of the mixture (Section~\ref{sec:physnum}).
+
+\subsection{Observation-corrected and regime-aware encoders}
+\label{sec:kf}
+The encoder above integrates a positive velocity, $H_k=H_{k-1}+u_\theta\Delta t+\dots$, so nothing anchors the level to the observations. Section~\ref{sec:angular} treats the level and the velocity as latent quantities, and the level must be re-estimated from the sensors at every step; this is the measurement update of a Kalman filter \cite{kalman1960}. The observation-corrected encoder, PGIB-KF (KF: Kalman filter), therefore adds a level read-out $l_k=f_l(\mathbf h_k)$ and a learned gain $\omega_k=\sigma(f_\omega(\mathbf h_k))\in(0,1)$ to the encoder features $\mathbf h_k$,
+\begin{equation}
+H_k=(1-\omega_k)\big(H_{k-1}+u_k+s_k\epsilon_k\big)+\omega_k\,l_k .
+\end{equation}
+Given $H_{k-1}$ this is again a Gaussian transition with drift $u^{\rm eff}_k=(1-\omega_k)u_k+\omega_k(l_k-H_{k-1})$ and standard deviation $s^{\rm eff}_k=(1-\omega_k)s_k$, so Proposition~\ref{prop:kl} applies unchanged: the bottleneck now prices the use of the observation beyond what the physics prior allows ($\beta\to\infty$ gives $\omega\to0$, a pure integrator). The HI is no longer monotone by construction.
+
+\begin{proposition}[Error accumulation without observation correction]
+\label{prop:accum}
+Let the velocity estimate carry the error $e_j=b+w_j$ with a unit-specific persistent bias $b$ and white noise $w_j$ of variance $\sigma_w^2$, and let the level read-out carry independent zero-mean noise of variance $\sigma_n^2$. For the pure integrator ($\omega=0$) the level error after $t$ steps has mean $tb$ and variance $t\sigma_w^2$, both unbounded in $t$. For a constant gain $\omega\in(0,1]$ the level error converges to a stationary law with
+\begin{equation}
+\E\,\varepsilon_\infty=\frac{(1-\omega)\,b}{\omega},\qquad \Var\,\varepsilon_\infty=\frac{(1-\omega)^2\sigma_w^2+\omega^2\sigma_n^2}{\omega(2-\omega)} .
+\end{equation}
+\end{proposition}
+\begin{proof}
+The level error obeys $\varepsilon_k=(1-\omega)(\varepsilon_{k-1}+e_k)+\omega n_k$ with $\varepsilon_0=0$; write $\alpha=1-\omega$. For $\omega=0$, $\varepsilon_t=\sum_{j\le t}e_j$ has mean $tb$ and variance $t\sigma_w^2$. For $\omega>0$ the mean satisfies $m_k=\alpha(m_{k-1}+b)$, with fixed point $\alpha b/(1-\alpha)=(1-\omega)b/\omega$ approached geometrically, and the variance $v_k=\alpha^2v_{k-1}+\alpha^2\sigma_w^2+\omega^2\sigma_n^2$ (independent noise terms) has fixed point $(\alpha^2\sigma_w^2+\omega^2\sigma_n^2)/(1-\alpha^2)$ with $1-\alpha^2=\omega(2-\omega)$.
+\end{proof}
+A simulation ($b=0.01$, $\sigma_w=0.02$, $\sigma_n=0.15$, $400$ steps, $2\times10^5$ paths) agrees with both expressions (for $\omega=0$ the bias is $4.00=tb$; for $\omega=0.2$ the bias and variance are $0.0399$ and $0.00321$ against $0.04$ and $0.00321$). A constant gain amounts to exponential smoothing, the steady state of the local-level filter \cite{harvey1989,durbin2012}. A persistent velocity bias is the generic situation when units differ in initial offset or wear, and it is the mechanism that we diagnose for the integrating encoder on the turbofan data (Section~\ref{sec:empirical}).
+
+By Proposition~\ref{prop:regime}, a regime-blind read-out has an error floor, and per-regime normalisation removes the offsets but not the gains. The regime-aware variant, \emph{PGIB-KFR}, therefore places the regime in the \emph{observation} model, where the proposition locates it. The process model is shared, whereas the read-out $l_k$ and the gain $\omega_k$ use regime-specific linear heads on the encoder features, $l_k=\mathbf h_k^\top\mathbf W^{l}_{r_k}+b^{l}_{r_k}$ and $\omega_k=\sigma(\mathbf h_k^\top\mathbf W^{\omega}_{r_k}+b^{\omega}_{r_k})$, where $r_k$ is the regime, which is also an input of the encoder. The regimes are the clusters of the standardised operating settings. With a single regime PGIB-KFR reduces to PGIB-KF, which we check on the single-regime subsets.
+
+\subsection{Calibrated predictive law with age fusion}
+\label{sec:fusion}
+Because the age is always known (Proposition~\ref{prop:age}), the HI-based law $p_{\rm HI}(\tau)$, which is (\ref{eq:mixig}) with diffusion $c\,v_t$ and drift variance $c\,v_t/w_t$, is pooled log-linearly \cite{genest1986,hinton2002} with an age law. Here $v_t$ is the variance of the HI increments over the trailing window of length $w_t$ for non-learned HIs and the learned $\sigma_B^2$ for the bottleneck models, and $c>0$ is a calibration multiplier. The age law is $p_{\rm age}(\tau\mid t)=f_L(t+\tau)/S_L(t)$, the log-normal lifetime density \cite{meeker1998} fitted on training lifetimes (log-scale floor $0.15$) conditioned on survival to age $t$. The pooled law is
+\begin{equation}
+p(\tau)\;\propto\;p_{\rm HI}(\tau)^{w_{\rm h}}\;p_{\rm age}(\tau\mid t)^{w_{\rm a}},\qquad (c,w_{\rm h},w_{\rm a})\in\mathcal G,
+\end{equation}
+on a finite grid $\mathcal G$ ($c\in[10^{-2},10^{2}]$ on a log scale, ten pairs $(w_{\rm h},w_{\rm a})$ including $(1,0)$ and $(0,1)$). The parameters minimise the negative log-likelihood of the true RUL, a strictly proper scoring rule \cite{gneiting2007}, on HI paths produced \emph{out of sample}: each HI construction is fitted on all but one training unit and applied to the left-out unit; the test unit is never used. The family contains the plain HI law and the age-only law, so in-sample the pooled law cannot do worse than either. Weights below one temper the corresponding law and widen the predictive interval, which the otherwise under-covering plain law requires. The pooling is a calibration device, not a Bayes-exact fusion, which would also require conditional independence of the HI and the age given the RUL, and division by the marginal law of the RUL. The same predictor is used for every HI, and a variant without fusion ($w_{\rm a}=0$) is reported for each HI, so that the effects of the HI and of the fusion can be separated.
+
+\section{Empirical assessment}
+\label{sec:empirical}
+The theory makes four predictions that real run-to-failure data can test. (i) The baseline for an HI is the RUL given the age, so a sensor-free predictor that uses only the age should be competitive when the sensors are weak (Proposition~\ref{prop:age}). (ii) An integrating encoder accumulates error and an observation-corrected one does not (Proposition~\ref{prop:accum}). (iii) Learned encoders have a training variance that must be measured before differences between HIs are interpreted. (iv) The error of a predictor certifies a bound on the information that its HI retains, which is vacuous when the error is large (Proposition~\ref{cor:cert}).
+
+\paragraph{Design.} The data are battery cells from the NASA Prognostics Center of Excellence (PCoE) and from the Center for Advanced Life Cycle Engineering (CALCE, CS2 cells, in sets of four and six); bearings from the FEMTO-ST institute (PRONOSTIA, conditions 1 to 3) and from the NASA Center for Intelligent Maintenance Systems (IMS); and the four subsets FD001 to FD004 of the Commercial Modular Aero-Propulsion System Simulation (C-MAPSS) turbofan data, of which FD001 and FD003 have one operating regime and FD002 and FD004 six. Three simple HIs are compared with three learned encoders. The simple HIs are the first principal component (PCA-HI), a linear combination optimised for the sum of the geometric criteria monotonicity, trendability and prognosability (Geo-opt HI), and a supervised ridge regression (ridge HI). The learned encoders are a $\beta$-variational autoencoder ($\beta$-VAE), a variational information bottleneck without physics prior (VIB), and the PGIB of Section~\ref{sec:pgib} with its Kalman-corrected (PGIB-KF) and regime-aware (PGIB-KFR) variants. All HIs feed the \emph{same} calibrated predictor of Section~\ref{sec:fusion}. Evaluation is leave-one-unit-out for the small sets and uses the official test engines for C-MAPSS. Data, protocols, their history and the evidence tiers (which results are clean confirmations and which are development results) are given in Appendix~\ref{app:data}, and full tables in Appendix~\ref{app:results}.
+
+\paragraph{Age and few training units (prediction i).} With two to six training units, the age law has the lowest RMSE on both FEMTO conditions, a simple HI on three sets, the PGIB on one (four-cell CALCE) and the $\beta$-VAE on one (FEMTO condition 3). The age law is within a factor of $1.5$ of the best method on six of the seven sets (Figure~\ref{fig:small}). On C-MAPSS the sensors are far more informative: the age law has an RMSE of $36.6$ to $54.7$ cycles, against $21.8$ to $29.7$ for the best simple HI. The age law is thus a strong baseline where the sensors are weak, and it must be reported.
+
+\begin{figure}[!tb]
+\centering
+\includegraphics[width=\textwidth]{figs/fig_small}
+\caption{RMSE of the compared HIs on the seven small data sets (cycles for batteries, $10$~s snapshots for bearings). Colour: ratio to the age law; frame: lowest value of each row; $^\ast$: sets not used in the design.}
+\label{fig:small}
+\end{figure}
+
+\paragraph{Error accumulation and its repair (prediction ii).} With $80$ to $208$ training engines, the integrating encoder is well behind the simple HIs and no better than the age law on FD001 to FD003 (single-model RMSE $34.8$ to $48.7$). The observation-corrected PGIB-KF reduces the RMSE to $23.8$--$40.7$ for a single model and to $21.3$--$35.8$ for a ten-seed ensemble (Table~\ref{tab:var10}). The deficit is therefore not caused by the bottleneck objective, which is the same in both models, but by the missing anchoring of the level.
+
+\paragraph{Training variance (prediction iii).} A single learned encoder varies from seed to seed by $2.2$ to $7.6$ RMSE units, as much as the differences between competing HIs (Figure~\ref{fig:cmapss}), which calls for variance-aware comparisons \cite{bouthillier2021}. A three-seed ensemble on FD003 suggested that PGIB-KF beats the best simple HI ($19.4$ against $21.9$), but with ten seeds \cite{lakshminarayanan2017} the difference disappears ($23.3$; paired difference $+1.4$, interval $-1.6$ to $4.5$). With ten seeds, the ensembles of the observation-corrected encoders are statistically tied with the best simple or supervised HI on all four subsets, except PGIB-KF on FD004, where it is worse, and they are never significantly better. The regime-aware variant is not shown to help: it is worse than PGIB-KF with a single regime and better only on FD004, where the difference is not significant.
+
+\begin{table}
+\caption{C-MAPSS, ten seeds per learned encoder. Single: RMSE, mean $\pm$ standard deviation over seeds; ens.\ 10: ten-seed ensemble; last column: paired difference of PGIB-KF from the best simple HI with $95\%$ bootstrap interval over engines \cite{efron1993}.}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{results/tab_var10}}
+\label{tab:var10}
+\end{table}
+
+\begin{figure}[!tb]
+\centering
+\includegraphics[width=\textwidth]{figs/fig_cmapss}
+\caption{C-MAPSS test RMSE. Squares: deterministic HIs; dots: single models of each learned encoder; bars: mean and standard deviation; diamonds: ten-seed ensembles; dotted line: best simple or supervised HI.}
+\label{fig:cmapss}
+\end{figure}
+
+\paragraph{Certificates (prediction iv).} The certified information is vacuous for NASA, the FEMTO conditions and, with one exception, IMS. It is positive only on CALCE, where the PGIB certifies $0.60$ nats against $0.41$ for the age law with four cells (Appendix~\ref{app:results}). Because the age alone already certifies information, the data do not show that the learned HIs retain much more than the age on these small sets.
+
+\section{Discussion and conclusions}
+\label{sec:disc}
+\paragraph{Theory.} The paper gives bounds, identities and laws for the information that an HI can retain about the RUL. The entropy-power bound lies below the Bayes-optimal error in every simulated case, and the gap equals the weighted non-Gaussianity of the posterior. A squeeze loses state information while monotonicity saturates, so geometric scores do not measure what matters. The error splits into an aleatoric floor, independent of the HI, and an epistemic term that grows with the information lost. A static scalar HI inflates the bound by $1+\rho\sin^2\psi$, in agreement with Monte Carlo to within one to three per cent, so that no static scalar HI is optimal over the whole life, and a regime-blind read-out keeps an error floor. These statements concern budgets and structure; they do not say that a particular encoder reaches the budget, nor do they rank encoders.
+
+\paragraph{Design implications and empirical findings.} The theory suggests four design rules: keep the age in the baseline and the predictor (Proposition~\ref{prop:age}); complement a scalar HI with estimates of level and velocity (Corollary~\ref{cor:weights}), as the windowed slope does in our predictor; anchor the level of an encoder to the observations (Proposition~\ref{prop:accum}); and let the observation model depend on the regime (Proposition~\ref{prop:regime}). The experiments confirm the first and the third. They neither confirm nor refute the fourth, because the effect of the regime-aware encoder is within the training variability. No learned encoder is superior to simple indicators: with two to six training units a simple indicator or the age law is best on five of seven sets, and with $80$ or more training engines a ten-seed ensemble of the observation-corrected encoder is tied with the best simple or supervised HI. The practical value of the bottleneck encoder, which requires ten trainings of a recurrent model to reach a tie, is therefore not established, whereas the theory does not depend on this outcome.
+
+\paragraph{Limitations.} (1) The theory of Section~\ref{sec:angular} is local and Gaussian, and Theorem~\ref{thm:physics} assumes a constant-drift Wiener future; non-Gaussian posteriors, non-constant drift and regime switching are open, and the entropy estimates in the numerical checks have unquantified Monte Carlo error. (2) The efficiency $\etaPIE$ could not be estimated reliably on real data, and the certificate is vacuous for most runs. (3) The regime-aware variant and the variance study were designed after seeing results on the sets used, and no independent multi-regime data set was available (evidence tiers in Appendix~\ref{app:data}). (4) Ensembles of ten encoders are compared with deterministic simple HIs, which favours the encoders in computation. (5) The age fusion and the out-of-sample calibration were introduced after an initial protocol showed under-coverage; they benefit all HIs but are a pragmatic device, not a Bayes-exact fusion. (6) The bearing features are generic time-domain and spectral summaries, and bearing degradation is heterogeneous; physics-based features may change the picture. The extension to snapshot-level projection limits \cite{anon2026a} is left for future work.
+
+\paragraph{Conclusions.} Viewing HI construction as an information budget yields a score that can be computed before any predictor is trained, a certificate that can be computed after one is, and four structural results on what squeezing, scalar projection, regime blindness and integration lose. On batteries, bearings and turbofan engines, the predicted effects are observed, but no learned encoder is superior to simple indicators. The contribution of the paper is the budget, not a new predictor.
+
+\ack{\todo{acknowledgements}}
+\funding{\todo{funding statement}}
+\roles{\todo{CRediT roles}}
+\data{NASA PCoE, NASA IMS, C-MAPSS, CALCE CS2 and FEMTO-ST/PRONOSTIA data are publicly available (NASA Prognostics Data Repository, CALCE Battery Group, IEEE 2012 Prognostics and Health Management data challenge). The simulation and benchmark code, and the result files used to generate all tables and figures, are provided with the manuscript. \todo{state repository / DOI}}
+
+
+
+\appendix
+\section{Data, protocols and evidence tiers}
+\label{app:data}
+\paragraph{Data.} Public run-to-failure collections were used: NASA PCoE cells B0005, B0006, B0007 and B0018 \cite{saha2007}; CALCE CS2 cells \cite{he2011}; the FEMTO-ST/PRONOSTIA bearings \cite{nectoux2012}; the NASA IMS bearings \cite{lee2007,qiu2006}; and the C-MAPSS turbofan engines \cite{saxena2008}. For batteries, the capacity is used only to define the EOL and is never an input. The EOL is the first cycle at which the rolling-median capacity falls to $75\%$ (NASA) or $80\%$ (CALCE) of the initial capacity; an absolute threshold of $1.4$~Ah was not used because cell B0007 never reaches it. The lifetimes are $127$, $73$, $162$ and $100$ cycles (NASA) and $542$, $499$, $572$ and $600$ cycles (CS2\_35 to CS2\_38); the data are truncated at the EOL, and CALCE features are averaged over blocks of $4$ cycles. Six per-cycle features are extracted from the charge and discharge records: constant-current time, constant-voltage time, height and voltage of the incremental-capacity peak, mean discharge temperature (NASA) or voltage drop at discharge onset (CALCE), and the discharge voltage at a fixed time ($600$~s for NASA, $1200$~s for CALCE).
+
+Further cells were screened by inclusion rules fixed before running any model (scripts and outputs are supplied). A NASA cell had to be at $24^\circ$C, have at least $100$ discharge cycles, be discharged at a roughly constant $1.4$ to $2.1$~A, start between $1.5$ and $2.1$~Ah and reach the $75\%$ EOL; only the four cells above qualify. Among the CALCE cells, CS2\_5, 24 and 25 are partial-discharge tests, CS2\_9 is discharged at a rate of $2$C (twice the nominal capacity per hour), and CS2\_3, 6 and 7 are short or follow other protocols, so none was used. CS2\_33 and CS2\_34 have the same chemistry and run to the EOL ($485$ and $479$ cycles) but are discharged at $0.55$~A; they are used only in a separate six-cell experiment, labelled protocol-heterogeneous, and the four-cell set remains the primary one.
+
+For bearings, each run ends at failure, so EOL is the last snapshot. Condition 1 (nominally $1800$~rpm, $4000$~N; Bearing1\_1--1\_7) and condition 2 ($1650$~rpm, $4200$~N; Bearing2\_1--2\_7) are evaluated separately, each with $7$ units from the learning and the full test sets; condition 3 has only $3$ units and was not used. The lifetimes are $2803$, $871$, $2375$, $1428$, $2463$, $2448$, $2259$ snapshots (condition 1) and $911$, $797$, $1955$, $751$, $2311$, $701$, $230$ snapshots (condition 2), each snapshot covering $0.1$~s of $25.6$~kHz acceleration every $10$~s. Eight features are computed per snapshot: logarithm of the root mean square (RMS), kurtosis, crest factor and spectral entropy of the horizontal and of the vertical channel. Features are averaged over blocks of $20$ (condition 1) or $8$ (condition 2) snapshots, and the RUL is reported in snapshots.
+
+Evaluation is leave-one-unit-out: each unit in turn is held out, the remaining units are used for training (three for NASA and four-cell CALCE, five for six-cell CALCE, six for each bearing condition), and metrics are computed at every step in the window $40$--$90\%$ of life and pooled over the held-out units.
+
+
+\paragraph{Further collections.} FEMTO condition 3 ($1500$~rpm, $5000$~N; Bearing3\_1--3\_3, with $515$, $1637$ and $434$ snapshots, block length $10$) and the NASA IMS bearings were kept aside and used only as confirmation sets. For IMS the four bearings that failed (Test~1 bearings 3 and 4, Test~2 bearing 1, Test~3 bearing 3; $2156$, $2156$, $984$ and $6324$ snapshots of $1$~s at $20$~kHz every $10$~min) are used with one accelerometer channel each and four features per snapshot (log RMS, kurtosis, crest factor, spectral entropy), averaged over blocks of $20$ snapshots. For C-MAPSS we use the single-condition subsets FD001 and FD003 ($100$ training engines run to failure and $100$ truncated test engines with the official RUL labels each); the $14$ informative sensors are standardised with training statistics. The $100$ training engines are split by identifier into $80$ engines to fit the HI constructions and $20$ (identifier divisible by five) to select the bottleneck configuration and to calibrate the predictor; the test engines are predicted once at their last observed cycle, and $95\%$ bootstrap intervals are computed over engines. The multi-regime subsets FD002 ($260$ training and $259$ test engines) and FD004 ($249$ and $248$) have six operating regimes; for them the only change is that sensors are standardised within regime, the six regimes being the clusters of the standardised operating settings found on the fitting engines (the clusters recover the six discrete settings exactly), the same preprocessing being applied to every method; the split is by identifier as above, with $208$ and $200$ fitting engines.
+
+\paragraph{Methods.} To isolate the effect of HI construction, every HI is mapped to the same scale (zero at the start of life, one at the EOL) and passed to the same calibrated predictor of Section~\ref{sec:fusion}: the mixed inverse-Gaussian law (\ref{eq:mixig}) with the drift taken from the slope of the smoothed HI over a trailing window of $\max(10,0.25t)$ steps, pooled with the age law. The parameters $(c,w_{\rm h},w_{\rm a})$ are chosen on HI paths that are out of sample for the HI construction (leave-one-training-unit-out for the small sets, the $20$ calibration engines for C-MAPSS). The compared HIs are PCA-HI (first principal component); the Geo-opt HI (linear combination found by differential evolution to maximise the sum of $\Mon$, $\mathrm{Tre}$ and $\mathrm{Pro}$ on the training units); for C-MAPSS, the ridge HI (supervised linear regression of the life fraction on the features); a $\beta$-VAE (causal gated recurrent unit (GRU) encoder, one-dimensional latent variable, Gaussian prior); VIB (the PGIB with a zero-drift prior, that is, without physics); the PGIB (state-dependent drift $\eta(H;\vartheta)=\vartheta_1\exp(\vartheta_2H)$); and PGIB-KF (Section~\ref{sec:kf}). For the bottleneck models, the compression weight $\beta\in\{0.03,0.3,3,30\}$ and the encoder (GRU or causal feed-forward window network) are selected by inner leave-one-training-unit-out validation of the predictive negative log-likelihood, with at most three inner folds when more than five training units are available; for PGIB-KF only $\beta\in\{0.03,0.3,3\}$ is searched. The held-out unit is never used. Learned models use three seeds, and the other HIs are deterministic. The sensor-free reference is the age law $p_{\rm age}$ of Section~\ref{sec:fusion}. The metrics are the RMSE and the mean absolute error (MAE) of the median prediction, the prediction interval coverage probability (PICP) and normalised average width (PINAW) of the $95\%$ interval, and the continuous ranked probability score (CRPS) \cite{gneiting2007}. For C-MAPSS the asymmetric score is $\sum_i(e^{-d_i/13}-1)$ for $d_i<0$ and $\sum_i(e^{d_i/10}-1)$ for $d_i\ge0$, summed over engines, with $d_i$ the predicted minus the true RUL \cite{saxena2008}.
+
+\paragraph{Protocol history and evidence tiers.} The study proceeded in five protocols, which determine how the numbers can be read. P1 (Appendix~\ref{app:p1}) was the first benchmark; it showed that the integrating encoder under-covers and that the age law is competitive. P2 introduced the resulting improvements (out-of-sample calibration, age fusion, a prediction grid independent of the test unit) and was frozen, with the file hash recorded, before it was run on the two confirmation sets (FEMTO condition 3 and IMS) and before the development sets were re-run. On C-MAPSS FD001 the P2 methods showed that the integrating encoder is considerably worse than simple HIs even with $80$ training engines. The diagnosis of Proposition~\ref{prop:accum} led to P3, the observation-corrected PGIB-KF, which was frozen and run once on FD003, a subset not used before, and exploratorily on the small sets. The unchanged P3 model was then frozen with regime-wise preprocessing and run once on FD002 and FD004. (A first launch used only the first $100$ training engines because the identifier list was hard-coded in the script; it was stopped before any result was produced, and the script and the recorded hash were corrected.) After these results, P4 added the regime-aware encoder and a regime-specific ridge baseline and was run once on each subset, the choice between PGIB-KF and PGIB-KFR and of $\beta$ being made on the calibration engines only. Because FD002 and FD004 had already been seen, they are development sets for P4, and no independent multi-regime data set was available (the successor N-CMAPSS has only six to ten units per subset). Finally, because the differences between learned encoders and simple HIs were of the size of the seed-to-seed variability, P5 retrained the learned encoders on the four subsets with ten fresh seeds, keeping architecture, $\beta$ and calibration fixed; it supersedes the three-seed results where they disagree. The evidence tiers are therefore: (i) \emph{clean confirmation}: C-MAPSS FD003, FD002 and FD004 for P3 (not for P4), and FEMTO condition 3 and IMS for P2 (not for P3, whose idea followed their P2 results); (ii) \emph{development}: NASA, CALCE (four and six cells), FEMTO conditions 1 and 2 and C-MAPSS FD001, which informed the design and whose results are therefore not unbiased estimates of out-of-sample performance.
+
+\begin{table}
+\caption{Algorithm 1: training of the PGIB and Bayesian FHT prognostics (Section~\ref{sec:pgib}).}
+\centering
+\begin{tabular}{p{0.95\textwidth}}
+\hline
+\textbf{Input:} training sequences $\{\mathbf{X}^{(n)}_{1:T_n},T^{(n)}\}$, threshold $D_{\rm fail}=1$, compression weight $\beta$, step $\Delta t$. \textbf{Output:} $q_{\theta^*}$, $(\vartheta^*,\sigma_B^*)$, predictive law (\ref{eq:mixig}).\\
+\hline
+1. Causal encoder (temporal convolutional network or GRU): $u_\theta,s_\theta\leftarrow\mathrm{softplus}(\cdot)$ from $\mathbf{X}_{1:k}$.\\
+2. Sample the path by reparametrisation: $H_k=H_{k-1}+u_\theta\Delta t+s_\theta\sqrt{\Delta t}\,\epsilon_k$, $\epsilon_k\sim\mathcal N(0,1)$, $H_0=0$.\\
+3. Conjugate drift update from $\Delta H_{1:t}$ to obtain $(\hat\mu_t,\sigma^2_{\mu,t})$.\\
+4. $\mathcal{L}_{\rm FHT}=-\ln p(T_t\mid H_{1:t})$ from (\ref{eq:mixig}); $\mathcal{L}_{\rm KL}$ from Proposition~\ref{prop:kl}.\\
+5. Update $(\theta,\vartheta,\sigma_B)$ with the AdamW optimiser on $\mathcal{L}_{\rm FHT}+\beta\mathcal{L}_{\rm KL}$ (plus a penalty on $H_{T_{\rm EOL}}-D_{\rm fail}$ at the EOL).\\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Detailed benchmark results}
+\label{app:results}
+This appendix gives the tables behind Section~\ref{sec:empirical} with a short commentary; the numerical details are in the tables.
+
+\paragraph{Few training units, development sets.} No method is best everywhere (Table~\ref{tab:dev}). The Geo-opt HI is best on NASA and six-cell CALCE, the PGIB on four-cell CALCE ($38.4$ against $43.3$ for the best simple HI and $46.5$ for the age law), and the age law on both FEMTO conditions. On NASA no learned HI beats the age law. The PGIB-KF, designed for many training units, is clearly worse than the PGIB with so few units.
+
+\paragraph{Confirmation sets for P2.} On the two sets not used in the design (Table~\ref{tab:conf}), the $\beta$-VAE is best on FEMTO condition 3 and PCA-HI on IMS, the latter by a wide margin, and the PGIB is only $4\%$ better than the age law on IMS. The bottleneck encoder is therefore not superior in the few-unit regime on unseen data.
+
+\paragraph{Many training units: C-MAPSS.} On FD003, the clean confirmation set of P3 (Table~\ref{tab:fd003}), a three-seed ensemble of PGIB-KF had the lowest RMSE, $19.4$ ($95\%$ interval $16.0$ to $22.8$), against $21.9$ for the Geo-opt HI, $26.8$ for the ridge HI, $33.8$ for PCA-HI, $39.5$ for the integrating PGIB and $47.6$ for the age law; the paired difference from the Geo-opt HI is $-2.5$ ($-4.8$ to $-0.3$). A single model has RMSE $24.2$, and the ten-seed study shows that the three-seed result was favourable. On FD001 (Table~\ref{tab:fd001}) the PGIB-KF ($22.9$) is indistinguishable from the best simple HIs ($21.8$ to $22.2$), with the lowest CRPS and narrower intervals. The integrating encoder is considerably worse on both subsets, and removing the error accumulation brings the same objective from the level of the age law to that of the best simple HIs or better.
+
+\paragraph{Multi-regime confirmation: FD002 and FD004.} The FD003 result does not replicate on the multi-regime subsets, which were frozen and run once (Tables~\ref{tab:fd002} and \ref{tab:fd004}). On FD002, PCA-HI is best ($28.7$) and PGIB-KF is slightly but significantly worse ($+1.6$, interval $0.3$ to $3.0$). On FD004, the Geo-opt HI ($29.7$) and the ridge HI ($30.9$) are well ahead of PGIB-KF ($40.6$), which still beats PCA-HI, the $\beta$-VAE, the integrating PGIB and the age law but under-covers (coverage $81\%$ on FD002 and $79\%$ on FD004).
+
+\paragraph{Regime-aware observation model (P4).} Adding the regime to the observation model (PGIB-KFR) narrows the gap on the multi-regime subsets but does not close it. On FD002 the PGIB-KFR ($29.6$) is indistinguishable from PCA-HI, the Geo-opt HI and the regime-specific ridge HI ($28.4$, the lowest). On FD004 it improves from $40.6$ to $34.8$ and beats PCA-HI ($-9.5$, $-12.4$ to $-6.6$) but stays behind the Geo-opt HI ($+5.1$, $2.3$ to $7.9$) and the ridge HI. Two points limit the reading. The pre-declared selection by calibration likelihood chose PGIB-KF rather than PGIB-KFR on three of the four subsets, and the single-regime check failed: with one regime, PGIB-KFR is PGIB-KF up to an extra input and the initialisation, yet it is worse on FD001 ($26.5$ against $22.9$) and FD003 ($25.4$ against $19.4$). Differences of three to six RMSE units between near-equivalent configurations are within the training variability. We therefore do not claim that the regime-aware model improves prognostics; the result is consistent with Proposition~\ref{prop:regime} but does not demonstrate it.
+
+\paragraph{Seed variability and ten-seed ensembles (P5).} The learned models were retrained with ten fresh seeds each, keeping architecture, $\beta$ and calibration fixed (Table~\ref{tab:var10}, Figure~\ref{fig:cmapss}). The ensembles have a coverage of $84\%$ to $94\%$. PGIB-KFR is worse than PGIB-KF on FD001 by $3.7$ RMSE units (Welch test \cite{welch1947}, $p=0.02$) and gains only with six regimes on FD004 ($-4.0$, $p=0.17$).
+
+\paragraph{Ablations and fusion.} On FD003, removing the bottleneck ($\beta=0$) or the physics prior changes the RMSE of the integrating PGIB by less than two units ($39.1$ and $37.9$ against $39.9$), whereas removing the epistemic drift variance raises it to $45.9$ and lowers the coverage from $95\%$ to $92\%$. The age fusion (Table~\ref{tab:fusion}) improves the point error of most HIs when the HI is poor or the units are few; for example, the RMSE of PCA-HI on FD001 falls from $29.0$ to $21.8$.
+
+\paragraph{Information certificates.} The certified information (Table~\ref{tab:cert2}) is vacuous for NASA, the three FEMTO conditions and, except for PCA-HI, IMS. It is positive only on CALCE, where it is $0.60$ nats for the PGIB against $0.41$ for the age law with four cells, and $0.35$ against $0.31$ with six cells. Only on CALCE does a learned HI thus add certified information beyond the age.
+
+\begin{table}
+\caption{Protocol P2, development sets. RMSE, MAE and CRPS in cycles (batteries) or $10$~s snapshots (bearings); mean $\pm$ standard deviation over seeds; bold: lowest RMSE.}
+\centering\small
+\input{results/tab2_dev}
+\label{tab:dev}
+\end{table}
+
+\begin{table}
+\caption{Protocol P2, confirmation sets (snapshots). PGIB-KF is exploratory here.}
+\centering\small
+\input{results/tab2_conf}
+\label{tab:conf}
+\end{table}
+
+\begin{table}
+\caption{C-MAPSS FD003 (clean confirmation set of P3; PGIB-KFR and regime-specific ridge rows are development results). RMSE: single models, mean over seeds; seed-avg.: RMSE of the seed-averaged prediction with $95\%$ bootstrap interval over engines.}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{results/tab_cmapss_fd003}}
+\label{tab:fd003}
+\end{table}
+
+\begin{table}
+\caption{C-MAPSS FD001 (development set; same layout as Table~\ref{tab:fd003}).}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{results/tab_cmapss_fd001}}
+\label{tab:fd001}
+\end{table}
+
+\begin{table}
+\caption{C-MAPSS FD002 (multi-regime; confirmation set for P3, development set for P4; same layout as Table~\ref{tab:fd003}).}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{results/tab_cmapss_fd002}}
+\label{tab:fd002}
+\end{table}
+
+\begin{table}
+\caption{C-MAPSS FD004 (multi-regime; confirmation set for P3, development set for P4; same layout as Table~\ref{tab:fd003}).}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{results/tab_cmapss_fd004}}
+\label{tab:fd004}
+\end{table}
+
+
+
+\begin{table}
+\caption{Effect of the age fusion: RMSE with fusion / without fusion (after recalibration with $w_{\rm a}=0$).}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{results/tab2_fusion}}
+\label{tab:fusion}
+\end{table}
+
+\begin{table}
+\caption{Protocol P2, information certified by the achieved error (nats); $<0$: vacuous. $h(T)$: entropy of the pooled held-out RUL.}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{results/tab_cert2}}
+\label{tab:cert2}
+\end{table}
+
+\section{Initial benchmark protocol (P1)}
+\label{app:p1}
+The first benchmark used a simpler protocol (P1). Every HI was calibrated on in-sample training paths, the plain first-hitting-time law (\ref{eq:mixig}) was used without age fusion, and the predictive grid extended to three times the held-out unit's own life, which leaks the length of the test unit into the support of the predictive law (removed in P2). The pilot on NASA B0005, the results below and the observation that the age law is competitive motivated P2. The P1 results are reported for completeness and are not used for the conclusions of the main text.
+
+\paragraph{Pilot run.} A pilot on the NASA B0005 fold, with a GRU-only encoder and $\beta\in\{0.003,0.03,0.3\}$, gave a PGIB RMSE of $56.3$ cycles and zero interval coverage, with the selected $\beta$ at the edge of the grid. The selection grid was therefore extended and the feed-forward encoder added as a candidate. Both changes are chosen per fold by inner validation, but the decision to introduce them was made after seeing a held-out result for one fold. No baseline was modified, and no change was made after the full runs reported below; the bearing experiments were run once with the final protocol.
+
+\begin{table}
+\caption{Protocol P1, battery benchmarks, leave-one-unit-out (mean $\pm$ standard deviation over seeds). RMSE, MAE and CRPS in cycles.}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{results/tab_bench_nasa}}\\[4pt]
+\adjustbox{max width=\linewidth}{\input{results/tab_bench_calce}}\\[4pt]
+\adjustbox{max width=\linewidth}{\input{results/tab_bench_calce6}}
+\label{tab:benchv1}
+\end{table}
+
+\begin{table}
+\caption{Protocol P1, FEMTO bearing benchmarks. RMSE, MAE and CRPS in $10$~s snapshots.}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{results/tab_bench_femto1}}\\[4pt]
+\adjustbox{max width=\linewidth}{\input{results/tab_bench_femto2}}
+\label{tab:benchbv1}
+\end{table}
+
+\begin{table}
+\caption{Protocol P1, information certified by the achieved error (Proposition~\ref{cor:cert}), in nats; $<0$: vacuous. $h(T)$: entropy of the pooled held-out RUL.}
+\centering\small
+\input{results/tab_cert}
+\label{tab:certv1}
+\end{table}
+
+\begin{figure}[!tb]
+\centering
+\includegraphics[width=\textwidth]{figs/fig_bench}
+\caption{Example RUL predictions with $95\%$ intervals on one held-out unit per data set (NASA B0005, CALCE CS2\_35, FEMTO Bearing1\_1), for PCA-HI (left) and PGIB (right); each panel gives the RMSE and the coverage on that unit.}
+\label{fig:benchv1}
+\end{figure}
+
+\paragraph{Results under P1.} The outcome depends on the data set (Tables~\ref{tab:benchv1} and \ref{tab:benchbv1}), and the age law is needed to read it. On NASA the age-law RMSE is $39.8$ cycles; PCA-HI ($17.8$), the Geo-opt HI ($21.9$), the $\beta$-VAE ($30.8$) and VIB ($33.3$) beat it, whereas the PGIB ($47.6$) does not, and its intervals cover only $42\%$ of the true RULs. On CALCE the age-law RMSE is $49.3$; only the PGIB ($33.0$) beats it clearly, while PCA-HI, the Geo-opt HI and the $\beta$-VAE ($117$ to $164$) are considerably worse than the age law. With the two $0.5$C-discharge cells added, the PGIB keeps the lowest RMSE ($50.4$) but its margin over the age law ($54.7$) is only $8\%$. On bearings the age-law RMSE ($602$ and $664$ snapshots for conditions 1 and 2) is comparable to the standard deviation of the pooled RUL, and most HIs do no better: the PGIB has the lowest RMSE in condition 1 ($524.5$, $13\%$ below the age law) but gives almost no benefit in condition 2 ($621.8$ against $664$). Two long-lived units dominate the pooled error in condition 2.
+
+The ablations (in the supplied result files) support the bottleneck on all five sets (for example RMSE $54.4\to47.6$ on NASA and $42.3\to33.0$ on CALCE) and the epistemic drift variance for coverage (for example $14\to42\%$ on NASA). The physics prior helps on CALCE and FEMTO condition 1 but not on NASA or FEMTO condition 2. With only three to six training units per fold, the validation signal that selects the encoder is itself noisy; on NASA it chose the strongest compression ($\beta=30$), at the edge of the grid, in all eight selections.
+
+\paragraph{Geometric scores versus error.} Across the five HIs of each data set, the rank correlation between the geometric score $\Mon+\mathrm{Tre}+\mathrm{Pro}$ and the RMSE is $+0.90$ on NASA (a higher geometric score goes with a larger error), $-1.00$ on CALCE, $-0.90$ on six-cell CALCE, $-0.60$ on FEMTO condition 1 and $+0.60$ on condition 2. The geometric criteria therefore did not rank the HIs consistently by prognostic error. This is an association over five methods per data set and not evidence for the mechanism of Theorem~\ref{thm:paradox}: the VIB and PGIB HIs have $\Mon\approx\mathrm{Tre}\approx1$ because their velocity is constrained to be positive, not because of a squeeze.
+
+\paragraph{Information on real data.} A direct estimate of $I(T;H)$ with the Kraskov--St\"ogbauer--Grassberger estimator \cite{kraskov2004} on rank-transformed window summaries gave, for several HIs, values above the estimate for the $12$-dimensional raw sensor summary, which is impossible for a true mutual information because the summary contains the HI. This reflects the bias of the estimator in $12$ dimensions at a few hundred samples, a known limitation \cite{paninski2003,mcallester2020}, and we therefore do not report $\etaPIE$ on real data. The certificate of Proposition~\ref{cor:cert} avoids high-dimensional estimation (Table~\ref{tab:certv1}); it is positive only for the PGIB on CALCE ($0.76$~nats) and six-cell CALCE ($0.32$), VIB on CALCE ($0.27$) and PCA-HI on NASA ($0.06$), and vacuous otherwise. This is a more modest reading of the benchmark than the RMSE tables alone.
+
+\input{refs/bib}
+\end{document}

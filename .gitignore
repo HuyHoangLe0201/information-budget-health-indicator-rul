@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+*.aux
+*.log.tex
+main.aux
+main.out
+main.log
+main.toc
+main.bbl
+main.blg
+main.tmp
+data/
+bench/data/

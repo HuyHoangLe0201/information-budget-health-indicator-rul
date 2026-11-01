@@ -1,0 +1,72 @@
+\begin{tabular}{l c c c c c}
+\hline
+\multicolumn{6}{l}{NASA PCoE (4 cells)}\\
+ Method & RMSE & MAE & PICP [\%] & PINAW & CRPS \\
+\hline
+Age-only (no sensors) & 34.4 & 28.7 & 84 & 2.68 & 21.0 \\
+PCA-HI & 24.9 & 19.3 & 95 & 2.46 & 13.8 \\
+Geo-opt HI & \textbf{24.3} & 20.1 & 93 & 3.22 & 17.6 \\
+$\beta$-VAE-HI & 31.7$\pm$2.2 & 25.3$\pm$1.8 & 98$\pm$0 & 4.24$\pm$0.17 & 20.0$\pm$0.9 \\
+VIB-HI (no physics) & 33.9$\pm$1.2 & 28.3$\pm$1.2 & 90$\pm$1 & 5.40$\pm$0.03 & 27.1$\pm$0.7 \\
+PGIB-HI (ens.) & 34.8 & 29.0 & 93 & 6.51 & 27.3 \\
+PGIB-KF-HI (ens.) & 44.3 & 39.4 & 84 & 4.55 & 29.1 \\
+\hline
+\end{tabular}
+\\[4pt]
+\begin{tabular}{l c c c c c}
+\hline
+\multicolumn{6}{l}{CALCE CS2 (4 cells)}\\
+ Method & RMSE & MAE & PICP [\%] & PINAW & CRPS \\
+\hline
+Age-only (no sensors) & 46.5 & 40.0 & 100 & 1.13 & 28.6 \\
+PCA-HI & 51.3 & 44.0 & 100 & 1.06 & 30.2 \\
+Geo-opt HI & 43.3 & 35.7 & 98 & 0.98 & 26.5 \\
+$\beta$-VAE-HI & 49.9$\pm$0.9 & 41.6$\pm$1.0 & 100 & 1.09$\pm$0.00 & 29.5$\pm$0.4 \\
+VIB-HI (no physics) & 48.3$\pm$1.4 & 40.6$\pm$0.9 & 83$\pm$4 & 0.85$\pm$0.00 & 30.8$\pm$0.8 \\
+PGIB-HI (ens.) & \textbf{38.4} & 34.2 & 99 & 0.74 & 23.3 \\
+PGIB-KF-HI (ens.) & 50.3 & 36.6 & 77 & 0.83 & 33.0 \\
+\hline
+\end{tabular}
+\\[4pt]
+\begin{tabular}{l c c c c c}
+\hline
+\multicolumn{6}{l}{CALCE CS2 (6 cells)}\\
+ Method & RMSE & MAE & PICP [\%] & PINAW & CRPS \\
+\hline
+Age-only (no sensors) & 50.6 & 45.5 & 100 & 1.13 & 30.1 \\
+PCA-HI & 56.8 & 50.0 & 100 & 1.09 & 32.8 \\
+Geo-opt HI & \textbf{46.3} & 43.2 & 100 & 1.02 & 27.6 \\
+$\beta$-VAE-HI & 73.5$\pm$4.9 & 60.9$\pm$3.9 & 93$\pm$3 & 1.04$\pm$0.02 & 42.4$\pm$3.2 \\
+VIB-HI (no physics) & 54.7$\pm$1.7 & 48.7$\pm$1.5 & 92$\pm$1 & 0.91$\pm$0.01 & 32.4$\pm$1.2 \\
+PGIB-HI (ens.) & 48.9 & 44.8 & 90 & 0.87 & 30.8 \\
+PGIB-KF-HI (ens.) & 71.9 & 63.6 & 84 & 0.92 & 45.2 \\
+\hline
+\end{tabular}
+\\[4pt]
+\begin{tabular}{l c c c c c}
+\hline
+\multicolumn{6}{l}{FEMTO cond. 1 (7 bearings)}\\
+ Method & RMSE & MAE & PICP [\%] & PINAW & CRPS \\
+\hline
+Age-only (no sensors) & \textbf{495.8} & 371.4 & 94 & 3.45 & 303.7 \\
+PCA-HI & 786.9 & 621.6 & 72 & 4.72 & 489.2 \\
+Geo-opt HI & 533.2 & 416.8 & 96 & 3.19 & 311.5 \\
+$\beta$-VAE-HI & 737.1$\pm$191.7 & 525.4$\pm$102.0 & 85$\pm$6 & 4.84$\pm$0.04 & 421.4$\pm$87.9 \\
+VIB-HI (no physics) & 584.1$\pm$29.4 & 467.0$\pm$26.4 & 82$\pm$5 & 3.48$\pm$0.13 & 357.9$\pm$29.0 \\
+PGIB-HI (ens.) & 534.7 & 401.8 & 84 & 4.67 & 340.9 \\
+\hline
+\end{tabular}
+\\[4pt]
+\begin{tabular}{l c c c c c}
+\hline
+\multicolumn{6}{l}{FEMTO cond. 2 (7 bearings)}\\
+ Method & RMSE & MAE & PICP [\%] & PINAW & CRPS \\
+\hline
+Age-only (no sensors) & \textbf{430.6} & 373.5 & 97 & 10.38 & 278.6 \\
+PCA-HI & 558.3 & 450.5 & 67 & 8.52 & 391.1 \\
+Geo-opt HI & 504.9 & 414.7 & 85 & 11.22 & 396.1 \\
+$\beta$-VAE-HI & 531.2$\pm$11.3 & 434.6$\pm$20.1 & 88$\pm$2 & 9.78$\pm$0.02 & 368.4$\pm$2.0 \\
+VIB-HI (no physics) & 448.2$\pm$0.4 & 337.7$\pm$1.3 & 97 & 11.39$\pm$0.14 & 318.5$\pm$2.6 \\
+PGIB-HI (ens.) & 449.5 & 333.6 & 97 & 13.97 & 341.2 \\
+\hline
+\end{tabular}

@@ -1,0 +1,8 @@
+IMS_T1B3 2156
+IMS_T1B4 2156
+IMS_T2B1 984
+Traceback (most recent call last):
+  File "/home/user/paper/bench/prep_ims.py", line 18, in <module>
+    for k, name in enumerate(units): np.savez(f'{OUT}/ims_{name}.npz', X=res[:, k, :]); print(name, res.shape[0], flush=True)
+                                                                         ~~~^^^^^^^^^
+IndexError: too many indices for array: array is 1-dimensional, but 3 were indexed

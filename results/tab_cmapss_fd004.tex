@@ -1,0 +1,19 @@
+\setlength{\tabcolsep}{4pt}\begin{tabular}{l c c c c c c c}
+\hline
+ Method & RMSE & RMSE seed-avg. [95\% CI] & MAE & Score & PICP [\%] & PINAW & CRPS \\
+\hline
+Age-only (no sensors) & 54.7 & 50.9--58.5 & 46.0 & 611896 & 95 & 1.31 & 31.8 \\
+PCA-HI & 44.3 & 40.7--48.0 & 35.4 & 104864 & 92 & 1.03 & 24.9 \\
+Geo-opt HI & 29.7 & 26.6--32.7 & 21.9 & 9468 & 100 & 0.86 & 16.1 \\
+Ridge-HI (supervised) & 30.9 & 28.1--33.4 & 23.8 & 11632 & 94 & 1.14 & 18.5 \\
+Ridge-HI, regime-specific & 31.1 & 28.2--33.9 & 24.0 & 10794 & 92 & 1.14 & 18.6 \\
+$\beta$-VAE-HI & 48.1$\pm$3.1 & 42.7--50.2 & 39.0$\pm$3.0 & 294449 & 93 & 1.17 & 27.7$\pm$1.9 \\
+VIB-HI (no physics prior) & 51.8$\pm$1.0 & 47.3--56.2 & 41.9$\pm$0.6 & 697542 & 90 & 1.13 & 29.5$\pm$0.4 \\
+PGIB-HI (GRU/window encoder) & 49.9$\pm$2.4 & 44.2--53.9 & 39.5$\pm$1.5 & 1143425 & 90 & 1.42 & 29.3$\pm$0.7 \\
+PGIB-HI, 3-seed ensemble & 49.5 & 44.8--54.3 & 38.9 & 1085286 & 91 & 1.42 & 28.9 \\
+PGIB-KF-HI & 42.1$\pm$2.8 & 37.2--43.6 & 33.9$\pm$1.9 & 241870 & 78 & 1.08 & 25.6$\pm$1.3 \\
+PGIB-KF-HI, 3-seed ensemble & 40.6 & 37.3--44.0 & 32.9 & 124580 & 79 & 1.07 & 24.7 \\
+PGIB-KFR-HI (regime-aware) & 37.1$\pm$2.5 & 31.4--37.2 & 29.4$\pm$1.5 & 187056 & 85 & 1.12 & 22.3$\pm$0.8 \\
+PGIB-KFR-HI, 3-seed ensemble & 34.8 & 31.8--37.8 & 27.8 & 37063 & 85 & 1.12 & 21.0 \\
+\hline
+\end{tabular}

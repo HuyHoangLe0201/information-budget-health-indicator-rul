@@ -1,0 +1,13 @@
+\begin{tabular}{l c c c c c c c c}
+\hline
+\multicolumn{9}{l}{FEMTO bearings, condition 2 (7 units) (leave-one-unit-out)}\\
+ Method & Mon & Tre & Pro & RMSE & MAE & PICP [\%] & PINAW & CRPS \\
+\hline
+Age-only reference (no sensors) & -- & -- & -- & 664.4 & 584.6 & -- & -- & -- \\
+PCA-HI & 0.04 & 0.43 & 0.17 & 613.9 & 487.6 & 54 & 2.25 & 433.9 \\
+Geo-opt HI & 0.06 & 0.37 & 0.46 & 559.2 & 457.1 & 73 & 2.33 & 356.5 \\
+$\beta$-VAE-HI & 0.06$\pm$0.01 & 0.46$\pm$0.05 & 0.42$\pm$0.16 & 539.8$\pm$31.7 & 439.6$\pm$24.6 & 70$\pm$2 & 2.01$\pm$0.06 & 348.6$\pm$26.1 \\
+VIB-HI (no physics prior) & 1.00 & 0.99$\pm$0.00 & 0.39$\pm$0.02 & 616.8$\pm$1.5 & 493.8$\pm$1.5 & 41$\pm$1 & 2.62$\pm$0.23 & 451.1$\pm$3.2 \\
+PGIB-HI & 1.00 & 0.99$\pm$0.00 & 0.46$\pm$0.02 & 621.8$\pm$4.3 & 498.2$\pm$8.1 & 36$\pm$2 & 2.25$\pm$0.01 & 464.3$\pm$7.9 \\
+\hline
+\end{tabular}

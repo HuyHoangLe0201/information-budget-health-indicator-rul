@@ -1,0 +1,10 @@
+data ok FD004 200 49 248 R 6
+ridge-reg (0.1, 1, 0.5) 41s
+PGIB-KFR 0.03 5.39 142s
+PGIB-KFR 0.3 6.2 239s
+PGIB-KFR 3.0 6.23 335s
+/home/user/paper/bench/run_cmapss5.py:59: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  mod = train_kfr(Xfit, ds, R, b, s, R4.STEPS); Ht = [B.pgib_hi(mod, x).numpy() for x in Xte]; s2 = float(torch.exp(2*mod.lsB)); Hs_.append(Ht); s2s_.append(s2); rec('PGIB-KFR-HI', Ht, s2, cal['fuse'], s); rec('PGIB-KFR-HI|nofuse', Ht, s2, cal['nofuse'], s)
+validation NLL KF 5.234 KFR 5.391 -> PGIB-KF-HI (ens) 858s
+done 858s

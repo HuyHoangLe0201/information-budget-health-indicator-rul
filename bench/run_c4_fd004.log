@@ -1,0 +1,32 @@
+regime sizes [12505  7538  7444  7421  7488  7484]
+data ok 200 49 248
+PCA-HI (0.31622776601683794, 0.5, 1) 48s
+Mon-opt HI (0.1, 1, 1) 618s
+Ridge-HI (supervised) (0.1, 1, 0.5) 655s
+vae done 1020s
+VIB-HI (no physics) gru 0.03 5.93 1065s
+VIB-HI (no physics) gru 0.3 6.07 1110s
+VIB-HI (no physics) gru 3.0 6.15 1156s
+VIB-HI (no physics) gru 30.0 5.88 1202s
+VIB-HI (no physics) win 0.03 5.75 1205s
+VIB-HI (no physics) win 0.3 5.78 1208s
+VIB-HI (no physics) win 3.0 5.91 1211s
+VIB-HI (no physics) win 30.0 5.86 1215s
+/home/user/paper/bench/run_cmapss4.py:79: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  mod = train_steps(Xfit, phys, b, s, arch); Ht = [B.pgib_hi(mod, x).numpy() for x in Xte]; s2 = float(torch.exp(2*mod.lsB)); Hs_.append(Ht); s2s_.append(s2)
+VIB-HI (no physics) selected win 0.03 (3.1622776601683795, 0.25, 1) 1266s
+PGIB-HI gru 0.03 5.96 1316s
+PGIB-HI gru 0.3 5.96 1361s
+PGIB-HI gru 3.0 6.54 1404s
+PGIB-HI gru 30.0 6.49 1451s
+PGIB-HI win 0.03 5.68 1455s
+PGIB-HI win 0.3 5.77 1458s
+PGIB-HI win 3.0 5.94 1461s
+PGIB-HI win 30.0 6.15 1464s
+PGIB-HI selected win 0.03 (3.1622776601683795, 0.5, 0.5) 1534s
+PGIB-KF 0.03 5.23 1623s
+PGIB-KF 0.3 5.57 1718s
+PGIB-KF 3.0 5.62 1810s
+PGIB-KF selected 0.03 (0.31622776601683794, 0.25, 0.5) 2325s
+done 2325s

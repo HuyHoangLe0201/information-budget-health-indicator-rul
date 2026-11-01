@@ -1,0 +1,13 @@
+\begin{tabular}{l c c c c c c c c}
+\hline
+\multicolumn{9}{l}{CALCE CS2 (6 cells, incl. 0.5C-discharge CS2\_33/34) (leave-one-unit-out)}\\
+ Method & Mon & Tre & Pro & RMSE & MAE & PICP [\%] & PINAW & CRPS \\
+\hline
+Age-only reference (no sensors) & -- & -- & -- & 54.7 & 50.0 & -- & -- & -- \\
+PCA-HI & 0.13 & 0.28 & 0.21 & 191.8 & 172.0 & 50 & 0.99 & 149.6 \\
+Geo-opt HI & 0.39 & 0.95 & 0.98 & 106.9 & 82.7 & 95 & 3.11 & 63.7 \\
+$\beta$-VAE-HI & 0.05$\pm$0.02 & 0.52$\pm$0.10 & 0.33$\pm$0.04 & 201.6$\pm$5.3 & 179.9$\pm$5.0 & 48$\pm$0 & 1.46$\pm$0.18 & 156.1$\pm$3.1 \\
+VIB-HI (no physics prior) & 1.00 & 1.00$\pm$0.00 & 0.87$\pm$0.02 & 69.7$\pm$6.0 & 54.4$\pm$8.8 & 90$\pm$5 & 2.24$\pm$0.23 & 44.9$\pm$4.8 \\
+PGIB-HI & 1.00 & 1.00$\pm$0.00 & 0.91$\pm$0.01 & 50.4$\pm$4.4 & 44.7$\pm$5.1 & 69$\pm$5 & 0.58$\pm$0.02 & 33.4$\pm$4.2 \\
+\hline
+\end{tabular}
