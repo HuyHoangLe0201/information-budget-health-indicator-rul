@@ -1,6 +1,7 @@
 {
  "res": {
   "level only u=(1,0)": {
+   "pred_fix_mean": 1.1786824351513558,
    "pred_mean": 1.1771596344762192,
    "mc_mean": 1.1810609226729496,
    "psi_mean_deg": 5.974947612060931,
@@ -8,20 +9,23 @@
    "mc_median": 1.1739077217332679
   },
   "velocity only u=(0,1)": {
+   "pred_fix_mean": 1.163597838706934,
    "pred_mean": 1.1936992398460038,
    "mc_mean": 1.1965381675629974,
    "psi_mean_deg": 5.814011834006621,
    "pred_median": 1.1717458967398677,
    "mc_median": 1.1775179344786548
   },
-  "static, u = gradient at prior mean": {
+  "stage-fixed gradient (prior mean)": {
+   "pred_fix_mean": 1.0,
    "pred_mean": 1.004274562528652,
    "mc_mean": 1.002777752761709,
    "psi_mean_deg": 0.6808124402660841,
    "pred_median": 1.0015823090504055,
    "mc_median": 1.0003327536405113
   },
-  "phase-adaptive u_t = g_t": {
+  "unit-specific gradient (local)": {
+   "pred_fix_mean": 1.0036115510339052,
    "pred_mean": 1.0,
    "mc_mean": 0.9991679590018816,
    "psi_mean_deg": 0.0,

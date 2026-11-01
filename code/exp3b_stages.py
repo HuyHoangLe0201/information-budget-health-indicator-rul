@@ -24,20 +24,18 @@ for k in range(TMAX):
 def cs(mean, cov, n):
     L = np.linalg.cholesky(cov + 1e-12*np.eye(2)); z = mean + rng.standard_normal((4*n, 2)) @ L.T; ok = (z[:, 1] > 0.5) & (z[:, 0] < Df-1); z = z[ok][:n]; return (Df-z[:, 0])/z[:, 1]
 mc = {}
+KEYS = ['level only', 'velocity only', 'static (aligned at t*=50)', 'phase-adaptive (stage-fixed)', 'unit-adaptive (local)']
 for t, th in snap.items():
-    Sig, P, Lam, th0 = stats(t); res = {k: [] for k in curve}; pr = {k: [] for k in curve}
+    Sig, P, Lam, th0 = stats(t); res = {k: [] for k in KEYS}; pr = {k: [] for k in KEYS}; pf = {k: [] for k in KEYS}
+    gs = np.array([-1/vbar, -(Df-vbar*t)/vbar**2]); rho_f = (gs @ Lam @ gs)/(gs @ P @ gs)
     for i in range(N):
         a = Df-th[i, 0]
         if a < 5: continue
         g = np.array([-1/th[i, 1], -a/th[i, 1]**2]); rho = (g @ Lam @ g)/(g @ P @ g); NX = np.exp(2*vasicek(cs(th[i], P, S), 40))
-        for k, u in [('level only', np.array([1., 0.])), ('velocity only', np.array([0., 1.])), ('static (aligned at t*=50)', u_static), ('phase-adaptive', g)]:
-            lu = u @ Lam @ u; c = Lam @ u; cov = Sig - np.outer(c, c)/lu; mh = th0 + c*(u @ th[i]-u @ th0)/lu; cos = (g @ Lam @ u)/np.sqrt((g @ Lam @ g)*lu)
-            res[k].append(np.exp(2*vasicek(cs(mh, cov, S), 40))/NX); pr[k].append(1+rho*(1-cos**2))
-    mc[t] = {k: dict(mc=float(np.mean(v)), pred=float(np.mean(pr[k]))) for k, v in res.items()}; print(t, {k: (round(v['pred'], 3), round(v['mc'], 3)) for k, v in mc[t].items()}, flush=True)
-fig, ax = plt.subplots(figsize=(3.8, 3.0)); sty = {'level only': ('k-', 'o'), 'velocity only': ('k--', 's'), 'static (aligned at t*=50)': ('k-.', '^'), 'phase-adaptive': ('k:', 'v')}
-for k, ys in curve.items(): ax.plot(TT, ys, sty[k][0], label=k, lw=1.3)
-for t, d in mc.items():
-    for k, v in d.items(): ax.plot([t], [v['mc']], sty[k][1], color='k', mfc='w', ms=4.5)
-ax.set_xlabel('Inspection time $t$'); ax.set_ylabel(r'Bound inflation $\mathcal{B}(h_u)/\mathcal{B}_{\min}$'); ax.set_yscale('log'); ax.legend(fontsize=6.5); plt.tight_layout(); plt.savefig('../figs/fig_angular.pdf')
+        for k, u in [('level only', np.array([1., 0.])), ('velocity only', np.array([0., 1.])), ('static (aligned at t*=50)', u_static), ('phase-adaptive (stage-fixed)', gs), ('unit-adaptive (local)', g)]:
+            lu = u @ Lam @ u; c = Lam @ u; cov = Sig - np.outer(c, c)/lu; mh = th0 + c*(u @ th[i]-u @ th0)/lu; cos = (g @ Lam @ u)/np.sqrt((g @ Lam @ g)*lu); cos_f = (gs @ Lam @ u)/np.sqrt((gs @ Lam @ gs)*lu)
+            res[k].append(np.exp(2*vasicek(cs(mh, cov, S), 40))/NX); pr[k].append(1+rho*(1-cos**2)); pf[k].append(1+rho_f*(1-cos_f**2))
+    mc[t] = {k: dict(mc=float(np.mean(v)), pred=float(np.mean(pr[k])), pred_fix=float(np.mean(pf[k]))) for k, v in res.items()}; print(t, {k: (round(v['pred_fix'], 3), round(v['pred'], 3), round(v['mc'], 3)) for k, v in mc[t].items()}, flush=True)
+# (the figure is produced by make_all_figs.py from results/exp3b.json)
 json.dump(dict(TT=TT, curve=curve, mc=mc), open('/home/user/paper/results/exp3b.json', 'w'), indent=1)
 print({k: [round(v, 2) for v in ys[::3]] for k, ys in curve.items()})

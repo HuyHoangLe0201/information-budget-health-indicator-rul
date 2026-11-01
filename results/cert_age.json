@@ -1,0 +1,194 @@
+{
+ "nasa": {
+  "h_cond": 4.673606941667175,
+  "n": 236,
+  "mu": 4.706853262206865,
+  "sigma": 0.29476648772609343,
+  "lifetimes": [
+   127.0,
+   73.0,
+   162.0,
+   100.0
+  ],
+  "cert": {
+   "Age-only|fuse": -0.28316614869162215,
+   "PCA-HI|fuse": 0.03866579526271874,
+   "PCA-HI|nofuse": 0.3554414292212318,
+   "Mon-opt HI|fuse": 0.06571847229306549,
+   "Mon-opt HI|nofuse": -0.20669829368702253,
+   "beta-VAE-HI|fuse": -0.1400255410833493,
+   "beta-VAE-HI|nofuse": 0.13946460869829735,
+   "VIB-HI (no physics)|fuse": -0.22510670000502575,
+   "VIB-HI (no physics)|nofuse": -0.06342795555408465,
+   "PGIB-HI (ens)|fuse": -0.29408269446430335,
+   "PGIB-HI (ens)|nofuse": -0.1437855513773192,
+   "PGIB-KF-HI (ens)|fuse": -0.5353846178393171,
+   "PGIB-KF-HI (ens)|nofuse": -0.5353846178393171
+  }
+ },
+ "calce": {
+  "h_cond": 5.743654855826992,
+  "n": 279,
+  "mu": 6.305768043395558,
+  "sigma": 0.15,
+  "lifetimes": [
+   536.0,
+   496.0,
+   568.0,
+   596.0
+  ],
+  "cert": {
+   "Age-only|fuse": 0.4853222153744099,
+   "PCA-HI|fuse": 0.3877053545030371,
+   "PCA-HI|nofuse": -0.8989779700491107,
+   "Mon-opt HI|fuse": 0.5570676287709402,
+   "Mon-opt HI|nofuse": -0.5531057709908476,
+   "beta-VAE-HI|fuse": 0.42132318167956395,
+   "beta-VAE-HI|nofuse": -0.3407773941605754,
+   "VIB-HI (no physics)|fuse": 0.4562460054414643,
+   "VIB-HI (no physics)|nofuse": 0.17703243831349091,
+   "PGIB-HI (ens)|fuse": 0.6776902911300411,
+   "PGIB-HI (ens)|nofuse": 0.6252863370423682,
+   "PGIB-KF-HI (ens)|fuse": 0.40587676646237547,
+   "PGIB-KF-HI (ens)|nofuse": 0.40587676646237547
+  }
+ },
+ "calce6": {
+  "h_cond": 5.692614710445591,
+  "n": 401,
+  "mu": 6.260379355285932,
+  "sigma": 0.15,
+  "lifetimes": [
+   480.0,
+   476.0,
+   536.0,
+   496.0,
+   568.0,
+   596.0
+  ],
+  "cert": {
+   "Age-only|fuse": 0.3488762499454472,
+   "PCA-HI|fuse": 0.23373817489496496,
+   "PCA-HI|nofuse": -0.9387697015163052,
+   "Mon-opt HI|fuse": 0.43814875551145516,
+   "Mon-opt HI|nofuse": -0.5655529364650809,
+   "beta-VAE-HI|fuse": -0.04687738550480436,
+   "beta-VAE-HI|nofuse": -1.3597091917232502,
+   "VIB-HI (no physics)|fuse": 0.3111013831879168,
+   "VIB-HI (no physics)|nofuse": -0.6571135948667095,
+   "PGIB-HI (ens)|fuse": 0.38321960573703073,
+   "PGIB-HI (ens)|nofuse": -0.25198299950285463,
+   "PGIB-KF-HI (ens)|fuse": -0.0021170181650269626,
+   "PGIB-KF-HI (ens)|nofuse": -0.0021170181650269626
+  }
+ },
+ "femto1": {
+  "h_cond": 7.81058035898145,
+  "n": 370,
+  "mu": 7.566040062111634,
+  "sigma": 0.39481034808074406,
+  "lifetimes": [
+   2780.0,
+   840.0,
+   2340.0,
+   1400.0,
+   2440.0,
+   2420.0,
+   2220.0
+  ],
+  "cert": {
+   "Age-only|fuse": 0.18551022065189304,
+   "PCA-HI|fuse": -0.2764554822836507,
+   "PCA-HI|nofuse": -0.9016181048274037,
+   "Mon-opt HI|fuse": 0.11279899671381433,
+   "Mon-opt HI|nofuse": -0.5962179516953485,
+   "beta-VAE-HI|fuse": -0.14913661569046255,
+   "beta-VAE-HI|nofuse": -0.8809240514339232,
+   "VIB-HI (no physics)|fuse": -0.031193514359433294,
+   "VIB-HI (no physics)|nofuse": -0.14831959075298862,
+   "PGIB-HI (ens)|fuse": 0.10985390335258405,
+   "PGIB-HI (ens)|nofuse": -0.25791034449504036
+  }
+ },
+ "femto2": {
+  "h_cond": 7.770845238258529,
+  "n": 483,
+  "mu": 6.754867648590223,
+  "sigma": 0.7193924817833285,
+  "lifetimes": [
+   896.0,
+   784.0,
+   1944.0,
+   736.0,
+   2296.0,
+   688.0,
+   216.0
+  ],
+  "cert": {
+   "Age-only|fuse": 0.28673481431920234,
+   "PCA-HI|fuse": 0.027053342456569318,
+   "PCA-HI|nofuse": 0.01670264720260839,
+   "Mon-opt HI|fuse": 0.1275915212715697,
+   "Mon-opt HI|nofuse": 0.15904621812961217,
+   "beta-VAE-HI|fuse": 0.08086554585369399,
+   "beta-VAE-HI|nofuse": 0.23673026308062362,
+   "VIB-HI (no physics)|fuse": 0.24781267088545622,
+   "VIB-HI (no physics)|nofuse": 0.19339269286409344,
+   "PGIB-HI (ens)|fuse": 0.24381304359367562,
+   "PGIB-HI (ens)|nofuse": 0.2677662404332537
+  }
+ },
+ "femto3": {
+  "h_cond": 7.300891510877911,
+  "n": 130,
+  "mu": 6.548348079308678,
+  "sigma": 0.5995066396155934,
+  "lifetimes": [
+   500.0,
+   1620.0,
+   420.0
+  ],
+  "cert": {
+   "Age-only|fuse": -0.45231822573634695,
+   "PCA-HI|fuse": -0.34752981614752443,
+   "PCA-HI|nofuse": -0.3394219171542803,
+   "Mon-opt HI|fuse": -0.4585845524670562,
+   "Mon-opt HI|nofuse": -0.19854173659744312,
+   "beta-VAE-HI|fuse": -0.19272280709497824,
+   "beta-VAE-HI|nofuse": 0.04123207305973242,
+   "VIB-HI (no physics)|fuse": -0.3427948902608451,
+   "VIB-HI (no physics)|nofuse": -0.34583375011422124,
+   "PGIB-HI (ens)|fuse": -0.35304859716467085,
+   "PGIB-HI (ens)|nofuse": -0.3508895410345012,
+   "PGIB-KF-HI (ens)|fuse": -0.4369808528038126,
+   "PGIB-KF-HI (ens)|nofuse": -0.4369808528038126
+  }
+ },
+ "ims": {
+  "h_cond": 8.654914421508101,
+  "n": 295,
+  "mu": 7.733395233043406,
+  "sigma": 0.6692937191422658,
+  "lifetimes": [
+   2120.0,
+   2120.0,
+   960.0,
+   6300.0
+  ],
+  "cert": {
+   "Age-only|fuse": -0.19814525109512893,
+   "PCA-HI|fuse": 0.6223127060642621,
+   "PCA-HI|nofuse": 0.6223127060642621,
+   "Mon-opt HI|fuse": 0.38724707106844036,
+   "Mon-opt HI|nofuse": 0.38724707106844036,
+   "beta-VAE-HI|fuse": -0.5753571483648532,
+   "beta-VAE-HI|nofuse": -0.5753571483648532,
+   "VIB-HI (no physics)|fuse": -0.30967715492510095,
+   "VIB-HI (no physics)|nofuse": -0.30967715492510095,
+   "PGIB-HI (ens)|fuse": -0.15654158262139717,
+   "PGIB-HI (ens)|nofuse": -0.16880582888604323,
+   "PGIB-KF-HI (ens)|fuse": -0.28819104705561926,
+   "PGIB-KF-HI (ens)|nofuse": -0.28819104705561926
+  }
+ }
+}

@@ -105,16 +105,16 @@ def fig_angular():
         Sig = PC[t]; P = Ps[t - 1]; Lam = Sig - P; gv = np.array([-1 / vbar, -(Df - vbar * t) / vbar ** 2]); rho.append((gv @ Lam @ gv) / (gv @ P @ gv))
         for k, u in [('level only', np.array([1., 0.])), ('velocity only', np.array([0., 1.])), ('static (aligned at t*=50)', ustat), ('phase-adaptive', gv)]:
             c = (gv @ Lam @ u) / np.sqrt((gv @ Lam @ gv) * (u @ Lam @ u)); psi[k].append(np.degrees(np.arccos(np.clip(abs(c), 0, 1))))
-    fig, ax = plt.subplots(1, 3, figsize=(W, 2.95), gridspec_kw=dict(wspace=0.5))
+    fig, ax = plt.subplots(1, 3, figsize=(W, 3.2), gridspec_kw=dict(wspace=0.5))
     a = ax[0]; panel(a, '(a)')
     for k in keys:
         a.plot(TT, cur[k], ls[k], color=col[k], label=lab[k])
-        a.plot([int(t) for t in mc], [mc[t][k]['mc'] for t in mc], mk[k], color=col[k], mfc='w', ms=5, lw=0)
+        mk_ = 'phase-adaptive (stage-fixed)' if k == 'phase-adaptive' else k
+        a.plot([int(t) for t in mc], [mc[t][mk_]['mc'] for t in mc], mk[k], color=col[k], mfc='w', ms=5, lw=0)
+        a.plot([int(t) for t in mc], [mc[t][mk_]['pred'] for t in mc], '+', color=col[k], ms=6, mew=1.1, lw=0)
     a.axvline(tstar, color='#aaaaaa', ls=':', lw=1); a.text(tstar + 1, 0.93, r'$t^\ast$', color=GREY, fontsize=8)
     a.annotate(r'$5\times$ at $t=75$', xy=(75, mc['75']['velocity only']['mc']), xytext=(30, 6.2), fontsize=7.2, color=RED, arrowprops=dict(arrowstyle='->', color=RED, lw=.7))
     a.set_yscale('log'); a.set_xlabel('inspection time $t$'); a.set_ylabel(r'bound inflation $\mathcal{B}(h_{\mathbf{u}})/\mathcal{B}_{\min}$'); a.set_ylim(0.9, 20)
-    h = [Line2D([], [], color='k', lw=1.4, label='theory'), Line2D([], [], color='k', marker='o', mfc='w', lw=0, label='Monte Carlo')]
-    a.legend(handles=h, loc='upper left', fontsize=6.8)
     b = ax[1]; panel(b, '(b)')
     for k in keys: b.plot(TT, psi[k], ls[k], color=col[k])
     b.axvline(tstar, color='#aaaaaa', ls=':', lw=1); b.set_xlabel('inspection time $t$'); b.set_ylabel(r'$\boldsymbol{\Lambda}$-angle $\psi_t$ to $\mathbf{g}_t$ [deg]'); b.set_ylim(-0.5, 18)
@@ -122,8 +122,8 @@ def fig_angular():
     for k in keys:
         eta = [1 - np.log(1 + r_ * np.sin(np.radians(p_)) ** 2) / np.log(1 + r_) for r_, p_ in zip(rho, psi[k])]; c.plot(TT, eta, ls[k], color=col[k])
     c.axvline(tstar, color='#aaaaaa', ls=':', lw=1); c.set_xlabel('inspection time $t$'); c.set_ylabel(r'information efficiency $\eta_m(h_{\mathbf{u}})$'); c.set_ylim(-0.02, 1.05)
-    fig.legend(handles=[Line2D([], [], color=col[k], ls=ls[k], lw=1.5, label=lab[k]) for k in keys], loc='lower center', ncol=4, fontsize=7, bbox_to_anchor=(0.5, 0.0), columnspacing=1.2, handlelength=2.2)
-    fig.subplots_adjust(bottom=0.27)
+    fig.legend(handles=[Line2D([], [], color=col[k], ls=ls[k], lw=1.5, label=lab[k]) for k in keys]+[Line2D([], [], color='k', lw=1.4, label='theory, fixed operating point'), Line2D([], [], color='k', marker='+', lw=0, ms=6, mew=1.1, label='theory, unit-specific gradient'), Line2D([], [], color='k', marker='o', mfc='w', lw=0, label='Monte Carlo, exact target')], loc='lower center', ncol=4, fontsize=7, bbox_to_anchor=(0.5, 0.0), columnspacing=1.2, handlelength=2.2)
+    fig.subplots_adjust(bottom=0.33)
     save(fig, 'fig_angular')
 
 # =====================================================================  Fig: regime leakage (Prop 7)
