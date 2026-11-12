@@ -83,4 +83,3 @@ Order = first citation in main.tex. "Metadata" = how bibliographic data were ver
 | 77 | lee2007 | publisher/proceedings page | classical source cited for a standard fact; content not re-read |
 | 78 | qiu2006 | Crossref record | classical source cited for a standard fact; content not re-read |
 | 79 | saxena2008 | author manuscript / full text | full text read |
-| 80 | welch1947 | Crossref record | classical source cited for a standard fact; content not re-read |

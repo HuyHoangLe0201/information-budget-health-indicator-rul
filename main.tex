@@ -390,7 +390,7 @@ All analyses use unit-grouped five-fold cross-validation: preprocessing, HIs and
 
 \paragraph{Lithium-ion cells.} The age-only control is at or below zero ($-0.02$ nats on HUST, $-0.27$ on MATR and $0.05$ on Tongji, whose interval includes zero), and the ridge HI certifies $0.30$, $0.32$ and $0.60$ nats with intervals above zero (Figure~\ref{fig:rda}(a), Table~\ref{tab:rdcert}). The three charging features used directly certify more ($0.67$, $0.61$ and $0.91$ nats) than the scalar HI constructed from them, as the data-processing inequality requires, and the capacity reference does not exceed them ($0.59$, $0.29$ and $0.40$ nats).
 
-\paragraph{Small data sets.} On the seven small battery and bearing sets of Section~\ref{sec:empirical} the model-based age-conditional certificate fails the negative control (Appendix~\ref{app:results}), which is why this test needs many units; it passes the control only with $77$ or more.
+\paragraph{Small data sets.} On the seven small battery and bearing sets of Section~\ref{sec:empirical} the model-based age-conditional certificate fails the negative control, because a log-normal lifetime law fitted to three to seven lifetimes overestimates $h(T_t\mid t)$ (Tables~\ref{tab:cert2} and \ref{tab:certage} in Appendix~\ref{app:results}), which is why this test needs many units; it passes the control only with $77$ or more.
 
 \subsection{Squeezing}
 \paragraph{Turbofan engines (Theorem~\ref{thm:paradox}).} A squeeze toward the mean HI trajectory of the training engines, with noise chosen as in Section~\ref{sec:paradoxnum}, raises the monotonicity of the ridge HI from $0.13$--$0.24$ to $0.41$--$0.58$, where it saturates for $\gamma\ge0.97$ at the value predicted from the template ($0.55$, $0.58$, $0.42$, $0.41$ observed against $0.55$, $0.61$, $0.41$, $0.41$ predicted for FD001 to FD004; Figure~\ref{fig:rda}(b)). Over the same range the certified information falls from $0.10$--$0.31$ nats to about zero or below (Figure~\ref{fig:rda}(c)).
@@ -600,30 +600,7 @@ Evaluation is leave-one-unit-out: each unit in turn is held out, the remaining u
 
 \section{Detailed benchmark results}
 \label{app:results}
-This appendix gives the tables behind Section~\ref{sec:empirical} with a short commentary; the numerical details are in the tables.
-
-\paragraph{Few training units, development sets.} No method is best everywhere (Table~\ref{tab:dev}). The Geo-opt HI is best on NASA and six-cell CALCE, the PGIB on four-cell CALCE ($38.4$ against $43.3$ for the best simple HI and $46.5$ for the age law), and the age law on both FEMTO conditions. On NASA no learned HI beats the age law. The PGIB-KF, designed for many training units, is clearly worse than the PGIB with so few units.
-
-\paragraph{Confirmation sets for P2.} On the two sets not used in the design (Table~\ref{tab:conf}), the $\beta$-VAE is best on FEMTO condition 3 and PCA-HI on IMS, the latter by a wide margin, and the PGIB is only $4\%$ better than the age law on IMS. The bottleneck encoder is therefore not superior in the few-unit regime on unseen data.
-
-\paragraph{Many training units: C-MAPSS.} On FD003, the clean confirmation set of P3 (Table~\ref{tab:fd003}), a three-seed ensemble of PGIB-KF had the lowest RMSE, $19.4$ ($95\%$ interval $16.0$ to $22.8$); the paired difference from the Geo-opt HI is $-2.5$ ($-4.8$ to $-0.3$). A single model has RMSE $24.2$, and the ten-seed study shows that the three-seed result was favourable. On FD001 (Table~\ref{tab:fd001}) the PGIB-KF ($22.9$) is indistinguishable from the best simple HIs ($21.8$ to $22.2$), with the lowest CRPS and narrower intervals.
-
-\paragraph{Multi-regime confirmation: FD002 and FD004.} The FD003 result does not replicate on the multi-regime subsets, which were frozen and run once (Tables~\ref{tab:fd002} and \ref{tab:fd004}). On FD002, PCA-HI is best ($28.7$) and PGIB-KF is slightly but significantly worse ($+1.6$, interval $0.3$ to $3.0$). On FD004, the Geo-opt HI ($29.7$) and the ridge HI ($30.9$) are well ahead of PGIB-KF ($40.6$), which still beats PCA-HI, the $\beta$-VAE, the integrating PGIB and the age law but under-covers (coverage $81\%$ on FD002 and $79\%$ on FD004).
-
-\paragraph{Regime-aware observation model (P4).} Adding the regime to the observation model (PGIB-KFR) narrows the gap on the multi-regime subsets but does not close it. On FD002 the PGIB-KFR ($29.6$) is indistinguishable from PCA-HI, the Geo-opt HI and the regime-specific ridge HI ($28.4$, the lowest). On FD004 it improves from $40.6$ to $34.8$ and beats PCA-HI ($-9.5$, $-12.4$ to $-6.6$) but stays behind the Geo-opt HI ($+5.1$, $2.3$ to $7.9$) and the ridge HI. Two points limit the reading. The pre-declared selection by calibration likelihood chose PGIB-KF rather than PGIB-KFR on three of the four subsets, and the single-regime check failed: with one regime, PGIB-KFR is PGIB-KF up to an extra input and the initialisation, yet it is worse on FD001 ($26.5$ against $22.9$) and FD003 ($25.4$ against $19.4$). Differences of three to six RMSE units between near-equivalent configurations are within the training variability. We therefore do not claim that the regime-aware model improves prognostics; the result is consistent with Proposition~\ref{prop:regime} but does not demonstrate it.
-
-\paragraph{Seed variability and ten-seed ensembles (P5).} The learned models were retrained with ten fresh seeds each, keeping architecture, $\beta$ and calibration fixed (Table~\ref{tab:var10}, Figure~\ref{fig:cmapss}). The ensembles have a coverage of $84\%$ to $94\%$. PGIB-KFR is worse than PGIB-KF on FD001 by $3.7$ RMSE units (Welch test \cite{welch1947}, $p=0.02$) and gains only with six regimes on FD004 ($-4.0$, $p=0.17$).
-
-\paragraph{Ablations and fusion.} On FD003, removing the bottleneck ($\beta=0$) or the physics prior changes the RMSE of the integrating PGIB by less than two units ($39.1$ and $37.9$ against $39.9$), whereas removing the epistemic drift variance raises it to $45.9$ and lowers the coverage from $95\%$ to $92\%$. On FD001 the age fusion lowers the RMSE of PCA-HI from $29.0$ to $21.8$ (Table~\ref{tab:fusion}).
-
-\paragraph{Information certificates.} The certified information (Table~\ref{tab:cert2}) is vacuous for NASA, the three FEMTO conditions and, except for PCA-HI, IMS. It is positive only on CALCE, where it is $0.60$ nats for the PGIB against $0.41$ for the age law with four cells, and $0.35$ against $0.31$ with six cells. To separate the information of the HI from that of the age (Section~\ref{sec:limits}), Proposition~\ref{prop:age} gives $I(T_t;H_{1:t}\mid t)\ge\bar h(T_t\mid t)-\tfrac12\ln(2\pi e\,\mathrm{MSE})$, where $\bar h(T_t\mid t)$ is the mean entropy of the RUL given the age. We evaluated it under a log-normal lifetime model fitted to all lifetimes of each data set (Table~\ref{tab:certage}). The age-only predictor cannot exceed the entropy-power bound of the true age-conditional law, so its value must not be positive; it is positive on CALCE (four and six cells) and on FEMTO conditions 1 and 2, because a log-normal law fitted to three to seven lifetimes overestimates $h(T_t\mid t)$. The model-based age-conditional certificate therefore fails this negative control and is not used to claim that any HI adds information to the age.
-
-\begin{table}
-\caption{Age-conditional certificate (nats) under a fitted log-normal lifetime model; $\bar h(T\mid t)$: mean conditional entropy. A positive value for the age-only predictor shows that the model overestimates $h(T\mid t)$.}
-\centering\small
-\input{results/tab_cert_age}
-\label{tab:certage}
-\end{table}
+This appendix gives the tables behind Section~\ref{sec:empirical}: protocol P2 on the development and confirmation sets (Tables~\ref{tab:dev} and \ref{tab:conf}), the C-MAPSS subsets (Tables~\ref{tab:fd003}, \ref{tab:fd001}, \ref{tab:fd002} and \ref{tab:fd004}), the effect of the age fusion (Table~\ref{tab:fusion}) and the certified information (Tables~\ref{tab:cert2} and \ref{tab:certage}). Protocols and evidence tiers are described in Appendix~\ref{app:data}.
 
 \begin{table}
 \caption{Protocol P2, development sets. RMSE, MAE and CRPS in cycles (batteries) or $10$~s snapshots (bearings); mean $\pm$ standard deviation over seeds; bold: lowest RMSE.}
@@ -667,8 +644,6 @@ This appendix gives the tables behind Section~\ref{sec:empirical} with a short c
 \label{tab:fd004}
 \end{table}
 
-
-
 \begin{table}
 \caption{Effect of the age fusion: RMSE with fusion / without fusion (after recalibration with $w_{\rm a}=0$).}
 \centering\small
@@ -681,6 +656,13 @@ This appendix gives the tables behind Section~\ref{sec:empirical} with a short c
 \centering\small
 \adjustbox{max width=\linewidth}{\input{results/tab_cert2}}
 \label{tab:cert2}
+\end{table}
+
+\begin{table}
+\caption{Age-conditional certificate (nats) under a fitted log-normal lifetime model; $\bar h(T\mid t)$: mean conditional entropy. A positive value for the age-only predictor shows that the model overestimates $h(T\mid t)$.}
+\centering\small
+\input{results/tab_cert_age}
+\label{tab:certage}
 \end{table}
 
 \section{Initial benchmark protocol (P1)}
