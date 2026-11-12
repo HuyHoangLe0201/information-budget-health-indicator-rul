@@ -63,20 +63,20 @@ Order = first citation in main.tex. "Metadata" = how bibliographic data were ver
 | 57 | bishop2006 | library catalogue (Open Library) | classical source cited for a standard fact; content not re-read |
 | 58 | kalman1960 | Crossref record | classical source cited for a standard fact; content not re-read |
 | 59 | durbin2012 | library catalogue (Open Library) | classical source cited for a standard fact; content not re-read |
-| 60 | stam1959 | Crossref record | classical source cited for a standard fact; content not re-read |
-| 61 | durrett2010 | library catalogue (Open Library) | classical source cited for a standard fact; content not re-read |
-| 62 | harvey1989 | library catalogue (Open Library) | classical source cited for a standard fact; content not re-read |
-| 63 | genest1986 | Crossref record | classical source cited for a standard fact; content not re-read |
-| 64 | hinton2002 | Crossref record | classical source cited for a standard fact; content not re-read |
-| 65 | meeker1998 | library catalogue (Open Library) | classical source cited for a standard fact; content not re-read |
-| 66 | gneiting2007 | Crossref record | classical source cited for a standard fact; content not re-read |
-| 67 | bouthillier2021 | publisher/proceedings page | bibliographic record only (title/venue/pages); content not read |
-| 68 | efron1993 | library catalogue (Open Library) | classical source cited for a standard fact; content not re-read |
-| 69 | ma2022 | Crossref record | bibliographic record only (title/venue/pages); content not read |
-| 70 | attia2020 | Crossref record | bibliographic record only (title/venue/pages); content not read |
-| 71 | zhu2022 | Crossref record | bibliographic record only (title/venue/pages); content not read |
-| 72 | tan2025 | Crossref record | abstract read |
-| 73 | mauthe2024 | arXiv/PMLR/NeurIPS record | full text read |
+| 60 | harvey1989 | library catalogue (Open Library) | classical source cited for a standard fact; content not re-read |
+| 61 | ma2022 | Crossref record | bibliographic record only (title/venue/pages); content not read |
+| 62 | attia2020 | Crossref record | bibliographic record only (title/venue/pages); content not read |
+| 63 | zhu2022 | Crossref record | bibliographic record only (title/venue/pages); content not read |
+| 64 | tan2025 | Crossref record | abstract read |
+| 65 | bouthillier2021 | publisher/proceedings page | bibliographic record only (title/venue/pages); content not read |
+| 66 | efron1993 | library catalogue (Open Library) | classical source cited for a standard fact; content not re-read |
+| 67 | mauthe2024 | arXiv/PMLR/NeurIPS record | full text read |
+| 68 | stam1959 | Crossref record | classical source cited for a standard fact; content not re-read |
+| 69 | durrett2010 | library catalogue (Open Library) | classical source cited for a standard fact; content not re-read |
+| 70 | genest1986 | Crossref record | classical source cited for a standard fact; content not re-read |
+| 71 | hinton2002 | Crossref record | classical source cited for a standard fact; content not re-read |
+| 72 | meeker1998 | library catalogue (Open Library) | classical source cited for a standard fact; content not re-read |
+| 73 | gneiting2007 | Crossref record | classical source cited for a standard fact; content not re-read |
 | 74 | saha2007 | publisher/proceedings page | classical source cited for a standard fact; content not re-read |
 | 75 | he2011 | Crossref record | classical source cited for a standard fact; content not re-read |
 | 76 | nectoux2012 | author manuscript / full text | abstract read |
