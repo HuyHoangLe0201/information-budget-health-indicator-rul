@@ -1,50 +1,48 @@
 \begin{tikzpicture}[
   font=\small, >=Stealth,
-  blk/.style={draw=black!70, rounded corners=2.5pt, minimum height=1.2cm, minimum width=2.25cm, align=center, fill=#1, line width=0.6pt, inner sep=3pt, drop shadow={shadow xshift=0.4pt,shadow yshift=-0.4pt,opacity=0.25}},
-  lossbox/.style={draw=red!60!black, rounded corners=2pt, fill=white, align=left, font=\footnotesize, text width=3.05cm, inner sep=3pt, line width=0.5pt, minimum height=1.5cm, anchor=north},
-  infobox/.style={draw=blue!50!black, rounded corners=2pt, fill=white, align=center, font=\footnotesize, inner sep=4pt, line width=0.6pt},
+  blk/.style={draw=black!70, rounded corners=2.5pt, minimum height=1.45cm, minimum width=2.45cm, align=center, fill=#1, line width=0.6pt, inner sep=3pt},
+  lossbox/.style={draw=red!60!black, rounded corners=2pt, fill=white, align=left, font=\footnotesize, text width=3.25cm, inner sep=3pt, line width=0.5pt, minimum height=2.8cm, anchor=north},
+  infobox/.style={draw=blue!50!black, rounded corners=2pt, fill=white, align=center, font=\footnotesize, inner sep=4pt, line width=0.6pt, anchor=north},
   arr/.style={-{Stealth[length=2.2mm]}, line width=0.8pt},
-  lane/.style={rounded corners=4pt, draw=none, fill=#1},
-  lanelab/.style={font=\footnotesize\bfseries, anchor=south west, inner sep=2pt},
+  lanelab/.style={font=\footnotesize\bfseries, anchor=north west, inner sep=2pt},
   stage/.style={circle, fill=black!75, text=white, font=\scriptsize\bfseries, inner sep=1.2pt, minimum size=3.8mm},
   lab/.style={font=\footnotesize, inner sep=2pt}]
-\begin{scope}[on background layer]
-  \fill[lane=black!4]  (-0.35,-1.0) rectangle (15.45,3.95);
-  \fill[lane=red!5]    (-0.35,-3.85) rectangle (15.45,-1.15);
-  \fill[lane=blue!5]   (-0.35,-9.25) rectangle (15.45,-4.0);
-\end{scope}
-\node[lanelab,black!70] at (-0.3,-1.0) {system and monitoring};
-\node[lanelab,red!60!black] at (-0.3,-3.85) {HI construction: where information is lost};
-\node[lanelab,blue!50!black] at (-0.3,-9.25) {information accounting};
+\hyphenpenalty=10000 \exhyphenpenalty=10000
+% ---------------- lanes (drawn first, labels inside the lane margins)
+\fill[black!4,rounded corners=4pt] (-0.35,0.0)   rectangle (15.45,4.95);
+\fill[red!5,rounded corners=4pt]   (-0.35,-4.0) rectangle (15.45,-0.2);
+\fill[blue!5,rounded corners=4pt]  (-0.35,-10.55) rectangle (15.45,-4.2);
+\node[font=\footnotesize\bfseries,anchor=south west,inner sep=2pt,black!70] at (-0.3,0.0) {system and monitoring};
+\node[lanelab,red!60!black] at (-0.3,-0.3) {HI construction: where information is lost};
+\node[lanelab,blue!50!black] at (-0.3,-4.2) {information accounting};
 % ---------------- chain
-\node[blk=gray!15] (z) at (1.2,0.85) {Latent state\\[-1pt]$\mathbf z=(D_t,V_t)$\\[-1pt]regime $r$};
-\node[blk=orange!18] (x) at (4.4,0.85) {Sensors\\[-1pt]$\mathbf X_{1:t}$};
-\node[blk=green!18!white,draw=green!40!black,line width=1.2pt] (h) at (7.6,0.85) {Health indicator\\[-1pt]$H_{1:t}=f_\theta(\mathbf X_{1:t})$};
-\node[blk=blue!12] (g) at (10.8,0.85) {Predictor\\[-1pt]$\hat T_t=g(H_{1:t},t)$};
-\node[blk=blue!12] (e) at (14.0,0.85) {RUL estimate\\[-1pt]$\hat T_t$};
-\foreach \n/\i in {z/1,x/2,h/3,g/4,e/5} \node[stage] at ($(\n.north west)+(0.1,0.0)$) {\i};
+\node[blk=gray!15] (z) at (1.25,1.75) {Latent state\\[-1pt]$\mathbf z=(D_t,V_t)$\\[-1pt]regime $r$};
+\node[blk=orange!18] (x) at (4.4,1.75) {Sensors\\[-1pt]$\mathbf X_{1:t}$};
+\node[blk=green!18!white,draw=green!40!black,line width=1.2pt] (h) at (7.55,1.75) {Health indicator\\[-1pt]$H_{1:t}=f_\theta(\mathbf X_{1:t})$};
+\node[blk=blue!12] (g) at (10.7,1.75) {Predictor\\[-1pt]$\hat T_t=g(H_{1:t},t)$};
+\node[blk=blue!12] (e) at (13.85,1.75) {RUL estimate\\[-1pt]$\hat T_t$};
+\foreach \n/\i in {z/1,x/2,h/3,g/4,e/5} \node[stage] at ($(\n.north west)+(-0.05,0.08)$) {\i};
 \draw[arr] (z) -- (x); \draw[arr] (x) -- (h); \draw[arr] (h) -- (g); \draw[arr] (g) -- (e);
-\node[blk=gray!15] (T) at (1.2,2.75) {True RUL $T_t$};
-\node[blk=yellow!25,minimum width=2.6cm] (age) at (10.8,2.75) {Age $t$ (always known)};
-\draw[arr] (z) -- node[lab,right]{drives} (T);
-\draw[arr] (age) -- (g);
-\draw[dashed,black!60,line width=0.6pt,-{Stealth[length=2mm]}] (T.north) -- (1.2,3.3) -- node[lab,above=-1pt,black!70]{squared error $\E(T_t-\hat T_t)^2$} (14.0,3.3) -- (e.north);
+\node[blk=gray!15,minimum height=1.0cm] (T) at (1.25,3.55) {True RUL $T_t$};
+\node[blk=yellow!25,minimum height=1.0cm,minimum width=3.0cm] (age) at (10.7,3.55) {Age $t$ (always known)};
+\draw[arr] (z.north) -- node[lab,right]{drives} (T.south);
+\draw[arr] (age.south) -- (g.north);
+\draw[dashed,black!60,line width=0.6pt,-{Stealth[length=2mm]}] (T.north) -- (1.25,4.4) -- (13.85,4.4) -- (e.north);
+\node[lab,black!70,fill=black!4,inner sep=1.5pt] at (6.0,4.4) {squared error $\E(T_t-\hat T_t)^2$};
 % ---------------- where information is lost
-\node[lossbox] (l1) at (1.95,-1.55) {\textbf{Pointwise squeeze, smoothing}\\ state information lost, monotonicity saturates (Theorem~\ref{thm:paradox})};
-\node[lossbox] (l2) at (5.6,-1.55) {\textbf{Scalar projection}\\ inflation of the bound by $1+\rho\sin^2\psi$ (Theorem~\ref{thm:angular}, Corollary~\ref{cor:rotation})};
-\node[lossbox] (l3) at (9.25,-1.55) {\textbf{Regime-blind read-out}\\ error floor that does not vanish as the noise decreases (Proposition~\ref{prop:regime})};
-\node[lossbox] (l4) at (12.9,-1.55) {\textbf{Integrating encoder}\\ error accumulates without observation correction (Proposition~\ref{prop:accum})};
-\coordinate (m) at (6.0,0.85);
-\draw[arr,red!60!black,line width=0.9pt] (6.0,-1.15) -- (6.0,0.85-0.0) ;
+\node[lossbox] (l1) at (1.95,-0.95) {\textbf{Squeeze, smoothing}\\ state information lost, monotonicity saturates (Theorem~\ref{thm:paradox})};
+\node[lossbox] (l2) at (5.65,-0.95) {\textbf{Scalar projection}\\ inflation of the bound by $1+\rho\sin^2\psi$ (Theorem~\ref{thm:angular}, Corollary~\ref{cor:rotation})};
+\node[lossbox] (l3) at (9.35,-0.95) {\textbf{Regime-blind read-out}\\ error floor that does not vanish as the noise decreases (Proposition~\ref{prop:regime})};
+\node[lossbox] (l4) at (13.05,-0.95) {\textbf{Integrating encoder}\\ error accumulates without observation correction (Proposition~\ref{prop:accum})};
+\draw[arr,red!60!black,line width=0.9pt] (7.55,-0.2) -- (h.south);
 % ---------------- information budget
-\node[lab] (ix) at (4.4,-4.65) {$I(T_t;\mathbf X_{1:t})$};
-\node[lab] (ih) at (7.6,-4.65) {$I(T_t;H_{1:t})$};
-\node[lab] (ie) at (14.0,-4.65) {$I(T_t;\hat T_t)$};
-\node[lab] at (6.0,-4.65) {$\ge$}; \node[lab] at (10.8,-4.65) {$\ge$};
-\draw[decorate,decoration={brace,amplitude=4pt,mirror},line width=0.6pt,blue!50!black] (3.0,-4.95) -- node[below=5pt,lab,blue!50!black]{information budget (data processing inequality, Eq.~\ref{eq:dpi}); efficiency $\etaPIE=I(T_t;H_{1:t})/I(T_t;\mathbf X_{1:t})$} (15.0,-4.95);
-% ---------------- bounds
-\node[infobox,text width=7.5cm] (b1) at (3.95,-7.75) {\textbf{Error budget} (Theorem~\ref{thm:bound}, Proposition~\ref{prop:age}, Theorem~\ref{thm:physics})\\[2pt] $\E(T_t-\hat T_t)^2\ \ge\ \dfrac{e^{2h(T_t\mid H_{1:t},t)}}{2\pi e}$, which splits into an aleatoric floor (independent of the HI) and an epistemic term that grows with the information lost};
-\node[infobox,text width=6.4cm] (b2) at (11.75,-7.75) {\textbf{Certificate} (Proposition~\ref{cor:cert})\\[2pt] $I(T_t;H_{1:t})\ \ge\ h(T_t)-\tfrac12\ln(2\pi e\,\varepsilon^2)$\\[1pt] a held-out error $\varepsilon$ of any predictor lower-bounds the information the HI retains};
+\node[lab] (ix) at (4.4,-5.15) {$I(T_t;\mathbf X_{1:t})$};
+\node[lab] (ih) at (7.55,-5.15) {$I(T_t;H_{1:t})$};
+\node[lab] (ie) at (13.85,-5.15) {$I(T_t;\hat T_t)$};
+\node[lab] at (5.98,-5.15) {$\ge$}; \node[lab] at (10.7,-5.15) {$\ge$};
+\draw[decorate,decoration={brace,amplitude=4pt,mirror},line width=0.6pt,blue!50!black] (3.3,-5.55) -- (14.9,-5.55);
+\node[lab,blue!50!black,align=center,text width=11.4cm] at (9.1,-6.3) {information budget (data processing inequality, Eq.~\ref{eq:dpi});\\ efficiency $\etaPIE=I(T_t;H_{1:t})/I(T_t;\mathbf X_{1:t})$};
+\node[infobox,text width=7.6cm,minimum height=3.2cm] (b1) at (4.1,-7.05) {\textbf{Error budget} (Theorem~\ref{thm:bound}, Proposition~\ref{prop:age}, Theorem~\ref{thm:physics})\\[2pt] $\E(T_t-\hat T_t)^2\ \ge\ \dfrac{e^{2h(T_t\mid H_{1:t},t)}}{2\pi e}$, which splits into an aleatoric floor (independent of the HI) and an epistemic term that grows with the information lost};
+\node[infobox,text width=6.2cm,minimum height=3.2cm] (b2) at (11.75,-7.05) {\textbf{Certificate} (Proposition~\ref{cor:cert})\\[2pt] $I(T_t;H_{1:t})\ \ge\ h(T_t)-\tfrac12\ln(2\pi e\,\varepsilon^2)$\\[1pt] a held-out error $\varepsilon$ of any predictor lower-bounds the information the HI retains};
 \draw[arr,blue!50!black] (b1.east) -- (b2.west);
-\draw[arr,blue!50!black] (3.95,-6.0) -- (b1.north -| 3.95,0);
 \end{tikzpicture}

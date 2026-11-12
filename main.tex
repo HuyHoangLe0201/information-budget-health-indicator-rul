@@ -5,6 +5,7 @@
 \biboptions{numbers,sort&compress}
 \journal{Reliability Engineering \& System Safety}
 \emergencystretch=3em
+\renewcommand{\topfraction}{0.85}
 \newif\ifblind\blindtrue   % \blindtrue for the anonymised version
 \usepackage{amsmath,amssymb,amsthm,booktabs,graphicx,xcolor,adjustbox}
 \usepackage{tikz}
@@ -57,7 +58,7 @@ Three bodies of work bear on how an HI should be judged. First, HIs are usually 
 
 The literature thus offers geometric and accuracy-based ways of judging an HI, a mature probabilistic theory of the RUL \emph{given} an HI, and general information-theoretic tools. In the sources we searched (bibliographic databases and the references above; this is not an exhaustive survey) we did not find a theory that connects them, that is, a bound on the RUL error that depends on the HI only through the information it retains, a statement of what the geometric criteria do and do not measure in these terms, and an account of what a \emph{scalar, static} indicator loses when the degradation velocity varies in time or the sensors respond to the operating regime. A companion study \cite{anon2026a} analysed what a static, per-snapshot projection of a multichannel signal retains about the degradation state. Here we analyse the HI \emph{trajectory}, with its level, velocity, between-unit variability and operating regime. Two further studies by the same authors address how many run-to-failure trajectories \cite{anon2026b} and which charging-phase features \cite{anon2026c} are needed; the present paper addresses how much \emph{information} an HI can at best retain. Figure~\ref{fig:framework} shows the setting and where each result applies.
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \resizebox{\textwidth}{!}{\input{figs/fig_framework}}
 \caption{Framework of the paper. The HI is constructed from the sensors, which are driven by the same latent state as the true RUL, and the predictor uses the HI and the age. The data processing inequality gives an information budget; the red boxes list the operations of HI construction whose information loss is quantified.}
