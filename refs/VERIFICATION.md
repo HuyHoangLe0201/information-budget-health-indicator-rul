@@ -72,10 +72,13 @@ Order = first citation in main.tex. "Metadata" = how bibliographic data were ver
 | 66 | gneiting2007 | Crossref record | classical source cited for a standard fact; content not re-read |
 | 67 | bouthillier2021 | publisher/proceedings page | bibliographic record only (title/venue/pages); content not read |
 | 68 | efron1993 | library catalogue (Open Library) | classical source cited for a standard fact; content not re-read |
-| 69 | saha2007 | publisher/proceedings page | classical source cited for a standard fact; content not re-read |
-| 70 | he2011 | Crossref record | classical source cited for a standard fact; content not re-read |
-| 71 | nectoux2012 | author manuscript / full text | abstract read |
-| 72 | lee2007 | publisher/proceedings page | classical source cited for a standard fact; content not re-read |
-| 73 | qiu2006 | Crossref record | classical source cited for a standard fact; content not re-read |
-| 74 | saxena2008 | author manuscript / full text | full text read |
-| 75 | welch1947 | Crossref record | classical source cited for a standard fact; content not re-read |
+| 69 | ma2022 | Crossref record | bibliographic record only (title/venue/pages); content not read |
+| 70 | attia2020 | Crossref record | bibliographic record only (title/venue/pages); content not read |
+| 71 | tan2025 | Crossref record | abstract read |
+| 72 | saha2007 | publisher/proceedings page | classical source cited for a standard fact; content not re-read |
+| 73 | he2011 | Crossref record | classical source cited for a standard fact; content not re-read |
+| 74 | nectoux2012 | author manuscript / full text | abstract read |
+| 75 | lee2007 | publisher/proceedings page | classical source cited for a standard fact; content not re-read |
+| 76 | qiu2006 | Crossref record | classical source cited for a standard fact; content not re-read |
+| 77 | saxena2008 | author manuscript / full text | full text read |
+| 78 | welch1947 | Crossref record | classical source cited for a standard fact; content not re-read |

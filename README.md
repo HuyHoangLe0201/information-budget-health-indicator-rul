@@ -53,7 +53,8 @@ Data are public and are not redistributed here; see `DATA.md` for the sources an
 | P3 (multi-regime) | FD002 and FD004 | `run_cmapss4.py FD002|FD004` | `out2/cmapss_*_v3.pkl` |
 | P4 | Regime-aware encoder (PGIB-KFR) | `run_cmapss5.py FD00x` | `out2/cmapss_*_v5.pkl` |
 | Certificates | Age-conditional certificate under a fitted lifetime model | `cert_age.py` | `results/cert_age.json`, `results/tab_cert_age.tex` |
-| Real-data tests | Cross-validated certificates, squeeze, stage-wise direction, regime read-out on C-MAPSS (Section 8) | `realdata_checks.py FD00x`, `cert_age_cmapss.py`, `make_tables_realdata.py`; figures: `code/make_all_figs.py realdata` | `results/realdata_FD00x.json`, `results/cert_age_cmapss.json`, `results/tab_rd_*.tex` |
+| Real-data tests, turbofan engines | Cross-validated certificates, squeeze, stage-wise direction, regime read-out on C-MAPSS (Section 8.1) | `realdata_checks.py FD00x`, `cert_age_cmapss.py`, `make_tables_realdata.py`; figures: `code/make_all_figs.py realdata` | `results/realdata_FD00x.json`, `results/cert_age_cmapss.json`, `results/tab_rd_*.tex` |
+| Real-data tests, lithium-ion cells | The same tests on the HUST (77 cells) and MATR (169 cells) collections of BatteryLife (Section 8.2) | `prep_batterylife.py HUST|MATR`, `battery_checks.py HUST|MATR`, `make_tables_realdata.py`; figures: `code/make_all_figs.py realdata` | `bench/data/{hust,matr}_feats.npz`, `results/realdata_{HUST,MATR}.json`, `results/tab_rd_*.tex` |
 | P5 | Ten-seed variance study | `run_cmapss6.py FD00x`, `analyze_variance.py`, `make_tables_cmapss.py` | `out2/cmapss_*_v6.pkl`, `results/variance10.json` |
 
 `<set>` is one of `nasa`, `calce`, `calce6`, `femto1`, `femto2`, `femto3`, `ims`. The directories `bench/out*/` contain the per-unit outputs of the runs reported in the paper, so that the aggregation, analysis and figure scripts can be run without retraining.

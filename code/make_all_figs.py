@@ -223,42 +223,42 @@ def fig_bench():
 
 # =====================================================================  Fig: real-data checks on C-MAPSS (certificates, squeeze, stages)
 def fig_realdata():
-    FDs = ['FD001', 'FD002', 'FD003', 'FD004']; Rr = {fd: J(f'results/realdata_{fd}.json') for fd in FDs}; Cc = J('results/cert_age_cmapss.json'); cols = [BLUE, ORANGE, GREEN, RED]
+    import os
+    FD4 = ['FD001', 'FD002', 'FD003', 'FD004']; FDs = FD4+[b for b in ['HUST', 'MATR'] if os.path.exists(f'results/realdata_{b}.json')]; Rr = {fd: J(f'results/realdata_{fd}.json') for fd in FDs}; Cc = J('results/cert_age_cmapss.json'); cols = [BLUE, ORANGE, GREEN, RED, PURPLE, GREY]; nS = len(FDs)
     G = ['0.0', '0.5', '0.9', '0.97', '0.99', '0.995']; xg = np.arange(len(G)); xt = ['0', '.5', '.9', '.97', '.99', '.995']
     # ---- Figure A: cross-validated certificates and squeeze
     fig, ax = plt.subplots(1, 3, figsize=(W, 2.7), gridspec_kw=dict(wspace=0.45, width_ratios=[1.7, 1, 1]))
     a = ax[0]; panel(a, '(a)'); preds = [('age only', 'age\n(control)'), ('ridge HI', 'ridge\nHI'), ('PCA-HI', 'PCA\nHI'), ('ridge level only', 'level\nonly'), ('ridge slope only', 'slope\nonly'), ('sensors', 'raw\nsensors')]
     for j, fd in enumerate(FDs):
-        c = Rr[fd]['cert']; ci = Rr[fd]['cert_ci']; xs = np.arange(len(preds))+(j-1.5)*0.16; y = np.array([c[k] for k, _ in preds]); lo = y-np.array([ci[k][0] for k, _ in preds]); hi = np.array([ci[k][1] for k, _ in preds])-y
+        c = Rr[fd]['cert']; ci = Rr[fd]['cert_ci']; xs = np.arange(len(preds))+(j-(nS-1)/2)*0.13; kk = [('charge sensors' if (k == 'sensors' and 'charge sensors' in c) else k) for k, _ in preds]; y = np.array([c[k] for k in kk]); lo = y-np.array([ci[k][0] for k in kk]); hi = np.array([ci[k][1] for k in kk])-y
         a.errorbar(xs, y, yerr=[lo, hi], fmt='o', color=cols[j], ms=3.5, capsize=1.5, lw=.9, label=fd)
-    a.axhline(0, color='k', lw=.8); a.set_xticks(range(len(preds))); a.set_xticklabels([l for _, l in preds], fontsize=6.6); a.set_ylabel(r'certified $I(T;H\mid t)$ [nats]'); a.legend(fontsize=6.4, ncol=4, loc='upper center', bbox_to_anchor=(0.5, 1.0), columnspacing=.6, handletextpad=.2, borderpad=.1)
-    a.set_ylim(-0.42, 0.55)
-    b = ax[1]; panel(b, '(b)')
+    a.axhline(0, color='k', lw=.8); a.set_ylim(-0.5, 0.9); a.set_xticks(range(len(preds))); a.set_xticklabels([l for _, l in preds], fontsize=6.6); a.set_ylabel(r'certified $I(T;H\mid t)$ [nats]');     b = ax[1]; panel(b, '(b)')
     for j, fd in enumerate(FDs):
         b.plot(xg, [Rr[fd]['mon'][g] for g in G], '-o', color=cols[j], ms=3.5, label=fd); b.axhline(Rr[fd]['mon_inf_pred'], color=cols[j], ls=':', lw=1)
-    b.set_xticks(xg); b.set_xticklabels(xt, fontsize=7); b.set_xlabel(r'squeezing strength $\gamma$'); b.set_ylabel('monotonicity'); b.text(0.97, 0.04, r'dotted: predicted $\mathrm{Mon}_\infty$', transform=b.transAxes, fontsize=6.4, va='bottom', ha='right', color=GREY)
+    b.set_xticks(xg); b.set_xticklabels(xt, fontsize=7); b.set_xlabel(r'squeezing strength $\gamma$'); b.set_ylabel('monotonicity')
     c_ = ax[2]; panel(c_, '(c)')
     for j, fd in enumerate(FDs): c_.plot(xg, [Rr[fd]['cert'][f'squeeze {g}'] for g in G], '-s', color=cols[j], ms=3.5, mfc='w')
     c_.axhline(0, color='k', lw=.8); c_.set_xticks(xg); c_.set_xticklabels(xt, fontsize=7); c_.set_xlabel(r'squeezing strength $\gamma$'); c_.set_ylabel(r'certified $I(T;H\mid t)$ [nats]')
+    fig.subplots_adjust(bottom=0.27); fig.legend(handles=[Line2D([], [], marker='o', color=cols[j], lw=0, ms=4, label=fd) for j, fd in enumerate(FDs)], loc='lower center', ncol=nS, fontsize=7, bbox_to_anchor=(0.5, 0.0))
     save(fig, 'fig_realdata_a')
     # ---- Figure B: official-test certificates and stage-wise directions
     fig, ax = plt.subplots(1, 3, figsize=(W, 3.2), gridspec_kw=dict(wspace=0.55, width_ratios=[1.5, 1, 1]))
     fig.subplots_adjust(bottom=0.24)
     a = ax[0]; panel(a, '(a)'); rows = [('Age-only', 'age law (control)'), ('PCA-HI', 'PCA-HI'), ('Mon-opt HI', 'Geo-opt HI'), ('Ridge-HI (supervised)', 'ridge HI'), ('beta-VAE-HI', r'$\beta$-VAE'), ('PGIB-HI (ens10)', 'PGIB, integrating'), ('PGIB-KF-HI (ens10)', 'PGIB-KF'), ('PGIB-KFR-HI (ens10)', 'PGIB-KFR')]
-    for j, fd in enumerate(FDs):
+    for j, fd in enumerate(FD4):
         for i, (k, _) in enumerate(rows):
             y = len(rows)-1-i+(j-1.5)*0.16; v = Cc[fd]['cert'][k]; ci = Cc[fd]['ci'][k]; a.errorbar([v], [y], xerr=[[v-ci[0]], [ci[1]-v]], fmt='o', color=cols[j], mfc='w' if fd == 'FD003' else cols[j], ms=3.3, capsize=1.3, lw=.8, label=fd if i == 0 else None)
-    a.axvline(0, color='k', lw=.8); a.set_yticks(range(len(rows))); a.set_yticklabels([l for _, l in rows][::-1], fontsize=7); a.set_xlabel(r'certified $I(T;H\mid t)$ [nats]'); a.grid(axis='y', visible=False)
-    fig.legend(handles=[Line2D([], [], marker='o', color=cols[j], mfc='w' if fd == 'FD003' else cols[j], lw=0, ms=4, label=fd+(' (control fails)' if fd == 'FD003' else '')) for j, fd in enumerate(FDs)], loc='lower center', ncol=4, fontsize=7, bbox_to_anchor=(0.5, 0.0))
+    a.axvline(0, color='k', lw=.8); a.set_yticks(range(len(rows))); a.set_yticklabels([l for _, l in rows][::-1], fontsize=7); a.set_xlabel(r'certified $I(T;H\mid t)$ [nats]'); a.grid(axis='y', visible=False); a.set_title('turbofan test engines', fontsize=7, loc='right')
+    fig.legend(handles=[Line2D([], [], marker='o', color=cols[j], mfc='w' if fd == 'FD003' else cols[j], lw=0, ms=4, label=fd+(' (control fails)' if fd == 'FD003' else '')) for j, fd in enumerate(FDs)], loc='lower center', ncol=nS, fontsize=7, bbox_to_anchor=(0.5, 0.0))
     b = ax[1]; panel(b, '(b)')
     for j, fd in enumerate(FDs):
         st = Rr[fd]['stage_age']['stages']; b.plot(np.arange(1, 6), [s['angle_opt'] for s in st], '-o', color=cols[j], ms=3.5); b.axhline(Rr[fd]['stage_age']['static_angle'], color=cols[j], ls=':', lw=1)
-    b.set_xlabel('age stage (equal-count bins)'); b.set_ylabel('optimal direction [deg from level axis]'); b.set_ylim(0, 90); b.text(0.03, 0.04, 'dotted: best static direction', transform=b.transAxes, fontsize=6.4, color=GREY)
+    b.set_xlabel('age stage (equal-count bins)'); b.set_ylabel('optimal direction [deg from level axis]'); b.set_ylim(0, 90)
     c = ax[2]; panel(c, '(c)'); x0 = np.arange(len(FDs)); wd = 0.26
     def worst(fd, key): st = Rr[fd]['stage_age']['stages']; return max(np.sqrt(s['mse'][key]/s['mse']['both']) for s in st)
     for k, (key, lab, col) in enumerate([('static', 'static direction', GREEN), ('level', 'level only', BLUE), ('velocity', 'velocity only', ORANGE)]):
         c.bar(x0+(k-1)*wd, [worst(fd, key) for fd in FDs], wd, color=col, label=lab)
-    c.axhline(1, color='k', lw=.8); c.set_xticks(x0); c.set_xticklabels(FDs, fontsize=6.3, rotation=35); c.set_ylim(0.95, 1.5); c.set_ylabel('worst-stage RMSE ratio to free direction'); c.legend(fontsize=6.3, loc='upper left')
+    c.axhline(1, color='k', lw=.8); c.set_xticks(x0); c.set_xticklabels(FDs, fontsize=6, rotation=45, ha='right'); c.set_ylim(0.95, 1.6); c.set_ylabel('worst-stage RMSE ratio to free direction'); c.legend(fontsize=6.3, loc='upper left')
     save(fig, 'fig_realdata_b')
 
 if __name__ == '__main__':

@@ -102,6 +102,15 @@ add('li2018', 'art', 'Li X, Ding Q and Sun J-Q', 2018,
 add('severson2019', 'art', 'Severson K A et al', 2019,
     'Data-driven prediction of battery cycle life before capacity degradation',
     'Nat. Energy', '4', '383--91', '10.1038/s41560-019-0356-8', 'C', 'title')
+add('attia2020', 'art', 'Attia P M et al', 2020,
+    'Closed-loop optimization of fast-charging protocols for batteries with machine learning',
+    'Nature', '578', '397--402', '10.1038/s41586-020-1994-5', 'C', 'title')
+add('ma2022', 'art', 'Ma G et al', 2022,
+    'Real-time personalized health status prediction of lithium-ion batteries using deep transfer learning',
+    'Energy Environ. Sci.', '15', '4083--94', '10.1039/D2EE01676A', 'C', 'title')
+add('tan2025', 'proc', 'Tan R et al', 2025,
+    'BatteryLife: a comprehensive dataset and benchmark for battery life prediction',
+    'Proc. 31st ACM SIGKDD Conf. on Knowledge Discovery and Data Mining', '2', '5789--800', '10.1145/3711896.3737372', 'C', 'abstract')
 
 # ---------------------------------------------------------------- uncertainty
 add('sankararaman2013', 'proc', 'Sankararaman S and Goebel K', 2013,
