@@ -111,6 +111,9 @@ add('ma2022', 'art', 'Ma G et al', 2022,
 add('tan2025', 'proc', 'Tan R et al', 2025,
     'BatteryLife: a comprehensive dataset and benchmark for battery life prediction',
     'Proc. 31st ACM SIGKDD Conf. on Knowledge Discovery and Data Mining', '2', '5789--800', '10.1145/3711896.3737372', 'C', 'abstract')
+add('zhu2022', 'art', 'Zhu J et al', 2022,
+    'Data-driven capacity estimation of commercial lithium-ion batteries from voltage relaxation',
+    'Nat. Commun.', '13', '2261', '10.1038/s41467-022-29837-w', 'C', 'title')
 
 # ---------------------------------------------------------------- uncertainty
 add('sankararaman2013', 'proc', 'Sankararaman S and Goebel K', 2013,

@@ -1,7 +1,7 @@
 """LaTeX tables of the real-data checks (reads ../results/realdata_FD00x.json and cert_age_cmapss.json).  Run from bench/."""
 import json, numpy as np
 import os
-FD = ['FD001', 'FD002', 'FD003', 'FD004']; BAT = [b for b in ['HUST', 'MATR'] if os.path.exists(f'../results/realdata_{b}.json')]; SETS = FD+BAT
+FD = ['FD001', 'FD002', 'FD003', 'FD004']; BAT = [b for b in ['HUST', 'MATR', 'Tongji'] if os.path.exists(f'../results/realdata_{b}.json')]; SETS = FD+BAT
 R = {s: json.load(open(f'../results/realdata_{s}.json')) for s in SETS}; C = json.load(open('../results/cert_age_cmapss.json'))
 NAME = {s: s for s in SETS}
 f2 = lambda x: f'{x:.2f}'

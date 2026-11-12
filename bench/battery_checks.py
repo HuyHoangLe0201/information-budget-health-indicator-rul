@@ -1,4 +1,4 @@
-"""Real-data tests of the theory on a second domain with many units: lithium-ion cells (HUST: 77 cells, one protocol per cell; MATR: 169 cells, fast-charging protocols).
+"""Real-data tests of the theory on a second domain with many units: lithium-ion cells (HUST: 77 cells, one protocol per cell; MATR: 169 cells, fast-charging protocols; Tongji: 88 cells, three NCA/NMC chemistries).
 Same design as realdata_checks.py (C-MAPSS): cell-grouped 5-fold cross-validation; population = pairs (cell, age t), T = L - t, T | t = L - t | L > t.
 R1  age-conditional certificate (non-parametric lifetime law), negative control = age-only predictor;
 R2  squeeze (Theorem 2) applied to a real HI;
@@ -6,15 +6,15 @@ R3  stage-wise optimal linear scalar HI of (level, velocity) (Theorem 4, Corolla
 R4  protocol-blind versus own-reference normalisation (Proposition 5, with the protocol of a cell playing the role of the regime).
 HIs use the charging-phase features only (charge duration, charge voltage at 0.3 and 0.8 Ah); every feature is expressed relative to the cell's own
 cycles 2-11.  The discharge capacity, which defines the end of life, is used only by the reference predictor 'capacity'.
-Run from bench/:  python3 battery_checks.py HUST|MATR"""
+Run from bench/:  python3 battery_checks.py HUST|MATR|Tongji"""
 import numpy as np, json, sys, time
 from scipy import stats
 from sklearn.model_selection import GroupKFold
 from sklearn.ensemble import HistGradientBoostingRegressor as HGB
 from realdata_checks import tmean, tslope, mon, affine, fit_ridge_hi, fit_pca_hi
 NAME = sys.argv[1] if len(sys.argv) > 1 else 'HUST'
-# time scales (cycles) follow the lifetimes of the data set: HUST median life 1700 cycles, MATR 760 cycles
-CFG = {'HUST': dict(T0=100, STRIDE=5, W_LEV=20, W_VEL=100, LAG1=100, LAG2=250, TAU=2.0), 'MATR': dict(T0=50, STRIDE=3, W_LEV=10, W_VEL=50, LAG1=50, LAG2=125, TAU=1.0)}[NAME]
+# time scales (cycles) follow the lifetimes of the data set: HUST median life 1700 cycles, MATR 760, Tongji 360
+CFG = {'HUST': dict(T0=100, STRIDE=5, W_LEV=20, W_VEL=100, LAG1=100, LAG2=250, TAU=2.0), 'MATR': dict(T0=50, STRIDE=3, W_LEV=10, W_VEL=50, LAG1=50, LAG2=125, TAU=1.0), 'Tongji': dict(T0=30, STRIDE=2, W_LEV=10, W_VEL=40, LAG1=40, LAG2=100, TAU=1.0)}[NAME]
 T0, STRIDE, W_LEV, W_VEL, LAG1, LAG2, TAU = [CFG[k] for k in ('T0', 'STRIDE', 'W_LEV', 'W_VEL', 'LAG1', 'LAG2', 'TAU')]; NF = 5; RNG = np.random.default_rng(0)
 CHARGE = [2, 3, 4]; CAP = [0]; GAMMAS = [0.0, 0.5, 0.9, 0.97, 0.99, 0.995]
 def load():

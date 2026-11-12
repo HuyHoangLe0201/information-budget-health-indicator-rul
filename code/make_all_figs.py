@@ -224,13 +224,13 @@ def fig_bench():
 # =====================================================================  Fig: real-data checks on C-MAPSS (certificates, squeeze, stages)
 def fig_realdata():
     import os
-    FD4 = ['FD001', 'FD002', 'FD003', 'FD004']; FDs = FD4+[b for b in ['HUST', 'MATR'] if os.path.exists(f'results/realdata_{b}.json')]; Rr = {fd: J(f'results/realdata_{fd}.json') for fd in FDs}; Cc = J('results/cert_age_cmapss.json'); cols = [BLUE, ORANGE, GREEN, RED, PURPLE, GREY]; nS = len(FDs)
+    FD4 = ['FD001', 'FD002', 'FD003', 'FD004']; FDs = FD4+[b for b in ['HUST', 'MATR', 'Tongji'] if os.path.exists(f'results/realdata_{b}.json')]; Rr = {fd: J(f'results/realdata_{fd}.json') for fd in FDs}; Cc = J('results/cert_age_cmapss.json'); cols = [BLUE, ORANGE, GREEN, RED, PURPLE, GREY, SKY]; nS = len(FDs)
     G = ['0.0', '0.5', '0.9', '0.97', '0.99', '0.995']; xg = np.arange(len(G)); xt = ['0', '.5', '.9', '.97', '.99', '.995']
     # ---- Figure A: cross-validated certificates and squeeze
     fig, ax = plt.subplots(1, 3, figsize=(W, 2.7), gridspec_kw=dict(wspace=0.45, width_ratios=[1.7, 1, 1]))
     a = ax[0]; panel(a, '(a)'); preds = [('age only', 'age\n(control)'), ('ridge HI', 'ridge\nHI'), ('PCA-HI', 'PCA\nHI'), ('ridge level only', 'level\nonly'), ('ridge slope only', 'slope\nonly'), ('sensors', 'raw\nsensors')]
     for j, fd in enumerate(FDs):
-        c = Rr[fd]['cert']; ci = Rr[fd]['cert_ci']; xs = np.arange(len(preds))+(j-(nS-1)/2)*0.13; kk = [('charge sensors' if (k == 'sensors' and 'charge sensors' in c) else k) for k, _ in preds]; y = np.array([c[k] for k in kk]); lo = y-np.array([ci[k][0] for k in kk]); hi = np.array([ci[k][1] for k in kk])-y
+        c = Rr[fd]['cert']; ci = Rr[fd]['cert_ci']; xs = np.arange(len(preds))+(j-(nS-1)/2)*0.115; kk = [('charge sensors' if (k == 'sensors' and 'charge sensors' in c) else k) for k, _ in preds]; y = np.array([c[k] for k in kk]); lo = y-np.array([ci[k][0] for k in kk]); hi = np.array([ci[k][1] for k in kk])-y
         a.errorbar(xs, y, yerr=[lo, hi], fmt='o', color=cols[j], ms=3.5, capsize=1.5, lw=.9, label=fd)
     a.axhline(0, color='k', lw=.8); a.set_ylim(-0.5, 0.9); a.set_xticks(range(len(preds))); a.set_xticklabels([l for _, l in preds], fontsize=6.6); a.set_ylabel(r'certified $I(T;H\mid t)$ [nats]');     b = ax[1]; panel(b, '(b)')
     for j, fd in enumerate(FDs):

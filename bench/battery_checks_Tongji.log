@@ -1,0 +1,10 @@
+fold 0 done 5s
+fold 1 done 9s
+fold 2 done 14s
+fold 3 done 18s
+fold 4 done 23s
+cert: {'h_cond': 5.99, 'age only': 0.05, 'ridge HI': 0.6, 'PCA-HI': 0.52, 'ridge level only': 0.33, 'ridge slope only': 0.27, 'charge sensors': 0.91, 'capacity (reference)': 0.4, 'squeeze 0.0': 0.62, 'squeeze 0.5': 0.54, 'squeeze 0.9': 0.33, 'squeeze 0.97': 0.16, 'squeeze 0.99': 0.09, 'squeeze 0.995': -0.0}
+CI: {'age only': [-0.04, 0.15], 'ridge HI': [0.47, 0.76], 'PCA-HI': [0.37, 0.67], 'ridge level only': [0.22, 0.45], 'ridge slope only': [0.17, 0.38], 'charge sensors': [0.76, 1.05], 'capacity (reference)': [0.28, 0.52]}
+mon {0.0: 0.6538682950729182, 0.5: 0.7002641567037801, 0.9: 0.728483904740711, 0.97: 0.7313859664318042, 0.99: 0.7308966367179227, 0.995: 0.7302064748022551} pred 0.6965721201214221
+regime {'blind': 0.19027795657539764, 'norm': 0.16684729317411634}
+stage_phi 90 [57, 81, 89, 84, 73] stage_age 40 [47, 55, 29, 13, 37]
