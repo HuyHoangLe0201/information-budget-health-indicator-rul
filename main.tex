@@ -1,4 +1,11 @@
-\documentclass{iopjournal}
+\documentclass[preprint,12pt]{elsarticle}
+\usepackage[a4paper,left=2.5cm,right=2.5cm,top=2.5cm,bottom=3cm,footskip=1.6cm]{geometry}
+\usepackage{lineno}
+\usepackage[hidelinks]{hyperref}
+\biboptions{numbers,sort&compress}
+\journal{Reliability Engineering \& System Safety}
+\emergencystretch=3em
+\newif\ifblind\blindtrue   % \blindtrue for the anonymised version
 \usepackage{amsmath,amssymb,amsthm,booktabs,graphicx,xcolor,adjustbox}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,decorations.pathreplacing,calc,fit,backgrounds,shadows}
@@ -19,22 +26,32 @@
 \DeclareMathOperator{\Var}{Var}
 
 \begin{document}
-\articletype{Paper}
-
+\linenumbers
+\begin{frontmatter}
 \title{Information Budgets of Trajectory Health Indicators for Remaining Useful Life Prediction}
-
 \author{Anonymous authors}
 
-\keywords{information budget, health indicator, remaining useful life, information theory, monotonicity, information bottleneck, first hitting time, prognostics}
-
+\begin{highlights}
+\item Entropy-power bound links RUL error to the information an indicator retains
+\item Any predictor's held-out error certifies a lower bound on retained information
+\item Squeezing an indicator loses information while monotonicity saturates
+\item No static linear scalar indicator is optimal; best weights rotate with remaining life
+\item Observation correction stops error build-up; no encoder beats simple indicators
+\end{highlights}
 
 \begin{abstract}
-Health indicators (HIs) for remaining useful life (RUL) prediction are usually constructed by optimising geometric criteria, such as monotonicity, trendability and prognosability, or by training an encoder. Neither approach states how much information about the RUL an HI can retain. We model HI construction as a Markov chain from latent degradation to sensors to HI, and bound the mean squared error of any RUL predictor below by the entropy power of the RUL given the HI. The bound defines an information efficiency, converts the error of any predictor into a certified lower bound on the retained information, and accounts for the age, which every predictor knows. We show that a pointwise squeeze of the HI loses state information while monotonicity saturates; that, for Wiener degradation with an unobserved inspection state, the error splits into an aleatoric floor and an epistemic term that grows with the information lost; that a static scalar linear HI inflates the bound by a factor determined by the angle between its weights and the optimal weights, which rotate from velocity to level as the remaining life shrinks, so that no static scalar linear HI is optimal over the whole life; and that a regime-blind read-out has an error floor. Simulations on exactly solvable models agree with these results. We further show that an integrating encoder accumulates error that an observation correction removes. Experiments on batteries, bearings and turbofan engines support these consequences but show no learned encoder to be superior to simple indicators when all are used with the same age-fused predictor. On turbofan engines and lithium-ion cells with 77 to 260 units, the age-conditional certificate is informative and passes a negative control, and the monotonicity of a squeezed indicator saturates at the predicted value while its certified information vanishes. The loss predicted for a static scalar linear indicator is at most 7 percent for engines and for two of three cell collections but reaches 9 to 18 percent of the error for the third.
+Health indicators (HIs) for remaining useful life (RUL) prediction are built by optimising geometric criteria or by training an encoder, but neither states how much information about the RUL an HI can retain. We model HI construction as a Markov chain from degradation to sensors to HI and bound the mean squared error of any RUL predictor below by the entropy power of the RUL given the HI. The bound defines an efficiency and turns the held-out error of any predictor into a certified lower bound on the retained information. A squeeze of the HI loses information while monotonicity saturates; for Wiener degradation the error splits into an aleatoric floor and an epistemic term that grows with the information lost; a static scalar linear HI inflates the bound by a factor set by the angle to the optimal weights, which rotate as the remaining life shrinks; and a regime-blind read-out has an error floor. On 77 to 260 turbofan engines and lithium-ion cells, the age-conditional certificate is informative and passes a negative control, and a squeezed HI saturates in monotonicity at the predicted value while its certified information vanishes. The loss from a static linear HI is at most 7 percent of the error for engines and two of three cell collections, and 9 to 18 percent for the third. Benchmarks on batteries, bearings and turbofan engines show that an observation correction removes the error of an integrating encoder and that no learned encoder beats simple HIs under the same age-fused predictor.
 \end{abstract}
+
+\begin{keyword}
+information budget \sep health indicator \sep remaining useful life \sep information theory \sep information bottleneck \sep prognostics
+\end{keyword}
+\end{frontmatter}
+
 
 
 \section{Introduction}
-Prognostics and health management (PHM) predicts the remaining useful life (RUL) of components such as batteries, bearings and aero-engines, and underpins condition-based maintenance \cite{si2011,lei2018,javed2017,zio2022}. Methods are conventionally divided into physics-based, data-driven and hybrid \cite{javed2017,liao2014}, and recent work is dominated by deep networks that map sensor histories to the RUL end to end \cite{li2018,fink2020}. An established alternative compresses the monitoring data into a scalar \emph{health indicator} (HI) and extrapolates it to a failure threshold $D_{\rm fail}$. An HI can be inspected by an engineer, the threshold gives the end of life (EOL) a physical meaning, and, when the HI is modelled as a stochastic process, the RUL is a first hitting time (FHT) with a known distribution \cite{whitmore1995,lee2006,si2011}. Recent studies in this journal follow the same line \cite{wang2026jrse,gu2025,bisoyi2026}, within the wider scope of reliability science \cite{aven2021,sun2025}.
+Prognostics and health management (PHM) predicts the remaining useful life (RUL) of components such as batteries, bearings and aero-engines, and underpins condition-based maintenance \cite{si2011,lei2018,javed2017,zio2022}. Methods are conventionally divided into physics-based, data-driven and hybrid \cite{javed2017,liao2014}, and recent work is dominated by deep networks that map sensor histories to the RUL end to end \cite{li2018,fink2020}. An established alternative compresses the monitoring data into a scalar \emph{health indicator} (HI) and extrapolates it to a failure threshold $D_{\rm fail}$. An HI can be inspected by an engineer, the threshold gives the end of life (EOL) a physical meaning, and, when the HI is modelled as a stochastic process, the RUL is a first hitting time (FHT) with a known distribution \cite{whitmore1995,lee2006,si2011}. Recent studies follow the same line \cite{wang2026jrse,gu2025,bisoyi2026}, within the wider scope of reliability science \cite{aven2021,sun2025}.
 
 HIs are usually selected by \emph{geometric} criteria. Coble and Hines \cite{coble2009} formalised monotonicity (balance of positive and negative increments), prognosability (spread of end-of-life values relative to the range travelled) and trendability (agreement of the functional form across units) and optimised them with a genetic algorithm. Variants are common: trendability is often implemented as the correlation with time \cite{javed2013,zhang2016}, and a criterion based on ranking mutual information has been proposed for building a monotonic HI \cite{qian2015}. Coble and Hines themselves note that the no-self-healing assumption behind monotonicity fails for batteries \cite{coble2009}. HIs may also be learned by recurrent networks \cite{guo2017}, autoencoders and their regularised variants \cite{kingma2014,higgins2017}, or regressions on engineered features \cite{severson2019}. In both cases an HI is judged by its shape or by the accuracy of the predictor built on it \cite{saxena2008metrics}. Neither judgement indicates how much information about the RUL the HI \emph{could} have preserved, and neither separates the quality of the HI from that of the predictor.
 
@@ -153,7 +170,7 @@ A strictly monotone bijection $\varrho$ satisfies $I(T_t;\varrho(H_{1:t}))=I(T_t
 and $\Delta\Ikin$ has no definite sign in general: kinematic information alone does not determine the inflation.\\
 (c) Let the HI be the latent degradation level $D_k$ observed with Gaussian noise, $H_k=D_k+\xi^{(1)}_k$, where $D_k$ is linear-Gaussian, and let the squeeze with strength $\gamma\in[0,1)$ and template (mean trajectory) $m_k=\E[D_k]$ be
 \begin{equation}
-\tilde H_k^{\gamma}=m_k+(1-\gamma)(H_k-m_k)+\xi^{(2)}_k,\qquad \xi^{(2)}_k\sim\mathcal N(0,\sigma_2^2)\ \text{independent and identically distributed (i.i.d.)}
+\begin{gathered}\tilde H_k^{\gamma}=m_k+(1-\gamma)(H_k-m_k)+\xi^{(2)}_k,\\ \xi^{(2)}_k\sim\mathcal N(0,\sigma_2^2)\ \text{independent and identically distributed (i.i.d.)}\end{gathered}
 \end{equation}
 For every linear functional $\vartheta$ of the latent state (for example the current velocity), write $\Istate^\vartheta(\gamma)=I(\vartheta;\tilde H^\gamma_t)$, $\Ikin^\vartheta(\gamma)=I(\vartheta;\Delta\tilde H^\gamma_{2:t}\mid\tilde H^\gamma_t)$ and $\mathcal I^\vartheta_{\rm tot}(\gamma)=I(\vartheta;\tilde H^\gamma_{1:t})$. Then $\mathcal I^\vartheta_{\rm tot}$ and $\Istate^\vartheta$ are non-increasing in $\gamma$, and
 \begin{equation}
@@ -491,10 +508,18 @@ Section~\ref{sec:empirical} evaluates estimators. This section tests the predict
 
 \paragraph{Conclusions.} Viewing HI construction as an information budget yields a score that can be computed before any predictor is trained, a certificate that can be computed after one is, and four structural results on what squeezing, scalar projection, regime blindness and integration lose. On batteries, bearings and turbofan engines, the predicted effects are observed, but no learned encoder is superior to simple indicators. The contribution of the paper is the budget, not a new predictor.
 
-\ack{Acknowledgements are withheld for double-anonymous review.}
-\funding{Funding information is withheld for double-anonymous review.}
-\roles{Author contributions are withheld for double-anonymous review.}
-\data{NASA PCoE, NASA IMS, C-MAPSS, CALCE CS2 and FEMTO-ST/PRONOSTIA data are publicly available (NASA Prognostics Data Repository, CALCE Battery Group, IEEE 2012 Prognostics and Health Management data challenge). The simulation and benchmark code, the stored results and the per-unit outputs used to generate all tables and figures are available in an anonymised repository: \url{https://anonymous.4open.science/r/information-budget-health-indicator-rul-C5CE/}.}
+\section*{CRediT authorship contribution statement}
+Withheld for anonymous review.
+\section*{Declaration of competing interest}
+Withheld for anonymous review.
+\section*{Declaration of generative AI and AI-assisted technologies in the writing process}
+Withheld for anonymous review.
+\section*{Funding}
+Withheld for anonymous review.
+\section*{Data availability}
+NASA PCoE, NASA IMS, C-MAPSS, CALCE CS2, FEMTO-ST/PRONOSTIA, HUST, MATR and Tongji data are publicly available (NASA Prognostics Data Repository, CALCE Battery Group, IEEE 2012 Prognostics and Health Management data challenge, BatteryLife repository on Zenodo). The simulation and benchmark code, the stored results and the per-unit outputs used to generate all tables and figures are available in an anonymised repository: \url{https://anonymous.4open.science/r/information-budget-health-indicator-rul-C5CE/}.
+\section*{Acknowledgements}
+Withheld for anonymous review.
 
 
 

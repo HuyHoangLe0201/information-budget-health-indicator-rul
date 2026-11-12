@@ -6,7 +6,7 @@ Anonymous reproducibility package for the manuscript *Information Budgets of Tra
 
 | Path | Content |
 |---|---|
-| `main.tex` | Anonymised manuscript source (IOP `iopjournal` class, LPPL, included) |
+| `main.tex` | Anonymised manuscript source (Elsevier `elsarticle` class, part of TeX Live) |
 | `code/` | Theory experiments (exactly solvable models) and the figure script `make_all_figs.py` |
 | `bench/` | Real-data benchmarks: feature preparation, protocols P1 to P5, analysis scripts, run logs, per-unit outputs (`out*/`) |
 | `results/` | Aggregated results (`*.json`), LaTeX tables (`*.tex`) and the frozen script hashes (`bench2.frozen.md5`) |
@@ -73,4 +73,4 @@ Every reference of the manuscript was checked against a primary record (Crossref
 
 ## Licence
 
-`iopjournal.cls` and `orcid.pdf` are the IOP Publishing template files, distributed under the LaTeX Project Public License 1.3c. A licence for the remaining files will be added after the review.
+The manuscript uses the Elsevier `elsarticle` class (LaTeX Project Public License), which is part of standard TeX Live distributions. A licence for the remaining files will be added after the review.
