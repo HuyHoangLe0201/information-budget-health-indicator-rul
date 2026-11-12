@@ -114,6 +114,9 @@ add('tan2025', 'proc', 'Tan R et al', 2025,
 add('zhu2022', 'art', 'Zhu J et al', 2022,
     'Data-driven capacity estimation of commercial lithium-ion batteries from voltage relaxation',
     'Nat. Commun.', '13', '2261', '10.1038/s41467-022-29837-w', 'C', 'title')
+add('mauthe2024', 'arxiv', 'Mauthe F, Braun C, Raible J, Zeiler P and Huber M F', 2024,
+    'Overview of publicly available degradation data sets for tasks within prognostics and health management',
+    'arXiv preprint', '', '', '', 'A', 'full', extra='arXiv:2403.13694')
 
 # ---------------------------------------------------------------- uncertainty
 add('sankararaman2013', 'proc', 'Sankararaman S and Goebel K', 2013,

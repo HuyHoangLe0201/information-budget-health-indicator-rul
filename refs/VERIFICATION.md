@@ -76,10 +76,11 @@ Order = first citation in main.tex. "Metadata" = how bibliographic data were ver
 | 70 | attia2020 | Crossref record | bibliographic record only (title/venue/pages); content not read |
 | 71 | zhu2022 | Crossref record | bibliographic record only (title/venue/pages); content not read |
 | 72 | tan2025 | Crossref record | abstract read |
-| 73 | saha2007 | publisher/proceedings page | classical source cited for a standard fact; content not re-read |
-| 74 | he2011 | Crossref record | classical source cited for a standard fact; content not re-read |
-| 75 | nectoux2012 | author manuscript / full text | abstract read |
-| 76 | lee2007 | publisher/proceedings page | classical source cited for a standard fact; content not re-read |
-| 77 | qiu2006 | Crossref record | classical source cited for a standard fact; content not re-read |
-| 78 | saxena2008 | author manuscript / full text | full text read |
-| 79 | welch1947 | Crossref record | classical source cited for a standard fact; content not re-read |
+| 73 | mauthe2024 | arXiv/PMLR/NeurIPS record | full text read |
+| 74 | saha2007 | publisher/proceedings page | classical source cited for a standard fact; content not re-read |
+| 75 | he2011 | Crossref record | classical source cited for a standard fact; content not re-read |
+| 76 | nectoux2012 | author manuscript / full text | abstract read |
+| 77 | lee2007 | publisher/proceedings page | classical source cited for a standard fact; content not re-read |
+| 78 | qiu2006 | Crossref record | classical source cited for a standard fact; content not re-read |
+| 79 | saxena2008 | author manuscript / full text | full text read |
+| 80 | welch1947 | Crossref record | classical source cited for a standard fact; content not re-read |
