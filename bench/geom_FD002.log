@@ -1,0 +1,6 @@
+FD002 fold 0 done 14s
+FD002 fold 1 done 27s
+FD002 fold 2 done 39s
+FD002 fold 3 done 53s
+FD002 fold 4 done 66s
+FD002 {'name': 'FD002', 'n': 260, 'h_cond': 5.108, 'spearman_score': 0.895, 'spearman_mon': 0.588, 'best_score_hi': 'ridge HI', 'best_score_cert_rank': 1, 'best_cert': 0.208, 'cert_of_best_score': 0.208, 'median_cert': -0.04, 'n_hi': 42}

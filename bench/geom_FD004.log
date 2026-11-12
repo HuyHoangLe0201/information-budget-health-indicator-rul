@@ -1,0 +1,6 @@
+FD004 fold 0 done 15s
+FD004 fold 1 done 32s
+FD004 fold 2 done 48s
+FD004 fold 3 done 67s
+FD004 fold 4 done 83s
+FD004 {'name': 'FD004', 'n': 249, 'h_cond': 5.523, 'spearman_score': 0.637, 'spearman_mon': 0.585, 'best_score_hi': 'rand3', 'best_score_cert_rank': 1, 'best_cert': 0.197, 'cert_of_best_score': 0.197, 'median_cert': 0.005, 'n_hi': 42}

@@ -8,7 +8,8 @@ import numpy as np, os, sys, zipfile
 from multiprocessing import Pool
 import safe_pickle as sp
 import json
-NAME = sys.argv[1] if len(sys.argv) > 1 else 'HUST'; LAB = json.load(open(f'/home/user/data/batterylife/meta/Life labels/{NAME}_labels.json')); ZIP = f'/home/user/data/batterylife/{NAME}.zip'; QS = (3/11, 8/11)   # charged/discharged capacity levels as fractions of the nominal capacity (0.3 and 0.8 Ah for the 1.1 Ah cells)
+NAME = sys.argv[1] if len(sys.argv) > 1 else 'HUST'; BASE = NAME[:-3] if NAME.endswith('All') else NAME   # 'TongjiAll': sensitivity analysis that keeps the cells that never reach the threshold, with L = last recorded cycle
+LAB = json.load(open(f'/home/user/data/batterylife/meta/Life labels/{BASE}_labels.json')); ZIP = f'/home/user/data/batterylife/{BASE}.zip'; QS = (3/11, 8/11)   # charged/discharged capacity levels as fractions of the nominal capacity (0.3 and 0.8 Ah for the 1.1 Ah cells)
 NAMES = ['Qd', 'Qc', 't_charge', 'Vc_0.3', 'Vc_0.8', 'Vd_mean', 'Vd_0.3', 'Vd_0.8']
 def at(q, v, qstar):
     i = np.argmax(q >= qstar) if np.any(q >= qstar) else -1
@@ -40,9 +41,9 @@ if __name__ == '__main__':
             if np.isnan(F).any() or len(q) < L-10: print('excluded', name, len(q), L); continue
             L = min(L, len(q))
         else:
-            ref = nom if NAME.upper() == 'TONGJI' else np.mean(q[:5]); med = np.array([np.median(q[max(0, i-4):i+1]) for i in range(len(q))]); below = np.where(med < 0.8*ref)[0]
-            if len(below) == 0 or np.isnan(F).any(): print('excluded', name, len(q), np.isnan(F).any()); continue
-            L = int(below[0])+1
+            ref = nom if BASE.upper() == 'TONGJI' else np.mean(q[:5]); med = np.array([np.median(q[max(0, i-4):i+1]) for i in range(len(q))]); below = np.where(med < 0.8*ref)[0]
+            if np.isnan(F).any() or (len(below) == 0 and not NAME.endswith('All')): print('excluded', name, len(q), np.isnan(F).any()); continue
+            L = int(below[0])+1 if len(below) else len(q)
         if L < 100: print('excluded (life below 100 cycles)', name, L); continue
         ids.append(name); feats.append(F[:L].astype(np.float32)); lifes.append(L)
     print(len(ids), 'cells; life min/median/max', min(lifes), int(np.median(lifes)), max(lifes))

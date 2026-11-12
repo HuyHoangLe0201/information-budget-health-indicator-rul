@@ -14,7 +14,7 @@ from sklearn.ensemble import HistGradientBoostingRegressor as HGB
 from realdata_checks import tmean, tslope, mon, affine, fit_ridge_hi, fit_pca_hi
 NAME = sys.argv[1] if len(sys.argv) > 1 else 'HUST'
 # time scales (cycles) follow the lifetimes of the data set: HUST median life 1700 cycles, MATR 760, Tongji 360
-CFG = {'HUST': dict(T0=100, STRIDE=5, W_LEV=20, W_VEL=100, LAG1=100, LAG2=250, TAU=2.0), 'MATR': dict(T0=50, STRIDE=3, W_LEV=10, W_VEL=50, LAG1=50, LAG2=125, TAU=1.0), 'Tongji': dict(T0=30, STRIDE=2, W_LEV=10, W_VEL=40, LAG1=40, LAG2=100, TAU=1.0)}[NAME]
+CFG = {'HUST': dict(T0=100, STRIDE=5, W_LEV=20, W_VEL=100, LAG1=100, LAG2=250, TAU=2.0), 'MATR': dict(T0=50, STRIDE=3, W_LEV=10, W_VEL=50, LAG1=50, LAG2=125, TAU=1.0), 'Tongji': dict(T0=30, STRIDE=2, W_LEV=10, W_VEL=40, LAG1=40, LAG2=100, TAU=1.0), 'TongjiAll': dict(T0=30, STRIDE=2, W_LEV=10, W_VEL=40, LAG1=40, LAG2=100, TAU=1.0)}[NAME]
 T0, STRIDE, W_LEV, W_VEL, LAG1, LAG2, TAU = [CFG[k] for k in ('T0', 'STRIDE', 'W_LEV', 'W_VEL', 'LAG1', 'LAG2', 'TAU')]; NF = 5; RNG = np.random.default_rng(0)
 CHARGE = [2, 3, 4]; CAP = [0]; GAMMAS = [0.0, 0.5, 0.9, 0.97, 0.99, 0.995]
 def load():

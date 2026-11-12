@@ -1,0 +1,6 @@
+Tongji fold 0 done 18s
+Tongji fold 1 done 34s
+Tongji fold 2 done 52s
+Tongji fold 3 done 70s
+Tongji fold 4 done 87s
+Tongji {'name': 'Tongji', 'n': 88, 'h_cond': 5.993, 'spearman_score': 0.158, 'spearman_mon': 0.185, 'best_score_hi': 'rand19', 'best_score_cert_rank': 16, 'best_cert': 0.844, 'cert_of_best_score': 0.556, 'median_cert': 0.45, 'n_hi': 42}

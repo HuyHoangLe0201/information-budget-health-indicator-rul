@@ -1,0 +1,6 @@
+HUST fold 0 done 27s
+HUST fold 1 done 57s
+HUST fold 2 done 84s
+HUST fold 3 done 110s
+HUST fold 4 done 137s
+HUST {'name': 'HUST', 'n': 77, 'h_cond': 7.108, 'spearman_score': 0.08, 'spearman_mon': 0.519, 'best_score_hi': 'ridge HI', 'best_score_cert_rank': 18, 'best_cert': 0.567, 'cert_of_best_score': 0.285, 'median_cert': 0.232, 'n_hi': 42}

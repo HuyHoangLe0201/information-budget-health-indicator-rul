@@ -1,0 +1,6 @@
+MATR fold 0 done 34s
+MATR fold 1 done 67s
+MATR fold 2 done 100s
+MATR fold 3 done 132s
+MATR fold 4 done 166s
+MATR {'name': 'MATR', 'n': 169, 'h_cond': 6.94, 'spearman_score': 0.744, 'spearman_mon': 0.751, 'best_score_hi': 'rand33', 'best_score_cert_rank': 8, 'best_cert': 0.431, 'cert_of_best_score': 0.252, 'median_cert': 0.08, 'n_hi': 42}
