@@ -42,7 +42,7 @@
 \node[lab] at (5.98,-5.15) {$\ge$}; \node[lab] at (10.7,-5.15) {$\ge$};
 \draw[decorate,decoration={brace,amplitude=4pt,mirror},line width=0.6pt,blue!50!black] (3.3,-5.55) -- (14.9,-5.55);
 \node[lab,blue!50!black,align=center,text width=11.4cm] at (9.1,-6.3) {information budget (data processing inequality, Eq.~\ref{eq:dpi});\\ efficiency $\etaPIE=I(T_t;H_{1:t})/I(T_t;\mathbf X_{1:t})$};
-\node[infobox,text width=7.6cm,minimum height=3.2cm] (b1) at (4.1,-7.05) {\textbf{Error budget} (Theorem~\ref{thm:bound}, Proposition~\ref{prop:age}, Theorem~\ref{thm:physics})\\[2pt] $\E(T_t-\hat T_t)^2\ \ge\ \dfrac{e^{2h(T_t\mid H_{1:t},t)}}{2\pi e}$, which splits into an aleatoric floor (independent of the HI) and an epistemic term that grows with the information lost};
-\node[infobox,text width=6.2cm,minimum height=3.2cm] (b2) at (11.75,-7.05) {\textbf{Certificate} (Proposition~\ref{cor:cert})\\[2pt] $I(T_t;H_{1:t})\ \ge\ h(T_t)-\tfrac12\ln(2\pi e\,\varepsilon^2)$\\[1pt] a held-out error $\varepsilon$ of any predictor lower-bounds the information the HI retains};
+\node[infobox,text width=7.6cm,minimum height=3.2cm] (b1) at (4.1,-7.05) {\textbf{Error budget} (Theorem~\ref{thm:bound}(a,c), Theorem~\ref{thm:physics})\\[2pt] $\E(T_t-\hat T_t)^2\ \ge\ \dfrac{e^{2h(T_t\mid H_{1:t},t)}}{2\pi e}$, which splits into an aleatoric floor (independent of the HI) and an epistemic term that grows with the information lost};
+\node[infobox,text width=6.2cm,minimum height=3.2cm] (b2) at (11.75,-7.05) {\textbf{Certificate} (Theorem~\ref{thm:bound}(b))\\[2pt] $I(T_t;H_{1:t})\ \ge\ h(T_t)-\tfrac12\ln(2\pi e\,\varepsilon^2)$\\[1pt] a held-out error $\varepsilon$ of any predictor lower-bounds the information the HI retains};
 \draw[arr,blue!50!black] (b1.east) -- (b2.west);
 \end{tikzpicture}
