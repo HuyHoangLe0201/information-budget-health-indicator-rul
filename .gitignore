@@ -11,3 +11,4 @@ main.blg
 main.tmp
 data/
 bench/data/
+*.spl
