@@ -600,7 +600,7 @@ Evaluation is leave-one-unit-out: each unit in turn is held out, the remaining u
 
 \section{Detailed benchmark results}
 \label{app:results}
-This appendix gives the tables behind Section~\ref{sec:empirical}: protocol P2 on the development and confirmation sets (Tables~\ref{tab:dev} and \ref{tab:conf}), the C-MAPSS subsets (Tables~\ref{tab:fd003}, \ref{tab:fd001}, \ref{tab:fd002} and \ref{tab:fd004}), the effect of the age fusion (Table~\ref{tab:fusion}) and the certified information (Tables~\ref{tab:cert2} and \ref{tab:certage}). Protocols and evidence tiers are described in Appendix~\ref{app:data}.
+This appendix gives the tables behind Section~\ref{sec:empirical}: protocol P2 on the development and confirmation sets (Tables~\ref{tab:dev} and \ref{tab:conf}), the C-MAPSS subsets (Tables~\ref{tab:fd003}, \ref{tab:fd001}, \ref{tab:fd002} and \ref{tab:fd004}), the effect of the age fusion (Table~\ref{tab:fusion}), an ablation of the integrating PGIB (Table~\ref{tab:ablfd003}) and the certified information (Tables~\ref{tab:cert2} and \ref{tab:certage}). Protocols and evidence tiers are described in Appendix~\ref{app:data}.
 
 \begin{table}
 \caption{Protocol P2, development sets. RMSE, MAE and CRPS in cycles (batteries) or $10$~s snapshots (bearings); mean $\pm$ standard deviation over seeds; bold: lowest RMSE.}
@@ -649,6 +649,13 @@ This appendix gives the tables behind Section~\ref{sec:empirical}: protocol P2 o
 \centering\small
 \adjustbox{max width=\linewidth}{\input{results/tab2_fusion}}
 \label{tab:fusion}
+\end{table}
+
+\begin{table}
+\caption{Ablation of the integrating PGIB on C-MAPSS FD003 (age-fused predictor; mean $\pm$ standard deviation over three seeds). PICP, PINAW: coverage and normalised width of the $95\%$ interval; CRPS: continuous ranked probability score.}
+\centering\scriptsize
+\adjustbox{max width=\linewidth}{\input{results/tab_abl_fd003}}
+\label{tab:ablfd003}
 \end{table}
 
 \begin{table}
