@@ -13,7 +13,7 @@ if G:
     with open('../results/tab_geom.tex', 'w') as f:
         f.write("\\begin{tabular}{l c c c c c}\n\\hline\nData set & HIs & $\\rho_{\\rm S}$ (score) & $\\rho_{\\rm S}$ (Mon) & rank of the highest-score HI & certificate: highest-score HI / best HI \\\\\n\\hline\n")
         for s in S:
-            if s in G: g = G[s]; f.write(f"{s} & {g['n_hi']} & {g['spearman_score']:.2f} & {g['spearman_mon']:.2f} & {g['best_score_cert_rank']} & {g['cert_of_best_score']:.2f} / {g['best_cert']:.2f} \\\\\n")
+            if s in G: g = G[s]; f.write(f"{s} & {g['n_hi']} & {g['spearman_score']:.2f} [{g['spearman_score_ci'][0]:.2f}, {g['spearman_score_ci'][1]:.2f}] & {g['spearman_mon']:.2f} [{g['spearman_mon_ci'][0]:.2f}, {g['spearman_mon_ci'][1]:.2f}] & {g['best_score_cert_rank']} & {g['cert_of_best_score']:.2f} / {g['best_cert']:.2f} \\\\\n")
         f.write("\\hline\n\\end{tabular}\n")
 if os.path.exists('../results/realdata_TongjiAll.json'):
     A = json.load(open('../results/realdata_TongjiAll.json')); B = R['Tongji']
