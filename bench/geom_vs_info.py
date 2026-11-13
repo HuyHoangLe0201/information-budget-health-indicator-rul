@@ -1,6 +1,6 @@
-"""Do geometric scores track certified information on real data?  For each data set a family of 42 candidate HIs (40 random linear combinations of the
+"""Do geometric scores track information lower bound on real data?  For each data set a family of 42 candidate HIs (40 random linear combinations of the
 normalised sensors or charging features, the PCA-HI and the ridge HI) is built inside unit-grouped 5-fold cross-validation.  For every HI the
-age-conditional certificate (as in realdata_checks.py / battery_checks.py) and the geometric score Mon + Tre + Pro on the held-out units are computed,
+age-conditional information lower bound (as in realdata_checks.py / battery_checks.py) and the geometric score Mon + Tre + Pro on the held-out units are computed,
 and the Spearman correlation between the two is reported.   Run from bench/:  python3 geom_vs_info.py FD001|FD002|FD003|FD004|HUST|MATR|Tongji"""
 import sys, json, time, numpy as np
 from scipy import stats

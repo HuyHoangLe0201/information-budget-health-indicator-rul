@@ -1,6 +1,6 @@
-"""Age-conditional certificate on the OFFICIAL C-MAPSS test engines for every method of the paper (out2/cmapss_*_v5.pkl, v6 for the ten-seed ensembles).
+"""Age-conditional information lower bound on the OFFICIAL C-MAPSS test engines for every method of the paper (out2/cmapss_*_v5.pkl, v6 for the ten-seed ensembles).
 I(T;H|t) >= mean_i h(T|t_i) - 0.5*ln(2*pi*e*MSE), with h(T|t) from a Gaussian-KDE lifetime law of the TRAINING engines (L - t | L > t), t_i = observed cycles of test engine i.
-The age-only predictor is the negative control (its certificate must not be clearly positive).  Run from bench/."""
+The age-only predictor is the negative control (its information lower bound must not be clearly positive).  Run from bench/."""
 import numpy as np, pickle, json
 import importlib.util
 spec = importlib.util.spec_from_file_location('rdc', 'realdata_checks.py'); rdc = importlib.util.module_from_spec(spec); spec.loader.exec_module(rdc)

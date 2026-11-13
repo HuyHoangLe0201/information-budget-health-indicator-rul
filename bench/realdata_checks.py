@@ -1,8 +1,8 @@
 """Real-data checks of the theory on C-MAPSS (FD001-FD004), engine-grouped 5-fold cross-validation on the training engines (run-to-failure).
-R1  age-conditional certificate with a non-parametric lifetime law (enough engines), negative control = age-only predictor;
-R2  squeeze (Theorem 2) applied to a real HI: monotonicity versus certified information;
+R1  age-conditional information lower bound with a non-parametric lifetime law (enough engines), negative control = age-only predictor;
+R2  template shrinkage (Theorem 2) applied to a real HI: monotonicity versus information lower bound;
 R3  stage-wise optimal linear scalar HI of (level, velocity) (Theorem 4, Corollaries 1-2): static versus stage-wise weights;
-R4  regime-blind versus regime-aware linear read-out (Proposition 5).
+R4  regime-blind versus regime-aware linear estimator (Proposition 5).
 Population: pairs (engine, age t) with 30 <= t <= t_max (t_max = 0.9 quantile of the training lifetimes of the fold); T = L - t.  Pooling all ages of all engines
 gives the law T | t = L - t | L > t exactly, so h(T|t) can be estimated from the lifetime law (Gaussian KDE of log L, cross-fitted over engines).
 Run from bench/:  python3 realdata_checks.py [FD001 FD002 ...]"""

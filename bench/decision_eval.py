@@ -4,7 +4,7 @@ so that about this fraction of engines fails.  The margin is CROSS-FITTED: five-
 unused life = max(true RUL - scheduled time, 0).  95% intervals: bootstrap over engines (400 replicates, one cross-fit each).  Also stored: the failure fraction at the predictive 2.5% quantile.
 Reads out2/cmapss_*_v5.pkl and *_v6.pkl.   Run from bench/ -> ../results/decision_eval.json, ../results/tab_decision.tex"""
 import pickle, json, numpy as np
-M = [('Age-only', 'v5', 'Age law'), ('PCA-HI', 'v5', 'PCA-HI'), ('Mon-opt HI', 'v5', 'Geo-opt HI'), ('Ridge-HI (supervised)', 'v5', 'Ridge HI'), ('PGIB-HI (ens10)', 'v6', 'PGIB, integrating'), ('PGIB-KF-HI (ens10)', 'v6', 'PGIB-KF')]
+M = [('Age-only', 'v5', 'Age-only baseline'), ('PCA-HI', 'v5', 'PCA-HI'), ('Mon-opt HI', 'v5', 'Geo-opt HI'), ('Ridge-HI (supervised)', 'v5', 'Ridge HI'), ('PGIB-HI (ens10)', 'v6', 'PGIB, integrating'), ('PGIB-KF-HI (ens10)', 'v6', 'PGIB-KF')]
 rng = np.random.default_rng(0)
 def crossfit(y, med, a, folds):
     n = len(y); idx = rng.permutation(n); parts = np.array_split(idx, folds); un = np.zeros(n); fl = np.zeros(n)
@@ -26,8 +26,8 @@ for fd in ['FD001', 'FD002', 'FD003', 'FD004']:
             ii = rng.integers(0, n, n); yb = y[ii]
             for nm in meds: bs[nm].append(crossfit(yb, meds[nm][ii], a, 5)[0].mean())
         for nm in meds:
-            red = 1-np.array(bs[nm])/np.array(bs['Age law']); out[fd][nm][f'unused_{ak}_ci'] = [float(np.percentile(bs[nm], 2.5)), float(np.percentile(bs[nm], 97.5))]
-            out[fd][nm][f'reduction_{ak}'] = float(1-out[fd][nm][f'unused_{ak}']/out[fd]['Age law'][f'unused_{ak}']); out[fd][nm][f'reduction_{ak}_ci'] = [float(np.percentile(red, 2.5)), float(np.percentile(red, 97.5))]
+            red = 1-np.array(bs[nm])/np.array(bs['Age-only baseline']); out[fd][nm][f'unused_{ak}_ci'] = [float(np.percentile(bs[nm], 2.5)), float(np.percentile(bs[nm], 97.5))]
+            out[fd][nm][f'reduction_{ak}'] = float(1-out[fd][nm][f'unused_{ak}']/out[fd]['Age-only baseline'][f'unused_{ak}']); out[fd][nm][f'reduction_{ak}_ci'] = [float(np.percentile(red, 2.5)), float(np.percentile(red, 97.5))]
     for nm in meds: out[fd][nm]['fail_q025'] = float((y < los[nm]).mean())
 json.dump(out, open('../results/decision_eval.json', 'w'), indent=1)
 names = [m[2] for m in M]
@@ -38,4 +38,4 @@ with open('../results/tab_decision.tex', 'w') as f:
     f.write("\\hline\n\\end{tabular}\n")
 print(open('../results/tab_decision.tex').read())
 for fd in out:
-    print(fd, {nm: (round(v['reduction_5']*100), [round(100*c) for c in v['reduction_5_ci']]) for nm, v in out[fd].items() if nm != 'Age law'})
+    print(fd, {nm: (round(v['reduction_5']*100), [round(100*c) for c in v['reduction_5_ci']]) for nm, v in out[fd].items() if nm != 'Age-only baseline'})

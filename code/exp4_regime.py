@@ -1,4 +1,4 @@
-"""Regime-blind vs regime-aware linear read-out of a latent level D from x = a_r D + b_r + eps (regimes r iid, independent of D)."""
+"""Regime-blind vs regime-aware linear estimator of a latent level D from x = c_r D + o_r + eps (regimes r iid, independent of D)."""
 import numpy as np
 rng = np.random.default_rng(1); R = 6; pi = np.full(R, 1/R); a = np.array([0.6, 0.8, 1.0, 1.0, 1.3, 1.6]); b = np.array([-0.5, -0.2, 0.0, 0.1, 0.3, 0.6]); muD, v = 0.5, 0.08
 ED2 = v+muD**2; Ea, Ea2, Eb, Vb = (pi*a).sum(), (pi*a**2).sum(), (pi*b).sum(), (pi*b**2).sum()-(pi*b).sum()**2

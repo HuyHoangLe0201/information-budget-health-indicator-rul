@@ -1,9 +1,9 @@
 """Real-data tests of the theory on a second domain with many units: lithium-ion cells (HUST: 77 cells, one protocol per cell; MATR: 169 cells, fast-charging protocols; Tongji: 88 cells, three NCA/NMC chemistries).
 Same design as realdata_checks.py (C-MAPSS): cell-grouped 5-fold cross-validation; population = pairs (cell, age t), T = L - t, T | t = L - t | L > t.
-R1  age-conditional certificate (non-parametric lifetime law), negative control = age-only predictor;
-R2  squeeze (Theorem 2) applied to a real HI;
+R1  age-conditional information lower bound (non-parametric lifetime law), negative control = age-only predictor;
+R2  template shrinkage (Theorem 3) applied to a real HI;
 R3  stage-wise optimal linear scalar HI of (level, velocity) (Theorem 4, Corollary 1): static versus stage-wise weights;
-R4  protocol-blind versus own-reference normalisation (Proposition 5, with the protocol of a cell playing the role of the regime).
+R4  protocol-blind versus own-reference normalisation (Proposition 1, with the protocol of a cell playing the role of the regime).
 HIs use the charging-phase features only (charge duration, charge voltage at 0.3 and 0.8 Ah); every feature is expressed relative to the cell's own
 cycles 2-11.  The discharge capacity, which defines the end of life, is used only by the reference predictor 'capacity'.
 Run from bench/:  python3 battery_checks.py HUST|MATR|Tongji"""

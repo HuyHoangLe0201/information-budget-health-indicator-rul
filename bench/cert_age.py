@@ -1,4 +1,4 @@
-"""Age-conditional certificate (Proposition 2).  For an estimator that uses the HI trajectory and the age,
+"""Age-conditional information lower bound (Proposition 2).  For an estimator that uses the HI trajectory and the age,
 I(T;H|t) >= E_t h(T|t) - 0.5*ln(2*pi*e*MSE).  E_t h(T|t) is the entropy of the RUL given the age under a log-normal lifetime model
 fitted (MLE, log-scale floor 0.15 as in the predictor) to ALL lifetimes of the data set; it is therefore MODEL-BASED, not distribution-free.
 A positive value means that the MSE is below the entropy-power bound of every estimator that uses the age alone, under that model.

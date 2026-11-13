@@ -55,17 +55,17 @@ def fig_paradox():
     a.plot(x, mon.mean(1), '-o', color=BLUE, ms=4); a.plot(x, [R[g]['eta'] for g in gs], '-s', color=RED, ms=4, mfc='w')
     a.axhline(0.981, color=BLUE, ls=':', lw=1); a.text(x[5], 1.02, r'$\mathrm{Mon}_\infty=0.981$', color=BLUE, fontsize=7, va='bottom', ha='right')
     a.text(x[4] + .3, 0.45, r'$\eta_{\mathrm{info}}$' + '\ndecreases', color=RED, fontsize=7.5, ha='left'); a.text(x[3] + .6, 0.86, 'monotonicity saturates', color=BLUE, fontsize=7.5, va='top', ha='center')
-    a.set_ylim(0, 1.15); a.set_ylabel('score'); a.set_xlabel(r'squeezing strength $\gamma$'); a.set_xticks(x); a.set_xticklabels(xt)
+    a.set_ylim(0, 1.15); a.set_ylabel('score'); a.set_xlabel(r'shrinkage strength $\gamma$'); a.set_xticks(x); a.set_xticklabels(xt)
     b = fig.add_subplot(gsp[1, 1]); panel(b, '(c)')
     b.plot(x, [R[g]['Itot'] for g in gs], '-o', color='k', ms=4); b.plot(x, [R[g]['Istate'] for g in gs], '-s', color=BLUE, ms=4, mfc='w'); b.plot(x, [R[g]['Ikin'] for g in gs], '-^', color=ORANGE, ms=4.5, mfc='w')
     b.text(x[0] + .1, 0.93, 'total', fontsize=7.5, color='k'); b.text(x[1] + .6, 0.47, 'state', fontsize=7.5, color=BLUE, ha='center')
     b.annotate('kinematic\n(non-monotone)', xy=(x[3] + .05, 0.4), xytext=(x[4] + .2, 0.66), fontsize=7.2, color=ORANGE, ha='center', va='bottom', arrowprops=dict(arrowstyle='->', color=ORANGE, lw=.7))
-    b.set_ylim(0, 1.0); b.set_ylabel('information about $V_t$ [nats]'); b.set_xlabel(r'squeezing strength $\gamma$'); b.set_xticks(x); b.set_xticklabels(xt)
+    b.set_ylim(0, 1.0); b.set_ylabel('information about $V_t$ [nats]'); b.set_xlabel(r'shrinkage strength $\gamma$'); b.set_xticks(x); b.set_xticklabels(xt)
     c = fig.add_subplot(gsp[1, 2]); panel(c, '(d)')
     c.errorbar(x, re_.mean(1), yerr=re_.std(1), fmt='s', color='#9a9a9a', ms=3.2, capsize=2, lw=.8, alpha=.8)
     c.plot(x, rb.mean(1), '-o', color=BLUE, ms=4); c.plot(x, rp.mean(1), '--^', color=RED, ms=4.5, mfc='w')
     c.text(x[1] + .5, 27.5, 'empirical RMSE\n(mean $\\pm$ standard\ndeviation, 3 seeds)', fontsize=7, color=GREY, va='bottom', ha='center'); c.annotate('Bayes-optimal', xy=(x[4] + .05, 15.5), xytext=(x[2] + .35, 19.5), fontsize=7.5, color=RED, ha='center', arrowprops=dict(arrowstyle='->', color=RED, lw=.7)); c.text(x[4] + .1, 4.6, r'bound $\sqrt{\mathcal{B}_{\mathrm{info}}}$', fontsize=7.5, color=BLUE, ha='center')
-    c.set_ylim(3, 35); c.set_ylabel('RUL RMSE [cycles]'); c.set_xlabel(r'squeezing strength $\gamma$'); c.set_xticks(x); c.set_xticklabels(xt)
+    c.set_ylim(3, 35); c.set_ylabel('RUL RMSE [cycles]'); c.set_xlabel(r'shrinkage strength $\gamma$'); c.set_xticks(x); c.set_xticklabels(xt)
     save(fig, 'fig_paradox')
 
 # =====================================================================  Fig: physics bound (Thm 4, Prop 5)
@@ -95,7 +95,7 @@ def fig_angular():
     import exp1_paradox as E
     d = J('results/exp3b.json'); TT = np.array(d['TT']); cur = d['curve']; mc = d['mc']
     keys = ['level only', 'velocity only', 'static (aligned at t*=50)', 'phase-adaptive']
-    lab = {'level only': r'level only $\mathbf{u}=(1,0)$', 'velocity only': r'velocity only $\mathbf{u}=(0,1)$', 'static (aligned at t*=50)': r'static, aligned at $t^\ast=50$', 'phase-adaptive': r'phase-adaptive $\mathbf{u}_t=\mathbf{g}_t$'}
+    lab = {'level only': r'level only $\mathbf{u}=(1,0)$', 'velocity only': r'velocity only $\mathbf{u}=(0,1)$', 'static (aligned at t*=50)': r'static, aligned at $t^\ast=50$', 'phase-adaptive': r'stage-adaptive $\mathbf{u}_t=\mathbf{g}_t$'}
     col = {'level only': BLUE, 'velocity only': RED, 'static (aligned at t*=50)': ORANGE, 'phase-adaptive': GREEN}
     mk = {'level only': 'o', 'velocity only': 's', 'static (aligned at t*=50)': '^', 'phase-adaptive': 'v'}; ls = {'level only': '-', 'velocity only': '--', 'static (aligned at t*=50)': '-.', 'phase-adaptive': '-'}
     Df, vbar, s1 = E.Dfail, E.vbar, E.s1; TMAX = int(TT.max()); Ks, Ps = E.kalman_cov(1.0, s1 ** 2, TMAX); PC = E.prior_cov(TMAX)
@@ -114,7 +114,7 @@ def fig_angular():
         a.plot([int(t) for t in mc], [mc[t][mk_]['pred'] for t in mc], '+', color=col[k], ms=6, mew=1.1, lw=0)
     a.axvline(tstar, color='#aaaaaa', ls=':', lw=1); a.text(tstar + 1, 0.93, r'$t^\ast$', color=GREY, fontsize=8)
     a.annotate(r'$5\times$ at $t=75$', xy=(75, mc['75']['velocity only']['mc']), xytext=(30, 6.2), fontsize=7.2, color=RED, arrowprops=dict(arrowstyle='->', color=RED, lw=.7))
-    a.set_yscale('log'); a.set_xlabel('inspection time $t$'); a.set_ylabel(r'bound inflation $\mathcal{B}(h_{\mathbf{u}})/\mathcal{B}_{\min}$'); a.set_ylim(0.9, 20)
+    a.set_yscale('log'); a.set_xlabel('inspection time $t$'); a.set_ylabel(r'bound increase factor $\mathcal{B}(h_{\mathbf{u}})/\mathcal{B}_{\min}$'); a.set_ylim(0.9, 20)
     b = ax[1]; panel(b, '(b)')
     for k in keys: b.plot(TT, psi[k], ls[k], color=col[k])
     b.axvline(tstar, color='#aaaaaa', ls=':', lw=1); b.set_xlabel('inspection time $t$'); b.set_ylabel(r'$\boldsymbol{\Lambda}$-angle $\psi_t$ to $\mathbf{g}_t$ [deg]'); b.set_ylim(-0.5, 18)
@@ -141,16 +141,16 @@ def fig_regime():
     p = ax[0]; panel(p, '(a)'); cm = plt.cm.viridis(np.linspace(0.05, 0.9, Rn)); n = 1200; D = rng.normal(muD, np.sqrt(v), n); r = rng.integers(0, Rn, n); x = a[r] * D + b[r] + 0.02 * rng.standard_normal(n)
     for k in range(Rn):
         p.scatter(D[r == k], x[r == k], s=4, color=cm[k], alpha=.7, lw=0, label=f'regime {k + 1}')
-    p.set_xlabel('latent level $D$'); p.set_ylabel('sensor read-out $x=a_rD+b_r+\\varepsilon$'); p.legend(ncol=2, fontsize=6.3, markerscale=2.5, loc='upper left', columnspacing=.8, handletextpad=.2)
+    p.set_xlabel('latent level $D$'); p.set_ylabel('sensor output $x=c_rD+o_r+\\varepsilon$'); p.legend(ncol=2, fontsize=6.3, markerscale=2.5, loc='upper left', columnspacing=.8, handletextpad=.2)
     q = ax[1]; panel(q, '(b)')
-    q.plot(sig, blind, '-', color=RED, label=r'regime-blind linear read-out'); q.plot(mcs, mb, 'o', color=RED, mfc='w', ms=5, label='Monte Carlo (blind)')
-    q.plot(sig, aware, '-', color=GREEN, label=r'regime-aware read-out'); q.plot(mcs, ma, 's', color=GREEN, mfc='w', ms=4.5, label='Monte Carlo (aware)')
+    q.plot(sig, blind, '-', color=RED, label=r'regime-blind linear estimator'); q.plot(mcs, mb, 'o', color=RED, mfc='w', ms=5, label='Monte Carlo (blind)')
+    q.plot(sig, aware, '-', color=GREEN, label=r'regime-aware estimator'); q.plot(mcs, ma, 's', color=GREEN, mfc='w', ms=4.5, label='Monte Carlo (aware)')
     q.axhline(v, color=GREY, ls=':', lw=1); q.text(0.001, v * 1.01, r'$\mathrm{Var}(D)$', ha='left', fontsize=7, color=GREY)
     q.annotate('non-vanishing\nerror floor', xy=(0.0, blind[0]), xytext=(0.03, 0.018), fontsize=7, color=RED, arrowprops=dict(arrowstyle='->', color=RED, lw=.7))
     q.set_xlabel(r'sensor noise $\sigma$'); q.set_ylabel('MSE of the level estimate'); q.set_ylim(0, 0.09); q.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), ncol=2, fontsize=6.6, columnspacing=1.0, handlelength=1.8)
     save(fig, 'fig_regime')
 
-# =====================================================================  Fig: seven small sets (heat-map of RMSE relative to age law)
+# =====================================================================  Fig: seven small sets (heat-map of RMSE relative to age-only baseline)
 def fig_small():
     txt = open(os.path.join(ROOT, 'results/tab_summary_small.tex')).read(); rows = []
     for ln in txt.split('\n'):
@@ -174,13 +174,13 @@ def fig_small():
     ax.set_xticks(range(len(meth))); ax.set_xticklabels(meth); ax.xaxis.tick_top(); ax.set_yticks(range(len(rows))); ax.set_yticklabels([r[0] for r in rows])
     for s in ax.spines.values(): s.set_visible(False)
     ax.tick_params(length=0)
-    cb = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.02, ticks=[-1.6, -1, 0, 1, 1.6]); cb.ax.set_yticklabels(['', r'$2\times$ better', 'age law', r'$2\times$ worse', '']); cb.outline.set_visible(False); cb.ax.tick_params(labelsize=7, length=0)
+    cb = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.02, ticks=[-1.6, -1, 0, 1, 1.6]); cb.ax.set_yticklabels(['', r'$2\times$ better', 'age-only baseline', r'$2\times$ worse', '']); cb.outline.set_visible(False); cb.ax.tick_params(labelsize=7, length=0)
     save(fig, 'fig_small')
 
 # =====================================================================  Fig: C-MAPSS, seeds and baselines
 def fig_cmapss():
     V = J('results/variance10.json'); sub = ['FD001', 'FD002', 'FD003', 'FD004']; rng = np.random.default_rng(0)
-    rows = [('Age law', 'base', 'Age-only', GREY), ('PCA-HI', 'base', 'PCA-HI', SKY), ('Geo-opt. HI', 'base', 'Mon-opt HI', BLUE), ('Ridge (supervised)', 'base', 'Ridge-HI (supervised)', PURPLE),
+    rows = [('Age-only baseline', 'base', 'Age-only', GREY), ('PCA-HI', 'base', 'PCA-HI', SKY), ('Geo-opt. HI', 'base', 'Mon-opt HI', BLUE), ('Ridge (supervised)', 'base', 'Ridge-HI (supervised)', PURPLE),
             (r'$\beta$-VAE (10 seeds)', 'seed', 'beta-VAE-HI', ORANGE), ('PGIB, integrating (10 seeds)', 'seed', 'PGIB-HI', RED), ('PGIB-KF (10 seeds)', 'seed', 'PGIB-KF-HI', GREEN), ('PGIB-KFR (10 seeds)', 'seed', 'PGIB-KFR-HI', '#1b7a5a')]
     fig, axs = plt.subplots(2, 2, figsize=(W, 5.2), gridspec_kw=dict(hspace=0.45, wspace=0.08), sharey=True)
     for ax, fd, lab in zip(axs.ravel(), sub, ['(a) FD001, 1 regime', '(b) FD002, 6 regimes', '(c) FD003, 1 regime', '(d) FD004, 6 regimes']):
@@ -232,23 +232,23 @@ def fig_realdata():
     for j, fd in enumerate(FDs):
         c = Rr[fd]['cert']; ci = Rr[fd]['cert_ci']; xs = np.arange(len(preds))+(j-(nS-1)/2)*0.115; kk = [('charge sensors' if (k == 'sensors' and 'charge sensors' in c) else k) for k, _ in preds]; y = np.array([c[k] for k in kk]); lo = y-np.array([ci[k][0] for k in kk]); hi = np.array([ci[k][1] for k in kk])-y
         a.errorbar(xs, y, yerr=[lo, hi], fmt='o', color=cols[j], ms=3.5, capsize=1.5, lw=.9, label=fd)
-    a.axhline(0, color='k', lw=.8); a.set_ylim(-0.5, 0.9); a.set_xticks(range(len(preds))); a.set_xticklabels([l for _, l in preds], fontsize=6.6); a.set_ylabel(r'certified $I(T;H\mid t)$ [nats]');     b = ax[1]; panel(b, '(b)')
+    a.axhline(0, color='k', lw=.8); a.set_ylim(-0.5, 0.9); a.set_xticks(range(len(preds))); a.set_xticklabels([l for _, l in preds], fontsize=6.6); a.set_ylabel(r'lower bound on $I(T;H\mid t)$ [nats]');     b = ax[1]; panel(b, '(b)')
     for j, fd in enumerate(FDs):
         b.plot(xg, [Rr[fd]['mon'][g] for g in G], '-o', color=cols[j], ms=3.5, label=fd); b.axhline(Rr[fd]['mon_inf_pred'], color=cols[j], ls=':', lw=1)
-    b.set_xticks(xg); b.set_xticklabels(xt, fontsize=7); b.set_xlabel(r'squeezing strength $\gamma$'); b.set_ylabel('monotonicity')
+    b.set_xticks(xg); b.set_xticklabels(xt, fontsize=7); b.set_xlabel(r'shrinkage strength $\gamma$'); b.set_ylabel('monotonicity')
     c_ = ax[2]; panel(c_, '(c)')
     for j, fd in enumerate(FDs): c_.plot(xg, [Rr[fd]['cert'][f'squeeze {g}'] for g in G], '-s', color=cols[j], ms=3.5, mfc='w')
-    c_.axhline(0, color='k', lw=.8); c_.set_xticks(xg); c_.set_xticklabels(xt, fontsize=7); c_.set_xlabel(r'squeezing strength $\gamma$'); c_.set_ylabel(r'certified $I(T;H\mid t)$ [nats]')
+    c_.axhline(0, color='k', lw=.8); c_.set_xticks(xg); c_.set_xticklabels(xt, fontsize=7); c_.set_xlabel(r'shrinkage strength $\gamma$'); c_.set_ylabel(r'lower bound on $I(T;H\mid t)$ [nats]')
     fig.subplots_adjust(bottom=0.27); fig.legend(handles=[Line2D([], [], marker='o', color=cols[j], lw=0, ms=4, label=fd) for j, fd in enumerate(FDs)], loc='lower center', ncol=nS, fontsize=7, bbox_to_anchor=(0.5, 0.0))
     save(fig, 'fig_realdata_a')
     # ---- Figure B: official-test certificates and stage-wise directions
     fig, ax = plt.subplots(1, 3, figsize=(W, 3.2), gridspec_kw=dict(wspace=0.55, width_ratios=[1.5, 1, 1]))
     fig.subplots_adjust(bottom=0.24)
-    a = ax[0]; panel(a, '(a)'); rows = [('Age-only', 'age law (control)'), ('PCA-HI', 'PCA-HI'), ('Mon-opt HI', 'Geo-opt HI'), ('Ridge-HI (supervised)', 'ridge HI'), ('beta-VAE-HI', r'$\beta$-VAE'), ('PGIB-HI (ens10)', 'PGIB, integrating'), ('PGIB-KF-HI (ens10)', 'PGIB-KF'), ('PGIB-KFR-HI (ens10)', 'PGIB-KFR')]
+    a = ax[0]; panel(a, '(a)'); rows = [('Age-only', 'age-only baseline (control)'), ('PCA-HI', 'PCA-HI'), ('Mon-opt HI', 'Geo-opt HI'), ('Ridge-HI (supervised)', 'ridge HI'), ('beta-VAE-HI', r'$\beta$-VAE'), ('PGIB-HI (ens10)', 'PGIB, integrating'), ('PGIB-KF-HI (ens10)', 'PGIB-KF'), ('PGIB-KFR-HI (ens10)', 'PGIB-KFR')]
     for j, fd in enumerate(FD4):
         for i, (k, _) in enumerate(rows):
             y = len(rows)-1-i+(j-1.5)*0.16; v = Cc[fd]['cert'][k]; ci = Cc[fd]['ci'][k]; a.errorbar([v], [y], xerr=[[v-ci[0]], [ci[1]-v]], fmt='o', color=cols[j], mfc='w' if fd == 'FD003' else cols[j], ms=3.3, capsize=1.3, lw=.8, label=fd if i == 0 else None)
-    a.axvline(0, color='k', lw=.8); a.set_yticks(range(len(rows))); a.set_yticklabels([l for _, l in rows][::-1], fontsize=7); a.set_xlabel(r'certified $I(T;H\mid t)$ [nats]'); a.grid(axis='y', visible=False); a.set_title('turbofan test engines', fontsize=7, loc='right')
+    a.axvline(0, color='k', lw=.8); a.set_yticks(range(len(rows))); a.set_yticklabels([l for _, l in rows][::-1], fontsize=7); a.set_xlabel(r'lower bound on $I(T;H\mid t)$ [nats]'); a.grid(axis='y', visible=False); a.set_title('turbofan test engines', fontsize=7, loc='right')
     fig.legend(handles=[Line2D([], [], marker='o', color=cols[j], mfc='w' if fd == 'FD003' else cols[j], lw=0, ms=4, label=fd+(' (control fails)' if fd == 'FD003' else '')) for j, fd in enumerate(FDs)], loc='lower center', ncol=nS, fontsize=7, bbox_to_anchor=(0.5, 0.0))
     b = ax[1]; panel(b, '(b)')
     for j, fd in enumerate(FDs):

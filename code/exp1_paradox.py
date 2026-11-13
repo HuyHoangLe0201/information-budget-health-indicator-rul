@@ -1,6 +1,6 @@
 """Exp 1: Monotonicity paradox in an exactly solvable linear-Gaussian degradation model.
 Latent: D_k = D_{k-1} + V_{k-1} + sB*w_k ; V_k = V_{k-1} + sV*z_k ; V_0 ~ N(vbar, sv0^2); D_0=0.
-Raw HI: H_k = D_k + xi1_k.  Squeezed HI: Ht_k = m_k + g (H_k - m_k) + xi2_k, g = 1-gamma, m_k=E[D_k].
+Raw HI: H_k = D_k + xi1_k.  Shrunk HI: Ht_k = m_k + g (H_k - m_k) + xi2_k, g = 1-gamma, m_k=E[D_k].
 Gaussian => mutual informations about V_t are exact (Kalman). For T (non-Gaussian) the Bayes-optimal MSE and
 the entropy-power bound are evaluated from exact posterior samples of the latent state."""
 import numpy as np, json, sys

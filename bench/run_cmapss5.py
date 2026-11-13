@@ -1,5 +1,5 @@
 """PGIB-KFR: regime-aware observation model (frozen before running; run once per subset).
-Process model shared across regimes (positive velocity, physics prior); OBSERVATION model regime-dependent: level read-out l_k and filter gain kappa_k use regime-specific
+Process model shared across regimes (positive velocity, physics prior); OBSERVATION model regime-dependent: level estimator l_k and filter gain kappa_k use regime-specific
 linear heads on the encoder features, and the encoder also receives the one-hot regime.  Baseline added for fairness: regime-specific ridge HI.
 Selection between kf and kfr, and of beta, uses only the NLL on the calibration engines.  FD001/FD003 (one regime) serve as a non-regression check.
 Existing predictions (baselines, PGIB-KF) are loaded unchanged from out2/cmapss_{FD}_v3.pkl."""

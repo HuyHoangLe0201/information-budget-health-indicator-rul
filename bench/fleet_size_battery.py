@@ -1,4 +1,4 @@
-"""Fleet-size curve for the age-conditional certificate on a battery data set (same design as fleet_size_curve.py).  Run from bench/: python3 fleet_size_battery.py HUST|MATR|Tongji"""
+"""Fleet-size curve for the age-conditional information lower bound on a battery data set (same design as fleet_size_curve.py).  Run from bench/: python3 fleet_size_battery.py HUST|MATR|Tongji"""
 import sys, json, numpy as np
 import battery_checks as bc
 from sklearn.model_selection import GroupKFold

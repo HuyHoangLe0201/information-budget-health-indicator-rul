@@ -1,5 +1,5 @@
 """Context for the scalar-HI results: an end-to-end gradient-boosting predictor on all 14 sensors (regime-normalised level and slope features plus the age) on the official C-MAPSS test engines.
-Trained on all training engines; target RUL unclipped and clipped at 125 cycles (common practice); evaluated at the last observed cycle of each test engine.  Reports RMSE and the age-conditional certificate
+Trained on all training engines; target RUL unclipped and clipped at 125 cycles (common practice); evaluated at the last observed cycle of each test engine.  Reports RMSE and the age-conditional information lower bound
 (same lifetime law as cert_age_cmapss.py).   Run from bench/ -> ../results/e2e_baseline.json"""
 import numpy as np, json
 import realdata_checks as rd

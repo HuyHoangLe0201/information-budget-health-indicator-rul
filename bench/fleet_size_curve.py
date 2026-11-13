@@ -1,5 +1,5 @@
-"""How many run-to-failure units does the age-conditional certificate need?  Subsample k units from a large data set, run the five-fold certificate (age only, ridge HI), repeat 5 times, and report the mean and the share of
-subsamples in which the age-only control is <= 0.05 nats and the ridge HI certificate is above the control.   Run from bench/: python3 fleet_size_curve.py FD002"""
+"""How many run-to-failure units does the age-conditional information lower bound need?  Subsample k units from a large data set, run the five-fold information lower bound (age only, ridge HI), repeat 5 times, and report the mean and the share of
+subsamples in which the age-only control is <= 0.05 nats and the ridge HI information lower bound is above the control.   Run from bench/: python3 fleet_size_curve.py FD002"""
 import sys, json, numpy as np
 import realdata_checks as rd
 from sklearn.model_selection import GroupKFold

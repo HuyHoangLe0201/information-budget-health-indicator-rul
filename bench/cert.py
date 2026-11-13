@@ -1,4 +1,4 @@
-"""Certified information: I(T;H) >= h(T) - 0.5*ln(2*pi*e*MSE) for ANY estimator built on H (Theorem 1 rearranged).
+"""Information lower bound: I(T;H) >= h(T) - 0.5*ln(2*pi*e*MSE) for ANY estimator built on H (Theorem 1 rearranged).
 h(T): Vasicek spacing estimate on the pooled held-out true RULs (cycles). Reported value is max(0, .) (the bound is vacuous when MSE >= var-scale of T)."""
 import numpy as np, pickle, glob, json, sys, os
 OUTD = os.environ.get('OUTDIR', 'out'); OUTJ = os.environ.get('OUTJSON', '../results/cert.json')
