@@ -137,7 +137,7 @@ $\E[(T_t-\hat T_t)^2]=\E[\Var(T_t\mid\mathbf z)]+\E[(m(\mathbf z)-\hat T_t)^2]$,
 If the level $D_t$ were known, $a$ would be known and a change of variables would give $h(m\mid H,D_t)=h(\mu\mid H,D_t)+\E\ln(a/\mu^2)$. If the degradation followed the same constant-drift model from time $0$ with $D_0=0$ and $D_t$ were observed, $D_t/t$ would be a sufficient statistic for $\mu$ and the resulting bound would not depend on the HI. The HI matters through the joint uncertainty about the level and the drift, which is why Theorem~\ref{thm:physics} is stated for the latent pair $\mathbf z$. The second inequality of the theorem (the Jensen form) is weaker than the first but depends on the HI only through $\eta_m$.
 \end{remark}
 
-The bound of Theorem~\ref{thm:physics} is conservative by an exact non-Gaussianity gap, the variance-weighted Kullback--Leibler (KL) divergence of the posterior of the mean RUL from a Gaussian (Proposition~\ref{prop:gap} in Appendix~\ref{app:proofs}).
+The bound of Theorem~\ref{thm:physics} is conservative by an exact non-Gaussianity gap, the expected posterior variance of the mean RUL multiplied by $1-e^{-2D}$, where $D$ is the Kullback--Leibler (KL) divergence of the posterior from a Gaussian with the same mean and variance (Proposition~\ref{prop:gap} in Appendix~\ref{app:proofs}).
 
 \paragraph{Simulation check}
 \label{sec:physnum}
