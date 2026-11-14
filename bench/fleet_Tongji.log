@@ -1,0 +1,4 @@
+Tongji 5 {'age_mean': 0.13, 'age_max': 0.41, 'ridge_mean': 0.42, 'gain_mean': 0.3, 'pass_control': 0.4, 'informative': 0.6, 'valid': 0.2, 'n': 10}
+Tongji 10 {'age_mean': 0.22, 'age_max': 0.4, 'ridge_mean': 0.41, 'gain_mean': 0.2, 'pass_control': 0.1, 'informative': 0.5, 'valid': 0.0, 'n': 10}
+Tongji 20 {'age_mean': 0.17, 'age_max': 0.23, 'ridge_mean': 0.36, 'gain_mean': 0.19, 'pass_control': 0.0, 'informative': 0.7, 'valid': 0.0, 'n': 10}
+Tongji 40 {'age_mean': 0.11, 'age_max': 0.17, 'ridge_mean': 0.52, 'gain_mean': 0.41, 'pass_control': 0.1, 'informative': 1.0, 'valid': 0.1, 'n': 10}

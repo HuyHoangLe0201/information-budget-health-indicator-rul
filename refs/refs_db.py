@@ -235,6 +235,12 @@ add('gu2025', 'art', 'Gu H, Li Y, Jiang L and Luo Z', 2025,
 add('bisoyi2026', 'art', 'Bisoyi S, Kumar Rathi A and Mahato S', 2026,
     'Reliability assessment of remaining useful life predictions of roller bearings using deep learning models',
     'J. Reliab. Sci. Eng.', '2', '025302', '10.1088/3050-2454/ae61b4', 'C', 'title')
-add('anon2026a', 'book', 'Anonymous', 2026, 'Reference withheld for double-blind review', '', '', '', '', 'C', 'abstract')
-add('anon2026b', 'book', 'Anonymous', 2026, 'Reference withheld for double-blind review', '', '', '', '', 'C', 'abstract')
-add('anon2026c', 'book', 'Anonymous', 2026, 'Reference withheld for double-blind review', '', '', '', '', 'C', 'abstract')
+add('le2026jestch', 'art', 'Le H H and Nguyen K-A', 2026,
+    'Information-theoretic limits of health indicator construction for remaining useful life prediction',
+    'Eng. Sci. Technol. Int. J.', '81', '102485', '10.1016/j.jestch.2026.102485', 'C', 'abstract')
+add('le2026mst', 'art', 'Le H H and Nguyen K-A', 2026,
+    'Generalization bounds and sample complexity for remaining useful life prediction from complete degradation trajectories',
+    'Meas. Sci. Technol.', '37', '226203', '10.1088/1361-6501/ae7109', 'C', 'abstract')
+add('le2026ein', 'art', 'Le H H and Nguyen K-A', 2026,
+    'Charging phase health indicators for battery state-of-health estimation: a systematic comparison of CC, CV, and combined approaches under cross-battery validation',
+    'Eksploat. Niezawodn. -- Maint. Reliab.', '28', '', '10.17531/ein/220211', 'C', 'abstract')

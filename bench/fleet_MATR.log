@@ -1,0 +1,6 @@
+MATR 5 {'age_mean': -0.18, 'age_max': 0.3, 'ridge_mean': -0.13, 'gain_mean': 0.06, 'pass_control': 0.8, 'informative': 0.4, 'valid': 0.3, 'n': 10}
+MATR 10 {'age_mean': -0.14, 'age_max': 0.39, 'ridge_mean': 0.18, 'gain_mean': 0.32, 'pass_control': 0.9, 'informative': 0.8, 'valid': 0.7, 'n': 10}
+MATR 20 {'age_mean': -0.18, 'age_max': 0.03, 'ridge_mean': 0.12, 'gain_mean': 0.3, 'pass_control': 1.0, 'informative': 1.0, 'valid': 1.0, 'n': 10}
+MATR 40 {'age_mean': -0.28, 'age_max': -0.14, 'ridge_mean': 0.14, 'gain_mean': 0.42, 'pass_control': 1.0, 'informative': 0.9, 'valid': 0.9, 'n': 10}
+MATR 80 {'age_mean': -0.24, 'age_max': -0.08, 'ridge_mean': 0.2, 'gain_mean': 0.44, 'pass_control': 1.0, 'informative': 1.0, 'valid': 1.0, 'n': 10}
+MATR 120 {'age_mean': -0.27, 'age_max': -0.22, 'ridge_mean': 0.3, 'gain_mean': 0.57, 'pass_control': 1.0, 'informative': 1.0, 'valid': 1.0, 'n': 10}

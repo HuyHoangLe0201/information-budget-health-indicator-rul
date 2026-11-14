@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper."
+title: "infobudget: information lower bound of health indicators for remaining useful life prediction"
+type: software
+version: 1.0.0
+authors:
+  - family-names: Le
+    given-names: Huy Hoang
+    affiliation: "PowerMore Ltd., Vietnam"
+    orcid: "https://orcid.org/0009-0009-2138-5468"
+  - family-names: Nguyen
+    given-names: Kim-Anh
+    affiliation: "Faculty of Electrical Engineering, The University of Danang - University of Science and Technology, Da Nang, Vietnam"
+license: MIT
+repository-code: "https://github.com/HuyHoangLe0201/information-budget-health-indicator-rul"
+preferred-citation:
+  type: article
+  title: "Information Budgets of Trajectory Health Indicators for Remaining Useful Life Prediction"
+  authors:
+    - family-names: Le
+      given-names: Huy Hoang
+    - family-names: Nguyen
+      given-names: Kim-Anh
+  journal: "Reliability Engineering & System Safety"
+  notes: "submitted"
+  year: 2026

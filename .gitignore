@@ -12,3 +12,8 @@ main.tmp
 data/
 bench/data/
 *.spl
+
+# package
+*.egg-info/
+.pytest_cache/
+!bench/data/*_feats.npz

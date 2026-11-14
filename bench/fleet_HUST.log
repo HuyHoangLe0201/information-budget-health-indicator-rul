@@ -1,0 +1,4 @@
+HUST 5 {'age_mean': -0.07, 'age_max': -0.0, 'ridge_mean': -0.16, 'gain_mean': -0.09, 'pass_control': 1.0, 'informative': 0.2, 'valid': 0.2, 'n': 10}
+HUST 10 {'age_mean': -0.09, 'age_max': 0.07, 'ridge_mean': 0.03, 'gain_mean': 0.12, 'pass_control': 0.9, 'informative': 0.4, 'valid': 0.3, 'n': 10}
+HUST 20 {'age_mean': 0.02, 'age_max': 0.05, 'ridge_mean': 0.14, 'gain_mean': 0.13, 'pass_control': 0.8, 'informative': 0.7, 'valid': 0.6, 'n': 10}
+HUST 40 {'age_mean': 0.01, 'age_max': 0.05, 'ridge_mean': 0.28, 'gain_mean': 0.26, 'pass_control': 0.9, 'informative': 0.9, 'valid': 0.9, 'n': 10}

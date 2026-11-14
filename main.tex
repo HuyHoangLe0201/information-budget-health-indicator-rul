@@ -7,7 +7,6 @@
 \journal{Reliability Engineering \& System Safety}
 \emergencystretch=3em
 \renewcommand{\topfraction}{0.85}
-\newif\ifblind\blindtrue   % \blindtrue for the anonymised version
 \usepackage{amsmath,amssymb,amsthm,booktabs,graphicx,xcolor,adjustbox}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,decorations.pathreplacing,calc,fit,backgrounds,shadows}
@@ -31,7 +30,11 @@
 \linenumbers
 \begin{frontmatter}
 \title{Information Budgets of Trajectory Health Indicators for Remaining Useful Life Prediction}
-\author{Anonymous authors}
+\author[pm]{Huy Hoang Le\corref{cor1}}
+\author[dut]{Kim-Anh Nguyen}
+\cortext[cor1]{Corresponding author. E-mail: lhhoang@powermore.vn}
+\affiliation[pm]{organization={PowerMore Ltd.},country={Vietnam}}
+\affiliation[dut]{organization={Faculty of Electrical Engineering, The University of Danang -- University of Science and Technology},city={Da Nang},country={Vietnam}}
 
 \begin{highlights}
 \item An information lower bound shows how much a health indicator retains about remaining life
@@ -57,7 +60,7 @@ Prognostics and health management predicts the remaining useful life (RUL) of co
 
 Three bodies of work bear on how an HI should be judged. First, HIs are usually selected by \emph{geometric} criteria: Coble and Hines \cite{coble2009} formalised monotonicity, prognosability and trendability and optimised them with a genetic algorithm, and variants are common \cite{javed2013,zhang2016,qian2015}. HIs may also be learned by recurrent networks \cite{guo2017}, autoencoders \cite{kingma2014,higgins2017} or regressions on engineered features \cite{severson2019}; in both cases an HI is judged by its shape or by the accuracy of the predictor built on it \cite{saxena2008metrics}. Second, probabilistic RUL prediction from an HI is mostly built on Wiener degradation, whose first passage time is inverse Gaussian \cite{folks1978,chhikara1989,tweedie1957}, with measurement error \cite{whitmore1995,tang2014}, random unit-specific drift \cite{gebraeel2005,wang2010}, nonlinear drift \cite{si2012} or threshold regression \cite{lee2006}, applied to batteries \cite{tang2014}, bearings \cite{medjaher2012} and highly reliable products \cite{ye2015} (reviews: \cite{zhang2018,si2011}). The RUL uncertainty then has an aleatoric part (future randomness) and an epistemic part (incomplete knowledge of state and parameters) \cite{sankararaman2013,sankararaman2015,hullermeier2021,kendall2017}, which deep ensembles are a common way to represent \cite{lakshminarayanan2017}. Third, information theory \cite{shannon1948,cover2006} enters learning mainly through the information bottleneck \cite{tishby2000,alemi2017,poole2019,achille2018,kolchinsky2019,saxe2019}; estimating information from samples is difficult \cite{vasicek1976,kraskov2004,paninski2003,mcallester2020}, and limits on estimator accuracy are usually stated through Cram\'er--Rao bounds \cite{vantrees1968,gill1995,tichavsky1998}, of which the entropy-power bound used here is the information-theoretic counterpart \cite{cover2006} (Remark~\ref{rem:bcrb}).
 
-Engineers who build an HI face five practical questions that these bodies of work do not answer. Does the HI retain the information that a predictor needs? Is a higher monotonicity score a better HI? Is one scalar enough, or are level and velocity both needed? Must operating regimes be modelled? Is a learned encoder, a neural network that maps the sensors to the HI, justified? In the sources we searched (bibliographic databases and the references above; this is not an exhaustive survey) we did not find a bound on the RUL error that depends on the HI only through the information it retains, nor an account of what a \emph{scalar, static} indicator, a regime-blind estimator or an integrating encoder loses. A companion study \cite{anon2026a} analysed what a static, per-snapshot projection of a multichannel signal retains about the degradation state. Here we analyse the HI \emph{trajectory}, with its level, velocity, between-unit variability and operating regime. Two further studies by the same authors address how many run-to-failure trajectories \cite{anon2026b} and which charging-phase features \cite{anon2026c} are needed; the present paper addresses how much \emph{information} an HI can at best retain. Figure~\ref{fig:framework} shows the setting and where each result applies.
+Engineers who build an HI face five practical questions that these bodies of work do not answer. Does the HI retain the information that a predictor needs? Is a higher monotonicity score a better HI? Is one scalar enough, or are level and velocity both needed? Must operating regimes be modelled? Is a learned encoder, a neural network that maps the sensors to the HI, justified? In the sources we searched (bibliographic databases and the references above; this is not an exhaustive survey) we did not find a bound on the RUL error that depends on the HI only through the information it retains, nor an account of what a \emph{scalar, static} indicator, a regime-blind estimator or an integrating encoder loses. A companion study \cite{le2026jestch} analysed what a static, per-snapshot projection of a multichannel signal retains about the degradation state. Here we analyse the HI \emph{trajectory}, with its level, velocity, between-unit variability and operating regime. Two further studies by the authors address how many run-to-failure trajectories \cite{le2026mst} and which charging-phase features \cite{le2026ein} are needed; the present paper addresses how much \emph{information} an HI can at best retain. Figure~\ref{fig:framework} shows the setting and where each result applies.
 
 \begin{figure}[!t]
 \centering
@@ -221,7 +224,7 @@ Monotonicity rises from $0.50$ to $0.98$ and saturates at the predicted value $\
 
 \subsection{Projection: scalar indicators at the trajectory level}
 \label{sec:angular}
-Theorem~\ref{thm:physics} concerns the information budget of an arbitrary HI. We now ask what a \emph{scalar}, \emph{static} HI loses when the degradation velocity varies in time. The loss has the same $\sin^2$ structure as the projection-misalignment loss at the snapshot level in \cite{anon2026a}, but it acts along the \emph{temporal} direction (level versus velocity).
+Theorem~\ref{thm:physics} concerns the information budget of an arbitrary HI. We now ask what a \emph{scalar}, \emph{static} HI loses when the degradation velocity varies in time. The loss has the same $\sin^2$ structure as the projection-misalignment loss at the snapshot level in \cite{le2026jestch}, but it acts along the \emph{temporal} direction (level versus velocity).
 
 \paragraph{Setting} Let $\mathbf z=(D_t,V_t)^\top$ be the level and the velocity at inspection time $t$, with Gaussian prior $\mathcal N(\mathbf z_0,\boldsymbol\Sigma)$, observed through $\mathbf{X}_{1:t}$ in a linear-Gaussian model (for example the local-linear-trend state space \cite{harvey1989,durbin2012} of Section~\ref{sec:paradoxnum} with Gaussian sensor noise). The posterior is $\mathcal N(\hat{\mathbf z},\mathbf P)$ where $\hat{\mathbf z}=\E[\mathbf z\mid\mathbf{X}_{1:t}]$ and $\mathbf P$ does not depend on the data (as for the covariance recursion of the Kalman filter \cite{kalman1960,durbin2012}); $\hat{\mathbf z}\sim\mathcal N(\mathbf z_0,\boldsymbol\Lambda)$ with $\boldsymbol\Lambda=\boldsymbol\Sigma-\mathbf P\succ0$ (law of total variance \cite[Sect.~1.5.5]{bishop2006}), and $\hat{\mathbf z}$ is a sufficient statistic of $\mathbf{X}_{1:t}$ for $\mathbf z$. The target is the frozen-velocity RUL $m(\mathbf z)=(D_{\rm fail}-D_t)/V_t$, which is nonlinear in $\mathbf z$. We linearise it at a \emph{fixed}, non-random operating point $\bar{\mathbf z}=(\bar D,\bar V)^\top$, for example the prior mean at the inspection stage. Then
 \begin{equation}
@@ -502,18 +505,12 @@ How much can a better HI still gain? & Under a fitted Wiener model, compare the 
 
 \paragraph{Conclusions} For any HI, an engineer can ask how much information about the RUL it retains beyond the age, and the answer, in nats, follows from the held-out error of any predictor. The theory identifies four ways in which an HI loses information, and the tests on turbofan engines and lithium-ion cells show that they matter in practice. Monotonicity scores can rise while information vanishes; a static scalar HI increases the RMSE by up to $18\%$ in one cell collection; ignoring the operating regime or protocol raises the error of a linear estimator by $8$ to $26\%$; and an integrating encoder needs an observation correction. With fewer than about 40 units the age-only baseline is competitive, and no learned encoder outperformed simple indicators. The contribution of the paper is the budget and the decisions it supports, not a new predictor.
 
-\section*{CRediT authorship contribution statement}
-Withheld for anonymous review.
-\section*{Declaration of competing interest}
-Withheld for anonymous review.
-\section*{Declaration of generative AI and AI-assisted technologies in the writing process}
-Withheld for anonymous review.
 \section*{Funding}
-Withheld for anonymous review.
+This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
 \section*{Data availability}
-NASA PCoE, NASA IMS, C-MAPSS, CALCE CS2, FEMTO-ST/PRONOSTIA, HUST, MATR and Tongji data are publicly available (NASA Prognostics Data Repository, CALCE Battery Group, IEEE 2012 Prognostics and Health Management data challenge, BatteryLife repository on Zenodo). The simulation and benchmark code, the stored results and the per-unit outputs used to generate all tables and figures are available in an anonymised repository: \url{https://anonymous.4open.science/r/information-budget-health-indicator-rul-C5CE/}.
+NASA PCoE, NASA IMS, C-MAPSS, CALCE CS2, FEMTO-ST/PRONOSTIA, HUST, MATR and Tongji data are publicly available (NASA Prognostics Data Repository, CALCE Battery Group, IEEE 2012 Prognostics and Health Management data challenge, BatteryLife repository on Zenodo). The code, the stored results and the per-unit outputs used to generate all tables and figures, and a Python package for computing the information lower bound on new data, are available at \url{https://github.com/HuyHoangLe0201/information-budget-health-indicator-rul}.
 \section*{Acknowledgements}
-Withheld for anonymous review.
+The authors thank the editor and the anonymous reviewers for their time and constructive comments.
 
 
 
@@ -652,7 +649,7 @@ Evaluation is leave-one-unit-out: each unit in turn is held out, the remaining u
 
 \paragraph{Methods} To isolate the effect of HI construction, every HI is mapped to the same scale and passed to the same calibrated predictor of Appendix~\ref{sec:fusion}. The sensor features are standardised, and each HI is mapped by an affine map $H\mapsto(H-H_{\rm s})/(H_{\rm e}-H_{\rm s})$, where $H_{\rm s}$ and $H_{\rm e}$ are the averages, over the \emph{training} units only, of the mean of the first five and of the last five HI values of a unit (the end of life of a training unit is known); the standardisation, the PCA direction, the combination weights of the Geo-opt HI, the encoders and the affine map are all fitted on the training units and applied unchanged to the test unit, whose own end-of-life value is never used. The PGIB scale is set by its end-of-life penalty on the training units. The predictor of Appendix~\ref{sec:fusion} then uses: the mixed inverse-Gaussian distribution (\ref{eq:mixig}) with the drift taken from the slope of the smoothed HI over a trailing window of $\max(10,0.25t)$ steps, pooled with the age-based distribution. The parameters $(c,w_{\rm h},w_{\rm a})$ are chosen on HI paths that are out of sample for the HI construction (leave-one-training-unit-out for the small sets, the $20$ calibration engines for C-MAPSS). Implementation details of the compared HIs: the Geo-opt HI is found by differential evolution; the $\beta$-VAE uses a causal gated recurrent unit (GRU) encoder with a one-dimensional latent variable and a Gaussian prior; VIB is the PGIB with a zero-drift prior, that is, without physics; the PGIB has the state-dependent drift $\nu(H;\phi)=\phi_1\exp(\phi_2H)$ (Appendix~\ref{sec:kf} for PGIB-KF). For the bottleneck models, the compression weight $\beta\in\{0.03,0.3,3,30\}$ and the encoder (GRU or causal feed-forward window network) are selected by inner leave-one-training-unit-out validation of the predictive negative log-likelihood, with at most three inner folds when more than five training units are available; for PGIB-KF only $\beta\in\{0.03,0.3,3\}$ is searched. The held-out unit is never used. Learned models use three seeds, and the other HIs are deterministic. The sensor-free reference is the age-based distribution $p_{\rm age}$ of Appendix~\ref{sec:fusion}. The metrics are the RMSE and the mean absolute error (MAE) of the median prediction, the prediction interval coverage probability (PICP) and normalised average width (PINAW) of the $95\%$ interval, and the continuous ranked probability score (CRPS) \cite{gneiting2007}. For C-MAPSS the asymmetric score is $\sum_i(e^{-d_i/13}-1)$ for $d_i<0$ and $\sum_i(e^{d_i/10}-1)$ for $d_i\ge0$, summed over engines, with $d_i$ the predicted minus the true RUL \cite{saxena2008}.
 
-\paragraph{Protocol history and evidence tiers} The study proceeded in five protocols, which determine how the numbers can be read. P1 (Supplementary Material) showed that the integrating encoder under-covers and that the age-only baseline is competitive. P2 added out-of-sample calibration, age fusion and a prediction grid independent of the test unit; it was frozen, with the file hash recorded, before it was run on the confirmation sets (FEMTO condition 3 and IMS). On C-MAPSS FD001, P2 showed that the integrating encoder is considerably worse than simple HIs even with $80$ training engines. The diagnosis of Proposition~\ref{prop:accum} led to P3, the observation-corrected PGIB-KF, which was frozen and run once on FD003, a subset not used before, and then, with regime-wise preprocessing, once on FD002 and FD004. (A first launch used only the first $100$ training engines because the identifier list was fixed in the script; it was stopped before any result was produced, and the script and the recorded hash were corrected.) P4 added the regime-aware encoder and a regime-specific ridge baseline and was run once on each subset, the choice between PGIB-KF and PGIB-KFR and of $\beta$ being made on the calibration engines only; FD002 and FD004 are therefore development sets for P4, and no independent multi-regime data set was available (the successor N-CMAPSS has only six to ten units per subset). Because the differences between learned encoders and simple HIs were of the size of the seed-to-seed variability, P5 retrained the learned encoders on the four subsets with ten fresh seeds, keeping architecture, $\beta$ and calibration fixed; it supersedes the three-seed results where they disagree. The evidence tiers are: (i) \emph{independent confirmation}: C-MAPSS FD003, FD002 and FD004 for P3 (not for P4), and FEMTO condition 3 and IMS for P2 (not for P3); (ii) \emph{development}: NASA, CALCE (four and six cells), FEMTO conditions 1 and 2 and C-MAPSS FD001, which informed the design and whose results are therefore not unbiased estimates of out-of-sample performance.
+\paragraph{Protocol history and evidence tiers} The study proceeded in five protocols, which determine how the numbers can be read. P1 (Appendix~\ref{app:initial}) showed that the integrating encoder under-covers and that the age-only baseline is competitive. P2 added out-of-sample calibration, age fusion and a prediction grid independent of the test unit; it was frozen, with the file hash recorded, before it was run on the confirmation sets (FEMTO condition 3 and IMS). On C-MAPSS FD001, P2 showed that the integrating encoder is considerably worse than simple HIs even with $80$ training engines. The diagnosis of Proposition~\ref{prop:accum} led to P3, the observation-corrected PGIB-KF, which was frozen and run once on FD003, a subset not used before, and then, with regime-wise preprocessing, once on FD002 and FD004. (A first launch used only the first $100$ training engines because the identifier list was fixed in the script; it was stopped before any result was produced, and the script and the recorded hash were corrected.) P4 added the regime-aware encoder and a regime-specific ridge baseline and was run once on each subset, the choice between PGIB-KF and PGIB-KFR and of $\beta$ being made on the calibration engines only; FD002 and FD004 are therefore development sets for P4, and no independent multi-regime data set was available (the successor N-CMAPSS has only six to ten units per subset). Because the differences between learned encoders and simple HIs were of the size of the seed-to-seed variability, P5 retrained the learned encoders on the four subsets with ten fresh seeds, keeping architecture, $\beta$ and calibration fixed; it supersedes the three-seed results where they disagree. The evidence tiers are: (i) \emph{independent confirmation}: C-MAPSS FD003, FD002 and FD004 for P3 (not for P4), and FEMTO condition 3 and IMS for P2 (not for P3); (ii) \emph{development}: NASA, CALCE (four and six cells), FEMTO conditions 1 and 2 and C-MAPSS FD001, which informed the design and whose results are therefore not unbiased estimates of out-of-sample performance.
 
 \begin{table}
 \caption{Algorithm 1: training of the PGIB and Bayesian FHT prognostics (Appendix~\ref{sec:pgib}).}
@@ -743,6 +740,49 @@ This appendix gives the tables behind Section~\ref{sec:empirical}: protocol P2 o
 \input{results/tab_cert_age}
 \label{tab:certage}
 \end{table}
+
+\section{Initial benchmark protocol (P1)}
+\label{app:initial}
+The first benchmark used a simpler protocol (P1). Every HI was calibrated on in-sample training paths, the plain first-hitting-time distribution (\ref{eq:mixig}) was used without age fusion, and the predictive grid extended to three times the held-out unit's own life, which leaks the length of the test unit into the support of the predictive distribution (removed in P2). The pilot on NASA B0005, the results below and the observation that the age-only baseline is competitive motivated P2. The P1 results are reported for completeness and are not used for the conclusions of the main text.
+
+\paragraph{Pilot run} A pilot on the NASA B0005 fold, with a GRU-only encoder and $\beta\in\{0.003,0.03,0.3\}$, gave a PGIB RMSE of $56.3$ cycles and zero interval coverage, with the selected $\beta$ at the edge of the grid. The selection grid was therefore extended and the feed-forward encoder added as a candidate. Both changes are chosen per fold by inner validation, but the decision to introduce them was made after seeing a held-out result for one fold. No baseline was modified, and no change was made after the full runs reported below; the bearing experiments were run once with the final protocol.
+
+\begin{table}
+\caption{Protocol P1, battery benchmarks, leave-one-unit-out (mean $\pm$ standard deviation over seeds). RMSE, MAE and CRPS in cycles.}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{results/tab_bench_nasa}}\\[4pt]
+\adjustbox{max width=\linewidth}{\input{results/tab_bench_calce}}\\[4pt]
+\adjustbox{max width=\linewidth}{\input{results/tab_bench_calce6}}
+\label{tab:benchv1}
+\end{table}
+
+\begin{table}
+\caption{Protocol P1, FEMTO bearing benchmarks. RMSE, MAE and CRPS in $10$~s snapshots.}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{results/tab_bench_femto1}}\\[4pt]
+\adjustbox{max width=\linewidth}{\input{results/tab_bench_femto2}}
+\label{tab:benchbv1}
+\end{table}
+
+\begin{table}
+\caption{Protocol P1, lower bound on the information implied by the achieved error (Theorem~\ref{thm:bound}(b)), in nats; $<0$: uninformative. $h(T)$: entropy of the pooled held-out RUL.}
+\centering\small
+\input{results/tab_cert}
+\label{tab:certv1}
+\end{table}
+
+\begin{figure}[!tb]
+\centering
+\includegraphics[width=\textwidth]{figs/fig_bench}
+\caption{Example RUL predictions with $95\%$ intervals on one held-out unit per data set (NASA B0005, CALCE CS2\_35, FEMTO Bearing1\_1), for PCA-HI (left) and PGIB (right); each panel gives the RMSE and the coverage on that unit.}
+\label{fig:benchv1}
+\end{figure}
+
+\paragraph{Results under P1} The outcome depends on the data set (Tables~\ref{tab:benchv1} and \ref{tab:benchbv1}, Figure~\ref{fig:benchv1}), and the age-only baseline is needed to read it. On NASA the RMSE of the age-only baseline is $39.8$ cycles; PCA-HI ($17.8$), the Geo-opt HI ($21.9$), the $\beta$-VAE ($30.8$) and VIB ($33.3$) outperform it, whereas the PGIB ($47.6$) does not, and its intervals cover only $42\%$ of the true RULs. On CALCE the RMSE of the age-only baseline is $49.3$; only the PGIB ($33.0$) outperforms it clearly, while PCA-HI, the Geo-opt HI and the $\beta$-VAE ($117$ to $164$) are considerably worse than the age-only baseline. With the two $0.5$C-discharge cells added, the PGIB keeps the lowest RMSE ($50.4$) but its margin over the age-only baseline ($54.7$) is only $8\%$. On bearings the RMSE of the age-only baseline ($602$ and $664$ snapshots for conditions 1 and 2) is comparable to the standard deviation of the pooled RUL, and most HIs do no better: the PGIB has the lowest RMSE in condition 1 ($524.5$, $13\%$ below the age-only baseline) but gives almost no benefit in condition 2 ($621.8$ against $664$). Two long-lived units dominate the pooled error in condition 2.
+
+The ablations (in the supplied result files) support the bottleneck on all five sets (for example RMSE $54.4\to47.6$ on NASA and $42.3\to33.0$ on CALCE) and the epistemic drift variance for coverage (for example $14\to42\%$ on NASA). The physics prior helps on CALCE and FEMTO condition 1 but not on NASA or FEMTO condition 2. With only three to six training units per fold, the validation signal that selects the encoder is itself noisy; on NASA it chose the strongest compression ($\beta=30$), at the edge of the grid, in all eight selections.
+
+\paragraph{Geometric scores versus error} Across the five HIs of each data set, the rank correlation between the geometric score $\Mon+\mathrm{Tre}+\mathrm{Pro}$ and the RMSE is $+0.90$ on NASA (a higher geometric score goes with a larger error), $-1.00$ on CALCE, $-0.90$ on six-cell CALCE, $-0.60$ on FEMTO condition 1 and $+0.60$ on condition 2. The geometric criteria therefore did not rank the HIs consistently by prognostic error. This is an association over five methods per data set and not evidence for the mechanism of Theorem~\ref{thm:paradox}: the VIB and PGIB HIs have $\Mon\approx\mathrm{Tre}\approx1$ because their velocity is constrained to be positive, not because of a squeeze.
 
 \section{Efficiency estimation on real data}
 \label{app:p1}

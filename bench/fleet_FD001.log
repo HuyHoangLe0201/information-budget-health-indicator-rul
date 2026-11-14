@@ -1,0 +1,5 @@
+FD001 5 {'age_mean': -0.1, 'age_max': -0.02, 'ridge_mean': -0.01, 'gain_mean': 0.1, 'pass_control': 1.0, 'informative': 0.5, 'valid': 0.5, 'n': 10}
+FD001 10 {'age_mean': -0.03, 'age_max': 0.05, 'ridge_mean': 0.13, 'gain_mean': 0.17, 'pass_control': 1.0, 'informative': 0.6, 'valid': 0.6, 'n': 10}
+FD001 20 {'age_mean': -0.08, 'age_max': 0.06, 'ridge_mean': 0.09, 'gain_mean': 0.16, 'pass_control': 0.9, 'informative': 0.8, 'valid': 0.7, 'n': 10}
+FD001 40 {'age_mean': -0.11, 'age_max': -0.04, 'ridge_mean': 0.15, 'gain_mean': 0.26, 'pass_control': 1.0, 'informative': 1.0, 'valid': 1.0, 'n': 10}
+FD001 80 {'age_mean': -0.1, 'age_max': -0.07, 'ridge_mean': 0.23, 'gain_mean': 0.33, 'pass_control': 1.0, 'informative': 1.0, 'valid': 1.0, 'n': 10}

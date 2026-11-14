@@ -1,0 +1,9 @@
+FD002 fold 0 13s
+FD002 fold 1 26s
+FD002 fold 2 39s
+FD002 fold 3 53s
+FD002 fold 4 64s
+FD002 hbar 5.11
+age log-score certificate -0.01 | MSE-based (median-ish exp(mu)) -0.15
+ridge log-score certificate 0.58 | MSE-based (median-ish exp(mu)) 0.22
+sensors log-score certificate 0.69 | MSE-based (median-ish exp(mu)) 0.18
