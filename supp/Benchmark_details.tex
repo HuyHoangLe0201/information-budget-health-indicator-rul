@@ -272,5 +272,40 @@ These figures and tables duplicate numbers that the paper gives in its text and 
 \label{tab:rdstages}
 \end{table}
 
+\begin{figure}[!tb]
+\centering
+\includegraphics[width=\textwidth]{../figs/fig_small}
+\caption{RMSE of the compared HIs on the seven small data sets (cycles for batteries, $10$~s snapshots for bearings). Colour: ratio to the age-only baseline; frame: lowest value of each row; cond.: operating condition; number of units in brackets; $^\ast$: sets not used in the design.}
+\label{fig:smalls}
+\end{figure}
+
+\begin{table}[!htbp]
+\caption{Cross-validated age-conditional information lower bounds (nats, $95\%$ bootstrap interval); $\bar h(T\mid t)$: mean conditional entropy. Sensors: raw sensors (engines) or charging features (cells); Capacity: reference predictor on the discharge capacity (cells).}
+\centering\scriptsize
+\adjustbox{max width=\linewidth}{\input{../results/tab_rd_cert}}
+\label{tab:rdcerts}
+\end{table}
+
+\begin{table}[!htbp]
+\caption{RMSE of a linear estimator of the life fraction. Blind: without normalisation by regime (engines) or by the cell's own early cycles (cells).}
+\centering\small
+\input{../results/tab_rd_regime}
+\label{tab:rdregimes}
+\end{table}
+
+\begin{table}[!htbp]
+\caption{Age-conditional information lower bounds (nats) of the benchmark methods on the official test engines. $^\dagger$: the age-only control fails.}
+\centering\scriptsize
+\adjustbox{max width=\linewidth}{\input{../results/tab_rd_test}}
+\label{tab:rdtests}
+\end{table}
+
+\begin{table}
+\caption{Estimation of $\etaPIE$ with the Kraskov--St\"ogbauer--Grassberger estimator ($k=5$, $100$ replications) in a Gaussian model with known mutual information; $n$ is the sample size.}
+\centering\small
+\input{../results/tab_exp5}
+\label{tab:exp5s}
+\end{table}
+
 \input{../refs/bib}
 \end{document}
