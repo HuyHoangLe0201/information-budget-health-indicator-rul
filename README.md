@@ -1,8 +1,8 @@
-# Information budgets of trajectory health indicators for remaining useful life prediction
+# Information lower bounds of trajectory health indicators for remaining useful life prediction
 
 Code and reference implementation of
 
-> Huy Hoang Le and Kim-Anh Nguyen, *Information Budgets of Trajectory Health Indicators for Remaining Useful Life Prediction* (submitted to Reliability Engineering & System Safety).
+> Huy Hoang Le and Kim-Anh Nguyen, *Information Lower Bounds of Trajectory Health Indicators for Remaining Useful Life Prediction* (submitted to Reliability Engineering & System Safety).
 
 The repository has two parts.
 
@@ -92,7 +92,7 @@ The test `tests/test_paper_regression.py` recomputes the bound of the Tongji cel
 | `bench/` | real-data benchmarks: feature preparation, protocols P1 to P5, analysis scripts, run logs, per-unit outputs (`out*/`) |
 | `results/` | aggregated results (`*.json`), LaTeX tables (`*.tex`) and the frozen script hashes (`bench2.frozen.md5`) |
 | `figs/` | figures (PDF) and the TikZ framework figure (`fig_framework.tex`) |
-| `supp/Benchmark_details.pdf` | benchmark details moved out of the paper for length: learned encoders and predictive distribution, data and protocols, detailed benchmark tables, initial protocol P1, and the figures and tables that duplicate numbers of the paper (`supp/Benchmark_details.tex`, compiled after `main.tex`) |
+| `supp/Benchmark_details.pdf` | the Supplementary Material submitted with the paper: learned encoders and predictive distribution, data and protocols, detailed benchmark tables, initial protocol P1, and the figures and tables that duplicate numbers of the paper (`supp/Benchmark_details.tex`, compiled after `main.tex`) |
 | `refs/` | reference database, bibliography generator and the verification log (`VERIFICATION.md`) |
 
 ## Reproducing the paper

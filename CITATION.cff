@@ -15,7 +15,7 @@ license: MIT
 repository-code: "https://github.com/HuyHoangLe0201/information-budget-health-indicator-rul"
 preferred-citation:
   type: article
-  title: "Information Budgets of Trajectory Health Indicators for Remaining Useful Life Prediction"
+  title: "Information Lower Bounds of Trajectory Health Indicators for Remaining Useful Life Prediction"
   authors:
     - family-names: Le
       given-names: Huy Hoang
