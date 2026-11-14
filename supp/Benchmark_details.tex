@@ -29,11 +29,137 @@
 
 \begin{document}
 \begin{center}\textbf{Supplementary Material to ``Information Lower Bounds of Trajectory Health Indicators for Remaining Useful Life Prediction''}\end{center}
-\noindent This Supplementary Material collects the benchmark material that supports Section~\ref{sec:empirical} of the paper: the learned encoders and the predictive distribution, the data, protocols and evidence tiers, the detailed benchmark tables, and the initial benchmark protocol P1. Sections, tables and references of the paper are cited by their numbers in the paper; the bibliography is that of the paper.
+\noindent This Supplementary Material contains the proofs and supplementary results, the details of the real-data tests, the details of the benchmark (learned encoders, data, protocols, detailed tables, initial protocol) and the figures and tables moved out of the paper. Sections, theorems, tables and references of the paper are cited by their numbers in the paper; the bibliography of this document lists the references that it cites.
 
 \renewcommand{\thesection}{S\arabic{section}}
 \renewcommand{\thetable}{S\arabic{table}}
 \renewcommand{\thefigure}{S\arabic{figure}}
+\setcounter{proposition}{2}\setcounter{remark}{2}
+\section{Proofs and supplementary results}
+\label{app:proofs}
+\subsection{Proofs of the results of Sections~\ref{sec:limits} to \ref{sec:losses}}
+\begin{proof}[Proof of Theorem~\ref{thm:bound}]
+(a) Let $E=T_t-g(H_{1:t})$. Differential entropy is translation invariant \cite[Sect.~8.6]{cover2006}, so $h(E\mid H_{1:t})=h(T_t\mid H_{1:t})$ ($g(H_{1:t})$ is constant given $H_{1:t}$). Conditioning does not increase entropy \cite[Sect.~2.6]{cover2006}, so $h(E\mid H_{1:t})\le h(E)$, and the Gaussian maximises entropy at fixed second moment \cite[Sect.~8.6]{cover2006}, so $h(E)\le \tfrac12\ln(2\pi e\,\E[E^2])$. Combining the three relations gives $\E[E^2]\ge \frac{1}{2\pi e}e^{2h(T_t\mid H_{1:t})}$. The identity $h(T_t\mid H_{1:t})=h(T_t)-I(T_t;H_{1:t})$ (definition of mutual information) gives the second form. By (\ref{eq:dpi}), $h(T_t\mid H_{1:t})\ge h(T_t\mid\mathbf{X}_{1:t})$, and the ratio follows from $h(T_t\mid H_{1:t})-h(T_t\mid \mathbf{X}_{1:t})=I(T_t;\mathbf{X}_{1:t})-I(T_t;H_{1:t})$. Applying the same steps conditionally on $H_{1:t}=\mathsf h$ and then averaging gives the sharper \emph{pointwise} form $\varepsilon^2\ge\E_H\big[e^{2h(T_t\mid H_{1:t}=\mathsf h)}\big]/(2\pi e)\ge\Binfo(H_{1:t})$ (Jensen's inequality for the convex exponential); it is the form reported in the simulations of Sections~\ref{sec:physbound} and \ref{sec:paradox}.
+(b) Rearrange the first form of (a). (c) Apply (a) conditionally on $t$ and average. The chain rule of mutual information \cite[Sect.~2.5]{cover2006} gives the decomposition. For the inequality, (b) conditionally on $t$ yields $I(T_t;H_{1:t}\mid t=\tau)\ge h(T_t\mid t=\tau)-\tfrac12\ln(2\pi e\,\varepsilon_\tau^2)$ with $\varepsilon_\tau^2$ the conditional MSE; averaging over $\tau$ and using Jensen's inequality for the concave logarithm \cite[Sect.~2.6]{cover2006}, $\E_\tau\ln\varepsilon_\tau^2\le\ln\E_\tau\varepsilon_\tau^2=\ln\varepsilon^2$, gives the stated bound.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:physics}]
+Since $\E[T_t-m(\mathbf z)\mid\mathbf z,H_{1:t}]=0$ and $T_t$ is conditionally independent of $H_{1:t}$ given $\mathbf z$, the cross term vanishes and
+$\E[(T_t-\hat T_t)^2]=\E[\Var(T_t\mid\mathbf z)]+\E[(m(\mathbf z)-\hat T_t)^2]$, the usual split of the squared error into an irreducible and an estimation part \cite[Sect.~1.5.5]{bishop2006}. The first term is $\E[a\sigma_B^2/\mu^3]$. For the second, apply Theorem~\ref{thm:bound} conditionally on $H_{1:t}=\mathsf{h}$ to the target $m(\mathbf z)$, which gives $\E[(m-\hat T_t)^2\mid H=\mathsf{h}]\ge e^{2h(m\mid H=\mathsf{h})}/(2\pi e)$, and average over $\mathsf{h}$. For the second inequality, the exponential is convex, so (Jensen \cite[Sect.~2.6]{cover2006}) $\E_H[e^{2h(m\mid H=\mathsf{h})}]\ge e^{2h(m\mid H)}$ with $h(m\mid H)=\E_H h(m\mid H=\mathsf{h})$; and $m\to\mathbf{X}_{1:t}\to H_{1:t}$ is Markov, so $h(m\mid H)=h(m)-I(m;H)=h(m\mid\mathbf{X})+I(m;\mathbf{X})-I(m;H)=h(m\mid\mathbf{X})+(1-\eta_m)I(m;\mathbf{X})$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:angular}]
+(a) Because $\mathbf z=\hat{\mathbf z}+\boldsymbol\varepsilon$ with $\boldsymbol\varepsilon\sim\mathcal N(0,\mathbf P)$ independent of $\hat{\mathbf z}$, we have $\mathrm{Cov}(\mathbf z,\hat{\mathbf z})=\boldsymbol\Lambda$ and $\Var(\mathbf g^\top\mathbf z)=\mathbf g^\top\boldsymbol\Sigma\mathbf g=\mathbf g^\top\boldsymbol\Lambda\mathbf g+\mathbf g^\top\mathbf P\mathbf g$. The pair $(\mathbf g^\top\mathbf z,h_{\mathbf u})$ is jointly Gaussian with $\mathrm{Cov}=\mathbf g^\top\boldsymbol\Lambda\mathbf u$ and $\Var(h_{\mathbf u})=\mathbf u^\top\boldsymbol\Lambda\mathbf u$, so the Gaussian conditioning formula \cite[Sect.~2.3]{bishop2006} gives
+$\Var(m_L\mid h_{\mathbf u})=\mathbf g^\top\boldsymbol\Lambda\mathbf g+\mathbf g^\top\mathbf P\mathbf g-(\mathbf g^\top\boldsymbol\Lambda\mathbf u)^2/(\mathbf u^\top\boldsymbol\Lambda\mathbf u)=\mathbf g^\top\mathbf P\mathbf g+\mathbf g^\top\boldsymbol\Lambda\mathbf g\,(1-\cos^2\psi)$.\\
+(b) In the linearised model the conditional distribution of $m_L$ is Gaussian, so the entropy power equals the variance. Taking the ratio of (a) to the case $h=\hat{\mathbf z}$, for which $\Var(m_L\mid\hat{\mathbf z})=\mathbf g^\top\mathbf P\mathbf g$, gives the first formula. Moreover, by the formula for the mutual information of jointly Gaussian variables \cite[Chap.~8]{cover2006}, $I(m_L;\mathbf{X})=\tfrac12\ln(\Var(m_L)/\mathbf g^\top\mathbf P\mathbf g)=\tfrac12\ln(1+\rho)$ and $I(m_L;h_{\mathbf u})=\tfrac12\ln\big((1+\rho)/(1+\rho\sin^2\psi)\big)$; their ratio is $\eta_m$.\\
+(c) $\sin^2\psi=0$ iff $\boldsymbol\Lambda^{1/2}\mathbf g\parallel\boldsymbol\Lambda^{1/2}\mathbf u$ iff $\mathbf u\parallel\mathbf g$ since $\boldsymbol\Lambda\succ0$. For $\mathbf u=\mathbf g$ the loss vanishes, and Lemma~\ref{lem:reduce} shows that no scalar linear functional of $\mathbf{X}$ can do better.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:regime}]
+Because $D$ and $r$ are independent, $\mathrm{Cov}(D,x)=\bar c\,v$, and $\Var(x)=\Var(c_rD)+\Var(o_r)+2\bar d\,\mathrm{Cov}(c_r,o_r)+\sigma^2=V_x$, since $\mathrm{Cov}(c_rD,o_r)=\bar d\,\mathrm{Cov}(c_r,o_r)$ and $\Var(c_rD)=\E[c_r^2]\E[D^2]-(\bar c\bar d)^2$; the best linear predictor of $D$ from $x$ has error $v-\mathrm{Cov}(D,x)^2/\Var(x)$ (the conditional variance of a Gaussian pair with the same second moments \cite[Sect.~2.3]{bishop2006}). For the limit use $\E[c_r^2]\E[D^2]-(\bar c\bar d)^2=\bar c^2v+\Var(c_r)(v+\bar d^2)$ and $\Var(c_r)\bar d^2+\Var(o_r)+2\bar d\mathrm{Cov}(c_r,o_r)=\Var(\bar d c_r+o_r)$, so that at $\sigma=0$, $V_x=\bar c^2v+\Var(c_r)v+\Var(\bar d c_r+o_r)$. Given the regime, the estimator $(x-o_r)/c_r$ is unbiased with variance $\sigma^2/c_r^2$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:accum}]
+The level error obeys $\varepsilon_k=(1-\omega)(\varepsilon_{k-1}+e_k)+\omega n_k$ with $\varepsilon_0=0$ (substitute $H_k=D_k+\varepsilon_k$, $u_k=v_k+e_k$ and $l_k=D_k+n_k$ into the update, with $D_k=D_{k-1}+v_k$ the true level and $v_k$ its true increment); write $\alpha=1-\omega$. For $\omega=0$, $\varepsilon_t=\sum_{k\le t}e_k$ has mean $tb$ and variance $t\sigma_w^2$. For $\omega>0$ the mean $\bar\varepsilon_k$ satisfies $\bar\varepsilon_k=\alpha(\bar\varepsilon_{k-1}+b)$, with fixed point $\alpha b/(1-\alpha)=(1-\omega)b/\omega$ approached geometrically, and the variance $s_k^2=\alpha^2s_{k-1}^2+\alpha^2\sigma_w^2+\omega^2\sigma_n^2$ (independent noise terms) has fixed point $(\alpha^2\sigma_w^2+\omega^2\sigma_n^2)/(1-\alpha^2)$ with $1-\alpha^2=\omega(2-\omega)$.
+\end{proof}
+
+
+\subsection{Relation to the Bayesian Cram\'er--Rao bound}
+\begin{remark}[Relation to the Bayesian Cram\'er--Rao bound]
+\label{rem:bcrb}
+Let $J(\mathsf h)$ be the Fisher information, with respect to location, of the posterior density $p(T_t\mid H_{1:t}=\mathsf h)$. Under the regularity conditions of the van Trees inequality \cite{vantrees1968,gill1995} every estimator satisfies $\E[(T_t-\hat T_t)^2]\ge 1/\E_H[J(H)]$. Stam's inequality \cite{stam1959} states that $e^{2h(T_t\mid H=\mathsf h)}/(2\pi e)\ge 1/J(\mathsf h)$ for every $\mathsf h$. Taking the geometric mean over $\mathsf h$ and using that the geometric mean of $1/J$ is at least the reciprocal of the arithmetic mean of $J$,
+\begin{equation}
+\Binfo(H_{1:t})=\exp\!\Big(\E_H\ln\frac{e^{2h(T_t\mid H=\mathsf h)}}{2\pi e}\Big)\;\ge\;\exp\!\Big(\E_H\ln\frac1{J(H)}\Big)\;\ge\;\frac{1}{\E_H[J(H)]},
+\end{equation}
+so, wherever the Bayesian Cram\'er--Rao bound applies, the entropy-power bound is not weaker, and it requires no differentiability of the densities. For posterior filtering the Fisher-information route is developed in \cite{tichavsky1998}.
+\end{remark}
+
+\subsection{State--kinematic decomposition and pointwise shrinkage}
+\begin{proposition}[State--kinematic decomposition]
+\label{prop:decomp}
+Let $\Delta H_k=H_k-H_{k-1}$ denote the increments of the HI. The map $H_{1:t}\mapsto (H_t,\Delta H_{2:t})$ is a linear bijection, hence
+\begin{equation}
+I(T_t;H_{1:t})=\underbrace{I(T_t;H_t)}_{\Istate(t)}+\underbrace{I(T_t;\Delta H_{2:t}\mid H_t)}_{\Ikin(t)} .
+\end{equation}
+\end{proposition}
+\begin{proof}
+The map has a unit-determinant matrix, so $h(\mathbf A\mathbf Y)=h(\mathbf Y)+\ln|\det\mathbf A|$ \cite[Sect.~8.6]{cover2006} and mutual information is unchanged ($H_k=H_t-\sum_{j=k+1}^{t}\Delta H_j$ gives the inverse). The identity is then the chain rule of mutual information \cite[Sect.~2.5]{cover2006}.
+\end{proof}
+\begin{remark}
+The decomposition is an identity; its content lies in which operations remove which part. If the HI is the noise-free level of a process with constant drift started at zero, $H_t/t$ is a sufficient statistic for the drift, and $\Ikin$ about the drift is zero. Kinematic information is non-trivial when the velocity varies in time, for example under a state-dependent drift or a random-walk velocity, as in late-life acceleration.
+\end{remark}
+
+\begin{proposition}[Pointwise shrinkage]
+\label{prop:pointwise}
+Let the shrinkage of Theorem~\ref{thm:paradox} act pointwise in time, $\tilde H_k=\phi_k(H_k,\xi_k)$. Then
+\begin{equation}
+\begin{gathered}\ln\frac{\Binfo(\tilde H_{1:t})}{\Binfo(H_{1:t})}=2\big(\Delta\Istate+\Delta\Ikin\big),\\ \Delta\Istate:=\Istate(H)-\Istate(\tilde H)\ge0,\quad \Delta\Ikin:=\Ikin(H)-\Ikin(\tilde H),\end{gathered}
+\end{equation}
+where $\Delta\Ikin$ has no definite sign in general, so that kinematic information alone does not determine the increase of the bound. In the Gaussian shrinkage of Theorem~\ref{thm:paradox}(b), write $\Istate^\vartheta(\gamma)=I(\vartheta;\tilde H^\gamma_t)$ and $\Ikin^\vartheta(\gamma)=I(\vartheta;\Delta\tilde H^\gamma_{2:t}\mid\tilde H^\gamma_t)$; then $\Istate^\vartheta$ is non-increasing in $\gamma$ and $0\le\Istate^\vartheta,\Ikin^\vartheta\le\mathcal I^\vartheta_{\rm tot}(\gamma)\to0$, although $\Ikin^\vartheta$ need not be monotone.
+\end{proposition}
+\begin{proof}
+Apply Proposition~\ref{prop:decomp} to $H$ and to $\tilde H$ and take the difference in Theorem~\ref{thm:paradox}(a). Because $\tilde H_t=\phi_t(H_t,\xi_t)$ is a randomised function of $H_t$ alone, the DPI gives $I(T_t;\tilde H_t)\le I(T_t;H_t)$, that is, $\Delta\Istate\ge0$. For non-pointwise operators (for example smoothing over history) even this sign can fail. In the Gaussian shrinkage, the argument of the proof of Theorem~\ref{thm:paradox}(b) applied to the scalar observation at time $t$ gives the monotonicity of $\Istate^\vartheta$; since $\Istate^\vartheta=I(\vartheta;\tilde H_t)\le I(\vartheta;\tilde H_{1:t})$ and $\Ikin^\vartheta=\mathcal I_{\rm tot}^\vartheta-\Istate^\vartheta\le\mathcal I_{\rm tot}^\vartheta$, both are dominated by $\mathcal I_{\rm tot}^\vartheta$, which vanishes as $\gamma\to1$.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:paradox}}
+\begin{proof}
+(a) $\tilde H$ is a randomised function of $H$ only, so the Markov property holds and the DPI gives the first claim; the ratio follows from the definition of $\Binfo$. (b) With $\lambda=1-\gamma>0$, $\tilde H^\gamma$ is an invertible affine image of $(H-m)+\xi^{(2)}/\lambda$, that is, of $H$ observed through additive Gaussian noise of variance $\sigma_2^2/\lambda^2$. For $\gamma_2>\gamma_1$ the noise of the second channel is the first plus independent Gaussian noise, so the DPI \cite[Sect.~2.8]{cover2006} gives monotonicity of $\mathcal I_{\rm tot}^\vartheta$. As $\lambda\to0$ the noise variance diverges; in a linear-Gaussian channel $I(\vartheta;Y)=\tfrac12\ln\big(\Var(\vartheta)/\Var(\vartheta\mid Y)\big)$ \cite[Chap.~9]{cover2006} and $\Var(\vartheta\mid Y)\to\Var(\vartheta)$, so the information vanishes. For the limit of $\Mon$, as $\lambda\to0$ at fixed $t$ the increments converge to $\Delta m+\xi^{(2)}_{k+1}-\xi^{(2)}_k$, a stationary 1-dependent sequence. The indicators of a positive increment at odd $k$ involve disjoint pairs of the $\xi^{(2)}$ and are therefore i.i.d., as are those at even $k$, so the strong law of large numbers \cite[Chap.~2]{durrett2010} applies to each subsequence and the fraction of positive increments tends to $p=\Phi_{\mathcal N}(\Delta m/(\sqrt2\sigma_2))$ and, letting $t\to\infty$, $\Mon\to|2p-1|$.
+\end{proof}
+
+\subsection{Non-Gaussianity gap}
+\begin{proposition}[Non-Gaussianity gap]
+\label{prop:gap}
+Let $\hat m_H=\E[m\mid H]$ be the Bayes-optimal estimator of $m$ and let $D_{\mathsf h}:=D_{\rm KL}\big(p(m\mid H=\mathsf h)\,\|\,\mathcal N(\E[m\mid H=\mathsf h],\Var(m\mid H=\mathsf h))\big)\ge0$ be the Kullback--Leibler (KL) divergence of the posterior from the Gaussian with the same mean and variance. Then
+\begin{equation}
+\E\big[(m-\hat m_H)^2\big]-\E_H\!\left[\frac{e^{2h(m\mid H=\mathsf h)}}{2\pi e}\right]=\E_H\!\Big[\Var(m\mid H)\big(1-e^{-2D_H}\big)\Big]\ \ge0,
+\end{equation}
+with equality if and only if $p(m\mid H)$ is Gaussian almost surely.
+\end{proposition}
+\begin{proof}
+For a density $p$ with mean $\mu_p$ and variance $\sigma_p^2$ and the Gaussian $q=\mathcal N(\mu_p,\sigma_p^2)$, $\int p\ln q=-\tfrac12\ln(2\pi\sigma_p^2)-\tfrac12$ because $q$ depends on $x$ only through the first two moments of $p$. Hence $D_{\rm KL}(p\|q)=-h(p)+\tfrac12\ln(2\pi e\sigma_p^2)$ (the identity behind the maximum-entropy property of the Gaussian \cite[Sect.~8.6]{cover2006}), that is, $e^{2h(p)}/(2\pi e)=\sigma_p^2e^{-2D_{\rm KL}(p\|q)}$. Apply this to $p=p(m\mid H=\mathsf h)$, use $\E[(m-\hat m_H)^2\mid H=\mathsf h]=\Var(m\mid H=\mathsf h)$, which holds because the posterior mean is the Bayes-optimal estimator under squared loss \cite[Sect.~1.5.5]{bishop2006}, and average over $\mathsf h$. The right-hand side vanishes if and only if $D_H=0$ almost surely, that is, if and only if the posterior is Gaussian.
+\end{proof}
+
+\subsection{Reduction to functionals of the sufficient statistic}
+\begin{lemma}[Reduction to functionals of $\hat{\mathbf z}$]
+\label{lem:reduce}
+For every scalar linear functional $w^\top\mathbf{X}_{1:t}$ there is $\mathbf u$ such that $\mathrm{corr}(m_L,w^\top\mathbf{X})^2\le\mathrm{corr}(m_L,\mathbf u^\top\hat{\mathbf z})^2$. Hence no scalar linear HI is more informative about $m_L$ than the best $h_{\mathbf u}$, because in a Gaussian model $I=-\tfrac12\ln(1-\mathrm{corr}^2)$. Here $\mathrm{corr}$ denotes the correlation coefficient.
+\end{lemma}
+\begin{proof}
+Let $\mathbf C=\mathrm{Cov}(\mathbf z,\mathbf{X})$ and $\mathbf V=\Var(\mathbf{X})$, so $\hat{\mathbf z}=\mathbf z_0+\mathbf C\mathbf V^{-1}(\mathbf{X}-\E\mathbf{X})$ and $\boldsymbol\Lambda=\mathbf C\mathbf V^{-1}\mathbf C^\top$. Put $\mathbf u=\boldsymbol\Lambda^{-1}\mathbf Cw$. Then $\mathrm{Cov}(\hat{\mathbf z},w^\top\mathbf{X})=\mathbf C\mathbf V^{-1}\mathbf Vw=\mathbf Cw=\boldsymbol\Lambda\mathbf u$, so $w^\top\mathbf{X}=\mathbf u^\top\hat{\mathbf z}+e$ with $e$ uncorrelated with $\hat{\mathbf z}$ and, since $\mathrm{Cov}(\mathbf z,w^\top\mathbf{X})=\mathbf Cw=\boldsymbol\Lambda\mathbf u=\mathrm{Cov}(\mathbf z,\mathbf u^\top\hat{\mathbf z})$, also uncorrelated with $\mathbf z$. Therefore $\mathrm{Cov}(m_L,w^\top\mathbf{X})=\mathrm{Cov}(m_L,\mathbf u^\top\hat{\mathbf z})=\mathbf g^\top\boldsymbol\Lambda\mathbf u$ while $\Var(w^\top\mathbf{X})=\mathbf u^\top\boldsymbol\Lambda\mathbf u+\Var(e)\ge\Var(\mathbf u^\top\hat{\mathbf z})$, which gives the claim.
+\end{proof}
+
+\subsection{Proof of Corollary~\ref{cor:rotation}}
+\begin{proof}
+(a) By Theorem~\ref{thm:angular}, the gradient of the frozen-velocity RUL at the operating point is $\mathbf g=-\bar V^{-1}(1,\bar a/\bar V)^\top$, which is proportional to $(1,\bar\tau)^\top$; the Euclidean angle of this direction from the level axis is $\arctan\bar\tau$. (b) By Theorem~\ref{thm:angular}(c), the increase of the bound at stage $j$ vanishes only for $\mathbf u\parallel\mathbf g_j$, so it vanishes at both stages only if $\mathbf g_1\parallel\mathbf g_2$. The map $\mathbf u\mapsto\max_j\rho_j\sin^2\psi_j(\mathbf u)$ is continuous and positive on the unit circle, hence has a positive minimum $\delta$. For the quantitative statement note that the $\boldsymbol\Lambda$-angle between lines satisfies the triangle inequality $\psi_{12}\le\psi_1+\psi_2$. Indeed, for unit vectors $a,b$ in the $\boldsymbol\Lambda$-inner product the angle $\arccos\langle a,b\rangle$ is the geodesic distance on the unit sphere, which is a metric, and the angle between the lines through $a$ and $b$ is $\min_{s=\pm1}\arccos\langle a,sb\rangle$. Choose the sign of the representative of $\mathbf u$ so that its angle to the representative of $\mathbf g_1$ is $\psi_1$, then the sign of the representative of $\mathbf g_2$ so that its angle to that of $\mathbf u$ is $\psi_2$; the spherical triangle inequality bounds the angle between the representatives of $\mathbf g_1$ and $\mathbf g_2$ by $\psi_1+\psi_2$, and $\psi_{12}$ is not larger. Therefore $\max_j\psi_j\ge\psi_{12}/2$ and $\sin^2$ is increasing on $[0,\pi/2]$. The last sentence is Theorem~\ref{thm:angular}(c) applied at each stage.
+\end{proof}
+
+\section{Details of the real-data tests}
+\label{app:realdata}
+\paragraph{Turbofan engines: set-up} Each subset uses its training engines (run to failure); the $14$ informative sensors are standardised with the training engines of the fold, within regime for FD002 and FD004 (six regimes from $k$-means clustering of the operating settings). The ridge HI is a ridge regression (penalty $10$) of the life fraction on the standardised sensors, smoothed by a trailing mean of $5$ cycles and mapped affinely to zero at the start and one at the end of life with the training engines of the fold; PCA-HI is the first principal component. The trajectory summary of an HI consists of its trailing mean over $10$ cycles (level), its least-squares slope over the last $30$ cycles (velocity), its values $20$ and $50$ cycles earlier, and the age; the raw-sensor predictor uses level and slope of every sensor and the age. Predictors are histogram-based gradient-boosted regression trees ($200$ iterations, learning rate $0.08$, $31$ leaves, at least $40$ samples per leaf, $L_2$ penalty $1$) trained on all pairs of the training engines of a fold. The lifetime distribution is estimated by a Gaussian kernel density of $\ln L$ (Scott bandwidth) of the training engines of the fold; the conditional density of the RUL at age $t$ is $f_L(t+\tau)/S_L(t)$ and $h(T_t\mid t)$ is evaluated numerically on a grid of $0.5$ cycles. Bootstrap intervals resample engines ($300$ replicates).
+
+\paragraph{Lithium-ion cells} Each cycle of the processed records yields the discharge capacity, the charge duration (samples with current above $0.01$~A) and the charge voltage when the charged capacity first reaches $27\%$ and $73\%$ of the nominal capacity; the HIs use the last three quantities. The charge duration is divided by its mean over cycles 2 to 11 of the same cell and the voltages are reduced by their means over these cycles, and the result is standardised with the training cells of the fold. Time scales are set by the lifetimes. For HUST the minimum age is $100$ cycles, ages are sampled every $5$ cycles, the windows are $20$ cycles (level) and $100$ cycles (velocity), the lags are $100$ and $250$ cycles and the grid of the conditional entropy has a step of $2$ cycles. For MATR the corresponding values are $50$, $3$, $10$, $50$, $50$ and $125$ cycles and a step of $1$ cycle. The trees have at most $15$ leaves, and all other settings are those of the engines. The capacity reference uses level and velocity of the relative discharge capacity and the age. The end of life is the first cycle at which the running median of the discharge capacity over $5$ cycles falls below $80\%$ of the mean over the first $5$ cycles (HUST), or the life label of the source, at which the recordings end (MATR; recordings that end more than $10$ cycles before the label would be excluded, and none was). For Tongji the minimum age is $30$ cycles, ages are sampled every $2$ cycles, the windows are $10$ and $40$ cycles, the lags $40$ and $100$ cycles and the step $1$ cycle, and the end of life is the first cycle at which the running median of the discharge capacity falls below $80\%$ of the nominal capacity; cells that do not reach it, or reach it within $100$ cycles, are excluded. The capacity levels of the charge-voltage and discharge-voltage features are $3/11$ and $8/11$ of the nominal capacity. The processed records are unpickled with a restricted reader that admits only array types. The protocol analysis of Section~\ref{sec:realdata} uses the three charging features standardised over the population (blind) or relative to the own cycles 2 to 11 (normalised), with the ridge regression of the engines.
+
+\paragraph{Additional analyses} \emph{Candidate HIs.} For each data set, $40$ weight vectors with independent standard normal entries (signed so that the HI increases with age on the training units) are applied to the normalised sensors (engines) or charging features (cells), together with the PCA-HI and the ridge HI; each HI is smoothed over $5$ cycles and mapped affinely to zero at the start and one at the end of life with the training units of the fold. The information lower bound is computed as in the main analysis (ages sampled every $3$ cycles for engines), and the geometric score is the sum of the monotonicity, the trendability (absolute correlation with time, averaged over units) and the prognosability on the held-out units; the Spearman correlation is taken over the $42$ HIs. \emph{Decision evaluation.} The predictions of the age-only baseline, PCA-HI, Geo-opt HI, ridge HI and the ten-seed ensembles of PGIB and PGIB-KF on the official test engines are used; the margin added to the predicted RUL is the $5\%$ or $10\%$ quantile of the residuals (true minus predicted RUL) of the method, estimated on four of five folds of engines and applied to the fifth ($20$ repetitions), so that about this fraction of the engines fails; intervals are bootstrap intervals over engines ($400$ replicates). \emph{End-to-end predictor.} Gradient boosting with the settings of the engines on the regime-normalised level and slope (windows of $10$ and $30$ cycles) of the $14$ sensors and the age, trained on all cycles of all training engines and evaluated at the last cycle of each test engine; the information lower bound uses the lifetime distribution of the training engines. \emph{Inclusion rule.} For Tongji, cells that never fall below $80\%$ of the nominal capacity are kept with the last recorded cycle as end of life if at least $100$ cycles were recorded.
+
+\begin{table}[!t]
+\caption{Tongji: main analysis (88 cells) and sensitivity to the inclusion rule (119 cells, cells that never reached the threshold counted as failed at their last recorded cycle).}
+\label{tab:senstongji}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{../results/tab_sens_tongji}}
+\end{table}
+
+\paragraph{Number of units} For each size $k$ (5, 10, 20, 40, 80 and 120, as far as $k$ does not exceed $80\%$ of the units), $10$ random subsets of $k$ units were drawn without replacement; on each subset the unit-grouped cross-validation (five folds; leave-one-unit-out for $k=5$) of Section~\ref{sec:realdata} was repeated with the age-only predictor and the ridge HI, and the lower bounds were computed with the conditional entropy re-estimated from the training units of each fold. A subset is valid when the gain in the information lower bound exceeds $0.1$ nat and the age-only information lower bound is at most $0.05$ nat. The scripts are \texttt{fleet\_size\_curve.py} and \texttt{fleet\_size\_battery.py}.
+
+\paragraph{Template shrinkage} The template is the mean ridge HI at each cycle over the training engines of the fold, and the noise standard deviation is $\sigma_2=\Delta m/(\sqrt2\cdot1.645)$ with $\Delta m$ the mean template increment over the first half of the median lifetime. $\mathrm{Mon}_\infty$ is predicted as the mean of $2\Phi_{\mathcal N}(\Delta m_k/(\sqrt2\sigma_2))-1$ over the template increments $\Delta m_k$ up to the median lifetime, where $\Phi_{\mathcal N}$ is the standard normal distribution function. Because the template slope varies along life, the predicted limit is lower than for a constant slope.
+
+\paragraph{Stages} Level and velocity are the summaries of the out-of-fold ridge HI, standardised over all pairs; the target is the RUL. Stages are bins of the life fraction ($0.2$ to $1$, edges $0.2,0.35,0.5,0.65,0.8$; oracle stages) or equal-count bins of the age (observable stages). Within a stage, the free direction is the linear least-squares fit on both features, level-only and velocity-only use one feature, and a static direction (grid of $5^\circ$) is a fixed combination of the two features with a stage-specific affine map; the static direction minimises the sum of the out-of-fold MSEs over stages. Figure~\ref{fig:rdb}(c) gives the worst-stage RMSE ratio to the direction chosen separately at each stage.
+
+\paragraph{Official test engines} The information lower bound uses the observed cycles of each test engine as its age, the lifetime distribution of the training engines, and the predictions of the methods of Section~\ref{sec:empirical} (ten-seed ensembles for the learned encoders); the age-only baseline is the control. It assumes that the test truncation is independent of the lifetime, which the control checks.
+
+\section{Efficiency estimation on real data}
+\label{app:p1}
+A direct estimate of $I(T;H)$ with the Kraskov--St\"ogbauer--Grassberger estimator \cite{kraskov2004} on rank-transformed window summaries gave, for several HIs, values above the estimate for the $12$-dimensional raw sensor summary, which is impossible for a true mutual information because the summary contains the HI. This reflects the bias of the estimator in $12$ dimensions at a few hundred samples, a known limitation \cite{paninski2003,mcallester2020}. A simulation with known mutual information (twelve Gaussian sensor features, a scalar target and a scalar HI with $\etaPIE=0.7$) shows that the estimator underestimates $I(T;\mathbf X)$ strongly, so that $\hat\eta_{\rm info}$ exceeds $1$ in every replication even with $3000$ samples. We therefore do not report $\etaPIE$ on real data. The information lower bound of Theorem~\ref{thm:bound}(b) avoids high-dimensional estimation.
+
 \section{Estimators used in the benchmark}
 \label{sec:pgib}
 This appendix describes the estimators compared in Section~\ref{sec:empirical}. The path-space objective follows from the theory; the architectures and the calibration are design choices.
@@ -307,5 +433,46 @@ These figures and tables duplicate numbers that the paper gives in its text and 
 \label{tab:exp5s}
 \end{table}
 
-\input{../refs/bib}
+
+\begin{table}
+\caption{Physics-constrained bound. $\mathcal E_{\rm ale}$, $\mathcal E_{\rm epi}$: aleatoric and epistemic terms (cycles$^2$); $I$ in nats; errors in cycles.}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{../results/tab_exp2}}
+\label{tab:exp2}
+\end{table}
+
+\begin{table}
+\caption{Template-shrinkage experiment (mean over three seeds; $\pm$: standard deviation). Information about the velocity $V_t$ in nats: $\mathcal I_{\rm state}=I(V_t;\tilde H_t)$, $\mathcal I_{\rm kin}=I(V_t;\Delta\tilde H_{2:t}\mid\tilde H_t)$, and $\eta_{\rm info}=I(V_t;\tilde H_{1:t})/I(V_t;H_{1:t})$. $\sqrt{\mathcal B_{\rm info}}$: pointwise form, errors in cycles.}
+\centering
+\small
+\input{../results/tab_exp1}
+\label{tab:exp1}
+\end{table}
+
+\begin{table}
+\caption{Factor by which the bound increases at $t=50$, mean over $500$ units: prediction at the fixed operating point, prediction at the unit's own estimate, and Monte Carlo for the exact target. $\psi$: angle to the unit-specific gradient.}
+\centering\small
+\input{../results/tab_exp3}
+\label{tab:exp3}
+\end{table}
+
+\begin{table}
+\caption{C-MAPSS, ten seeds per learned encoder. Single: RMSE, mean $\pm$ standard deviation over seeds; ens.\ 10: ten-seed ensemble; the best simple HI includes the regime-specific ridge regression; last column: paired difference of PGIB-KF from the best simple HI with $95\%$ bootstrap interval over engines \cite{efron1993}.}
+\centering\small
+\adjustbox{max width=\linewidth}{\input{../results/tab_var10}}
+\label{tab:var10}
+\end{table}
+
+
+\section{Simulation settings}
+\label{app:sim}
+Original descriptions of the three simulations of Sections~\ref{sec:physbound} and \ref{sec:losses}.
+
+The drift is $\mu\sim\mathcal N(1,0.22^2)$, truncated to $\mu>0.3$ and $a>1$ (which keeps posterior sampling exact), with $\sigma_B=0.85$, $D_{\rm fail}=100$ and $t=50$. The raw sensor is $X_k=D_k+\xi_k$ with $\xi_k\sim\mathcal N(0,\sigma_\xi^2)$ and $\sigma_\xi=1.5$. HIs with decreasing information are $H^{\varsigma}_k=X_k+\varsigma\zeta_k$ with independent standard normal $\zeta_k$ and $\varsigma\in\{0,2,4,8,16,32\}$; each is a degraded version of $X$. The posterior of $(D_t,\mu)$ given $H^\varsigma$ is Gaussian (Kalman filter on $(D,\mu)$), and $m=a/\mu$ is evaluated on $1500$ posterior draws for each of $1500$ test units; $h(m\mid H)$ and $h(m)$ are estimated with the Vasicek estimator \cite{vasicek1976}. The Bayes-optimal error is $\E[\Var(T_t\mid\mathbf z)]+\E[\Var(m\mid H)]$, and the empirical error against simulated first-passage times is also reported. Errors are given as RMSE.
+
+The latent state is a local linear trend, $D_k=D_{k-1}+V_{k-1}+\sigma_Bw_k$ and $V_k=V_{k-1}+\sigma_V\zeta_k$, with level $D_k$, velocity $V_k$, independent standard normal noises $w_k,\zeta_k$ and $V_0\sim\mathcal N(\bar v,\sigma_{v0}^2)$. The raw HI is $H_k=D_k+\xi^{(1)}_k$ with measurement noise $\xi^{(1)}_k\sim\mathcal N(0,\sigma_1^2)$, and the shrinkage is that of Theorem~\ref{thm:paradox}(b) with noise standard deviation $\sigma_2$. The parameters are $\bar v=2$, $\sigma_{v0}=0.25$, $\sigma_V=0.03$, $\sigma_B=0.5$, $\sigma_1=2$, $\sigma_2=0.6$, failure threshold $D_{\rm fail}=200$ and inspection at $t=50$. The information about $V_t$ is exact from the Kalman covariances \cite{kalman1960,durbin2012}. For the RUL, the Bayes-optimal estimator is the posterior mean from $300$ exact posterior draws per unit, $h(T_t\mid\tilde H)$ is estimated with the Vasicek estimator \cite{vasicek1976}, and $\sqrt{\Binfo}$ is the square root of the average of the pointwise entropy powers. Errors are reported as RMSE; each setting uses $400$ test units and three seeds.
+
+The model is the local linear trend of Section~\ref{sec:paradoxnum} with the raw sensor and $D_{\rm fail}=200$. The posterior of $\mathbf z=(D_t,V_t)$ is Gaussian, and $\boldsymbol\Lambda$ is strongly anisotropic (eigenvalues $0.004$ and $204$). For each of $500$ units, the exact entropy power of the \emph{nonlinear} target $m=(D_{\rm fail}-D_t)/V_t$ given $h_{\mathbf u}$ is estimated from the exact conditional Gaussian of $\mathbf z$ ($2000$ draws, Vasicek estimator) and compared with $1+\rho\sin^2\psi$ computed in two ways: at a fixed operating point, the prior mean of the stage, as in Theorem~\ref{thm:angular}; and at the unit's own posterior mean, a local analysis in the sense of Remark~\ref{rem:scope}. As a consistency check, in the constant-drift model of Section~\ref{sec:physnum} $\boldsymbol\Lambda$ is effectively of rank one and the predicted factor is $1.000$ for every $\mathbf u$ (Monte Carlo: $1.000$ to $1.003$), as the remark after Theorem~\ref{thm:physics} implies.
+
+\input{../refs/bib_supp}
 \end{document}

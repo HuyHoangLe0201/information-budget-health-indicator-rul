@@ -4,9 +4,10 @@ import re, sys
 sys.path.insert(0, '.')
 from refs_db import R
 
-tex = open('../main.tex', encoding='utf-8').read()
+SRC = sys.argv[1] if len(sys.argv) > 1 else '../main.tex'; OUT = sys.argv[2] if len(sys.argv) > 2 else 'bib.tex'
+tex = open(SRC, encoding='utf-8').read()
 tex = re.sub(r'(?m)(?<!\\)%.*$', '', tex)           # strip comments
-tex = re.sub(r'\\input\{refs/bib\}', '', tex)
+tex = re.sub(r'\\input\{[^}]*bib[^}]*\}', '', tex)
 keys = []
 for m in re.finditer(r'\\cite[a-z]*(?:\[[^\]]*\])?\{([^}]*)\}', tex):
     for k in m.group(1).split(','):
@@ -62,5 +63,5 @@ def fmt(k):
     return '\\bibitem{%s} %s%s%s' % (k, s, doi, extra)
 
 out = ['\\begin{thebibliography}{%d}' % len(keys)] + [fmt(k) for k in keys] + ['\\end{thebibliography}']
-open('bib.tex', 'w', encoding='utf-8').write('\n'.join(out) + '\n')
+open(OUT, 'w', encoding='utf-8').write('\n'.join(out) + '\n')
 print(len(keys), 'references written')

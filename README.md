@@ -100,7 +100,7 @@ The test `tests/test_paper_regression.py` recomputes the bound of the Tongji cel
 ```bash
 pip install -r requirements.txt
 make figs     # regenerate all data figures from results/*.json and bench/out*/
-make paper    # compile main.pdf
+make paper    # compile main.pdf and the Supplementary Material
 ```
 
 ### Reproducing the theory experiments
@@ -114,7 +114,7 @@ python3 exp2b_bound.py       # physics-constrained bound with unobserved inspect
 python3 exp3_angular.py      # angular loss law at t = 50 (Theorem 4)
 python3 exp3b_stages.py      # angular loss law across inspection times (Corollary 1)
 python3 exp4_regime.py       # regime-blind estimation (Proposition 1)
-python3 exp5_mi_estimation.py  # estimation of the information efficiency with known mutual information (Appendix E)
+python3 exp5_mi_estimation.py  # estimation of the information efficiency with known mutual information (Supplementary Material, Section S3)
 python3 make_figs_tables.py  # tables of the first two experiments (its figures are superseded by make_all_figs.py)
 python3 make_all_figs.py     # all data figures
 ```
@@ -135,9 +135,9 @@ Data are public and are not redistributed here; see `DATA.md` for the sources an
 | Information lower bounds | Age-conditional information lower bound under a fitted lifetime model | `cert_age.py` | `results/cert_age.json`, `results/tab_cert_age.tex` |
 | Real-data tests, turbofan engines | Cross-validated information lower bounds, template shrinkage, stage-wise direction, regime-blind estimation on C-MAPSS (Section 8.1) | `realdata_checks.py FD00x`, `cert_age_cmapss.py`, `make_tables_realdata.py`; figures: `code/make_all_figs.py realdata` | `results/realdata_FD00x.json`, `results/cert_age_cmapss.json`, `results/tab_rd_*.tex` |
 | Real-data tests, lithium-ion cells | The same tests on the HUST (77 cells), MATR (169 cells) and Tongji (88 cells) collections of BatteryLife (Section 8.2) | `prep_batterylife.py HUST|MATR|Tongji`, `battery_checks.py HUST|MATR|Tongji`, `make_tables_realdata.py`; figures: `code/make_all_figs.py realdata` | `bench/data/{hust,matr,tongji}_feats.npz`, `results/realdata_{HUST,MATR,Tongji}.json`, `results/tab_rd_*.tex` |
-| Additional analyses (Section 5, Section 6, Appendix F) | Geometric scores versus the information lower bound; decision evaluation at fixed risk; end-to-end baseline; Tongji inclusion rule | `geom_vs_info.py`, `decision_eval.py`, `e2e_baseline.py`, `prep_batterylife.py TongjiAll`, `battery_checks.py TongjiAll`, `make_tables_extra.py` | `results/geom_vs_info_*.json`, `results/decision_eval.json`, `results/e2e_baseline.json`, `results/realdata_TongjiAll.json`, `results/tab_{geom,cmp,decision,e2e,sens_tongji}.tex` |
+| Additional analyses (Section 5, Section 6, Supplementary Material S2) | Geometric scores versus the information lower bound; decision evaluation at fixed risk; end-to-end baseline; Tongji inclusion rule | `geom_vs_info.py`, `decision_eval.py`, `e2e_baseline.py`, `prep_batterylife.py TongjiAll`, `battery_checks.py TongjiAll`, `make_tables_extra.py` | `results/geom_vs_info_*.json`, `results/decision_eval.json`, `results/e2e_baseline.json`, `results/realdata_TongjiAll.json`, `results/tab_{geom,cmp,decision,e2e,sens_tongji}.tex` |
 | Number of units needed (Section 5.8) | Gain in the information lower bound and control versus the number of units, random subsets | `fleet_size_curve.py FD00x`, `fleet_size_battery.py HUST\|MATR\|Tongji`, `make_tab_fleet.py` | `results/fleet_size_*.json`, `results/tab_fleet.tex` |
-| Ablation | Ablation of the integrating PGIB on FD003 (benchmark-details document, Section S3) | `make_tab_ablation.py` | `results/tab_abl_fd003.tex` |
+| Ablation | Ablation of the integrating PGIB on FD003 (Supplementary Material, Section S6) | `make_tab_ablation.py` | `results/tab_abl_fd003.tex` |
 | P5 | Ten-seed variance study | `run_cmapss6.py FD00x`, `analyze_variance.py`, `make_tables_cmapss.py` | `out2/cmapss_*_v6.pkl`, `results/variance10.json` |
 
 `<set>` is one of `nasa`, `calce`, `calce6`, `femto1`, `femto2`, `femto3`, `ims`. The directories `bench/out*/` contain the per-unit outputs of the runs reported in the paper, so that the aggregation, analysis and figure scripts can be run without retraining.
