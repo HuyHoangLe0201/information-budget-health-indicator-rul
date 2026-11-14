@@ -153,14 +153,7 @@ The drift is $\mu\sim\mathcal N(1,0.22^2)$, truncated to $\mu>0.3$ and $a>1$ (wh
 \label{tab:exp2}
 \end{table}
 
-\begin{figure}[!tb]
-\centering
-\includegraphics[width=\textwidth]{figs/fig_bound}
-\caption{Physics-constrained bound as the HI loses information (decreasing $\eta_m$). (a) RMSE of the bounds and estimators. (b) Epistemic term; the shaded area is the non-Gaussianity gap.}
-\label{fig:bound}
-\end{figure}
-
-The aleatoric term is constant ($\approx63.8$ cycles$^2$), whereas the epistemic term grows as $\eta_m$ falls from $1$ to $0.38$ (Table~\ref{tab:exp2}, Figure~\ref{fig:bound}). The pointwise bound stays below the Bayes-optimal error at every noise level (RMSE $11.8$ against $12.3$ cycles for $\varsigma=0$, and $18.1$ against $19.6$ for $\varsigma=32$). The exact epistemic variance exceeds the pointwise value because the posterior of $m$ is not Gaussian; the mean KL divergence in Proposition~\ref{prop:gap} is about $0.07$ nats at $\varsigma=0$. The marginal density (\ref{eq:mixig}) of Appendix~\ref{sec:pgib}, which marginalises the inverse-Gaussian distribution over the Gaussian drift, agrees with numerical integration of the mixture to within $0.31\%$. The entropy estimates carry Monte Carlo error that we did not quantify. For the aleatoric and the exact epistemic term at $\varsigma=0$, three independent repetitions with $1500$ test units gave $59.7$ to $64.4$ and $78.9$ to $87.2$ cycles$^2$, because the target $a/\mu$ has a heavy right tail, while the irreducible share stayed at $42$ to $43\%$; gaps of a few per cent between the columns of Table~\ref{tab:exp2} should therefore not be over-interpreted.
+The aleatoric term is constant ($\approx63.8$ cycles$^2$), whereas the epistemic term grows as $\eta_m$ falls from $1$ to $0.38$ (Table~\ref{tab:exp2}). The pointwise bound stays below the Bayes-optimal error at every noise level (RMSE $11.8$ against $12.3$ cycles for $\varsigma=0$, and $18.1$ against $19.6$ for $\varsigma=32$). The exact epistemic variance exceeds the pointwise value because the posterior of $m$ is not Gaussian; the mean KL divergence in Proposition~\ref{prop:gap} is about $0.07$ nats at $\varsigma=0$. The marginal density (\ref{eq:mixig}) of Appendix~\ref{sec:pgib}, which marginalises the inverse-Gaussian distribution over the Gaussian drift, agrees with numerical integration of the mixture to within $0.31\%$. The entropy estimates carry Monte Carlo error that we did not quantify. For the aleatoric and the exact epistemic term at $\varsigma=0$, three independent repetitions with $1500$ test units gave $59.7$ to $64.4$ and $78.9$ to $87.2$ cycles$^2$, because the target $a/\mu$ has a heavy right tail, while the irreducible share stayed at $42$ to $43\%$; gaps of a few per cent between the columns of Table~\ref{tab:exp2} should therefore not be over-interpreted.
 
 \paragraph{Engineering consequence} The aleatoric term is a floor that no HI can lower. In the example it is $64$ cycles$^2$ against $87$ cycles$^2$ of epistemic error for a lossless HI, so that about $42\%$ of the squared error is irreducible; comparing the achieved error of a predictor with this floor shows how much a better HI could still gain, and the epistemic term grows to $319$ cycles$^2$ when the HI retains only $38\%$ of the information in the sensors.
 
@@ -280,14 +273,7 @@ The model is the local linear trend of Section~\ref{sec:paradoxnum} with the raw
 \label{tab:exp3}
 \end{table}
 
-\begin{figure}[!tb]
-\centering
-\includegraphics[width=\textwidth]{figs/fig_angular}
-\caption{Angular loss relation for scalar linear HIs. (a) Factor by which the bound increases. (b) Angle to the optimal direction $\mathbf g_t$ at the fixed operating point. (c) Information efficiency $\eta_m$. The static HI is aligned at $t^\ast=50$; the stage-adaptive HI uses the stage-wise gradient at the prior mean.}
-\label{fig:angular}
-\end{figure}
-
-At $t=50$ both predictions agree with the Monte Carlo value within about $3\%$ for all HIs (Table~\ref{tab:exp3}). Figure~\ref{fig:angular} illustrates Corollary~\ref{cor:rotation}. The static HI aligned at $t^\ast=50$ is lossless at $t=25$ and $50$ but raises the bound by about $40\%$ at $t=75$ (Monte Carlo $1.39$), the level-only HI by about $37\%$ and the velocity-only HI by a factor of about $5$. The prediction at the fixed prior-mean operating point agrees with Monte Carlo at $t=25$ and $50$ but underestimates the late-life increase of the bound for the static and the velocity-only HI ($1.12$ and $3.5$ at $t=75$), because the gradient of the nonlinear target at the prior mean differs from that at the units' own estimates; the prediction with the unit's own gradient ($1.40$ and $5.1$) agrees within $3\%$. The linear theory is therefore an accurate local approximation but not an exact statement for the nonlinear target.
+At $t=50$ both predictions agree with the Monte Carlo value within about $3\%$ for all HIs (Table~\ref{tab:exp3}). The values at the other inspection times illustrate Corollary~\ref{cor:rotation}. The static HI aligned at $t^\ast=50$ is lossless at $t=25$ and $50$ but raises the bound by about $40\%$ at $t=75$ (Monte Carlo $1.39$), the level-only HI by about $37\%$ and the velocity-only HI by a factor of about $5$. The prediction at the fixed prior-mean operating point agrees with Monte Carlo at $t=25$ and $50$ but underestimates the late-life increase of the bound for the static and the velocity-only HI ($1.12$ and $3.5$ at $t=75$), because the gradient of the nonlinear target at the prior mean differs from that at the units' own estimates; the prediction with the unit's own gradient ($1.40$ and $5.1$) agrees within $3\%$. The linear theory is therefore an accurate local approximation but not an exact statement for the nonlinear target.
 
 \paragraph{Engineering consequence} A static scalar HI is adequate only when the stage-optimal directions are close. Otherwise pass the level and the velocity of the HI to the predictor, as the windowed slope does in our predictor, or let the weights follow the stage of life.
 
@@ -306,15 +292,7 @@ unless the regimes agree in $c_r$ and in $\bar d c_r+o_r$, whereas the estimator
 \begin{proof}
 Because $D$ and $r$ are independent, $\mathrm{Cov}(D,x)=\bar c\,v$, and $\Var(x)=\Var(c_rD)+\Var(o_r)+2\bar d\,\mathrm{Cov}(c_r,o_r)+\sigma^2=V_x$, since $\mathrm{Cov}(c_rD,o_r)=\bar d\,\mathrm{Cov}(c_r,o_r)$ and $\Var(c_rD)=\E[c_r^2]\E[D^2]-(\bar c\bar d)^2$; the best linear predictor of $D$ from $x$ has error $v-\mathrm{Cov}(D,x)^2/\Var(x)$ (the conditional variance of a Gaussian pair with the same second moments \cite[Sect.~2.3]{bishop2006}). For the limit use $\E[c_r^2]\E[D^2]-(\bar c\bar d)^2=\bar c^2v+\Var(c_r)(v+\bar d^2)$ and $\Var(c_r)\bar d^2+\Var(o_r)+2\bar d\mathrm{Cov}(c_r,o_r)=\Var(\bar d c_r+o_r)$, so that at $\sigma=0$, $V_x=\bar c^2v+\Var(c_r)v+\Var(\bar d c_r+o_r)$. Given the regime, the estimator $(x-o_r)/c_r$ is unbiased with variance $\sigma^2/c_r^2$.
 \end{proof}
-Normalising the sensors within each regime removes the regime offsets but not the regime-dependent gains, so the floor remains. In a numerical example with six regimes ($c_r\in[0.6,1.6]$, $o_r\in[-0.5,0.6]$, $v=0.08$), the formula and a simulation agree on $\mathrm{MSE}_{\rm blind}=0.060$ at $\sigma=0$, so that only $25\%$ of $\Var(D)$ is explained, whereas the regime-aware estimator has an error that tends to zero (Figure~\ref{fig:regime}).
-\begin{figure}[!tb]
-\centering
-\includegraphics[width=\textwidth]{figs/fig_regime}
-\caption{Regime-blind estimation in the six-regime example. (a) Sensor output against latent level for each regime. (b) Error of the regime-blind and regime-aware estimators: formula (lines) and simulation (markers).}
-\label{fig:regime}
-\end{figure}
-
-
+Normalising the sensors within each regime removes the regime offsets but not the regime-dependent gains, so the floor remains. In a numerical example with six regimes ($c_r\in[0.6,1.6]$, $o_r\in[-0.5,0.6]$, $v=0.08$), the formula and a simulation agree on $\mathrm{MSE}_{\rm blind}=0.060$ at $\sigma=0$, so that only $25\%$ of $\Var(D)$ is explained, whereas the regime-aware estimator has an error that tends to zero.
 \paragraph{Engineering consequence} Normalise the sensors by operating regime and, when protocols differ between units, by each unit's own early cycles. Per-regime normalisation removes offsets but not gains, so the regime should also be given to the observation model when gains differ.
 
 \subsection{Integration without observation correction}
@@ -353,10 +331,10 @@ All analyses use unit-grouped five-fold cross-validation: preprocessing, HIs and
 
 \paragraph{Lithium-ion cells} The age-only control is at or below zero on HUST and MATR and $0.05$ nats on Tongji, whose interval includes zero, and the lower bound for the ridge HI is $0.30$ to $0.60$ nats with intervals above zero (Figure~\ref{fig:rda}(a), Tables~\ref{tab:cmp} and \ref{tab:rdcert}). The three charging features used directly give higher lower bounds ($0.61$ to $0.91$ nats) than the scalar HI constructed from them, as the data processing inequality requires, and the capacity reference does not exceed them.
 
-\paragraph{Small data sets} On the seven small battery and bearing sets of Section~\ref{sec:empirical} the model-based age-conditional lower bound fails the negative control on four of them, because a log-normal lifetime distribution fitted to three to seven lifetimes overestimates $h(T_t\mid t)$ (Tables~\ref{tab:cert2} and \ref{tab:certage}). Among the data sets tested, the bound was positive and passed its control only with $77$ or more units; subsets of the larger sets put the threshold near $40$ (Section~\ref{sec:fleet}).
+\paragraph{Small data sets} On the seven small battery and bearing sets of Section~\ref{sec:empirical} the model-based age-conditional lower bound fails the negative control on four of them, because a log-normal lifetime distribution fitted to three to seven lifetimes overestimates $h(T_t\mid t)$ (Table~\ref{tab:certage}). Among the data sets tested, the bound was positive and passed its control only with $77$ or more units; subsets of the larger sets put the threshold near $40$ (Section~\ref{sec:fleet}).
 
 \subsection{Template shrinkage}
-\paragraph{Turbofan engines (Theorem~\ref{thm:paradox})} Shrinkage toward the mean HI trajectory of the training engines, with noise chosen as in Section~\ref{sec:paradoxnum}, raises the monotonicity of the ridge HI from $0.13$--$0.24$ to $0.41$--$0.58$ (Table~\ref{tab:rdsqueeze}), where it saturates for $\gamma\ge0.97$ at the value predicted from the template ($0.41$--$0.58$ observed against $0.41$--$0.61$ predicted; Figure~\ref{fig:rda}(b)). Over the same range the information lower bound falls from $0.10$--$0.31$ nats to about zero or below (Figure~\ref{fig:rda}(c)).
+\paragraph{Turbofan engines (Theorem~\ref{thm:paradox})} Shrinkage toward the mean HI trajectory of the training engines, with noise chosen as in Section~\ref{sec:paradoxnum}, raises the monotonicity of the ridge HI from $0.13$--$0.24$ to $0.41$--$0.58$, where it saturates for $\gamma\ge0.97$ at the value predicted from the template ($0.41$--$0.58$ observed against $0.41$--$0.61$ predicted; Figure~\ref{fig:rda}(b)). Over the same range the information lower bound falls from $0.10$--$0.31$ nats to about zero or below (Figure~\ref{fig:rda}(c)).
 
 \paragraph{Lithium-ion cells} Template shrinkage raises the monotonicity of the ridge HI from $0.32$ to $0.81$ on HUST, from $0.39$ to $0.48$ on MATR and from $0.65$ to $0.73$ on Tongji, close to the predicted limits ($0.82$, $0.49$ and $0.70$), while the lower bound falls to about zero or below on all three (Figure~\ref{fig:rda}(b,c)). In both domains, monotonicity and the information lower bound are decoupled.
 
@@ -371,9 +349,9 @@ The template shrinkage above is a constructed example. To see whether geometric 
 \end{table}
 
 \subsection{Direction of a scalar linear HI}
-\paragraph{Turbofan engines (Theorem~\ref{thm:angular}, Corollary~\ref{cor:rotation})} For the level and the velocity of the ridge HI, the direction of the best linear scalar combination for the RUL, measured as the angle from the level axis, moves across stages (for example between $21^\circ$ and $56^\circ$ across age stages on FD002, Table~\ref{tab:rdstage}). Level-only and velocity-only HIs lose up to $20\%$ and $38\%$ of RMSE relative to the best direction chosen separately at each stage (Figure~\ref{fig:rdb}(b,c)). However, the best \emph{static} direction, combined with a stage-specific affine map, loses at most $4\%$ in every stage and subset. The relation of Section~\ref{sec:angular} is therefore consistent with the observed rotation, but its consequence is small on these data; the factor $1+\rho\sin^2\psi$ depends on the signal-to-noise ratio $\rho$ as well as on the angle, and $\rho$ was not estimated here.
+\paragraph{Turbofan engines (Theorem~\ref{thm:angular}, Corollary~\ref{cor:rotation})} For the level and the velocity of the ridge HI, the direction of the best linear scalar combination for the RUL, measured as the angle from the level axis, moves across stages (for example between $21^\circ$ and $56^\circ$ across age stages on FD002). Level-only and velocity-only HIs lose up to $20\%$ and $38\%$ of RMSE relative to the best direction chosen separately at each stage (Figure~\ref{fig:rdb}(b,c)). However, the best \emph{static} direction, combined with a stage-specific affine map, loses at most $4\%$ in every stage and subset. The relation of Section~\ref{sec:angular} is therefore consistent with the observed rotation, but its consequence is small on these data; the factor $1+\rho\sin^2\psi$ depends on the signal-to-noise ratio $\rho$ as well as on the angle, and $\rho$ was not estimated here.
 
-\paragraph{Lithium-ion cells} On HUST the optimal direction moves from $71^\circ$--$80^\circ$ in the first three life stages to $3^\circ$--$16^\circ$ in the last two, and the best static direction loses up to $9\%$ of RMSE in a stage ($18\%$ in the last age stage), against up to $54\%$ for velocity alone (Figure~\ref{fig:rdb}(b,c), Table~\ref{tab:rdstage}). On MATR the optimal direction also rotates across the life fraction ($88^\circ$ to $42^\circ$), but a static direction loses at most $1.2\%$; on Tongji it loses at most $3\%$ across life stages and $7\%$ across age stages, against up to $35\%$ for the level alone. The loss predicted by the angular relation is thus material for HUST, modest for Tongji and negligible for MATR and for engines.
+\paragraph{Lithium-ion cells} On HUST the optimal direction moves from $71^\circ$--$80^\circ$ in the first three life stages to $3^\circ$--$16^\circ$ in the last two, and the best static direction loses up to $9\%$ of RMSE in a stage ($18\%$ in the last age stage), against up to $54\%$ for velocity alone (Figure~\ref{fig:rdb}(b,c)). On MATR the optimal direction also rotates across the life fraction ($88^\circ$ to $42^\circ$), but a static direction loses at most $1.2\%$; on Tongji it loses at most $3\%$ across life stages and $7\%$ across age stages, against up to $35\%$ for the level alone. The loss predicted by the angular relation is thus material for HUST, modest for Tongji and negligible for MATR and for engines.
 
 \subsection{Operating regime and test protocol}
 \paragraph{Turbofan engines (Proposition~\ref{prop:regime})} For a linear estimator of the life fraction, regime blindness increases the RMSE from $0.137$ to $0.148$ on FD002 and from $0.165$ to $0.199$ on FD004 ($8\%$ and $21\%$); with one regime the three estimators coincide (Table~\ref{tab:rdregime}). Per-regime normalisation removes most of the loss, and regime-specific weights add only $1\%$, so the residual effect of heterogeneous gains is small in these data.
@@ -422,7 +400,7 @@ Excluding the $33$ of the $130$ recorded Tongji cells that never reached the end
 \label{sec:empirical}
 Section~\ref{sec:realdata} tests the theory with generic HIs. This section asks what the theory implies for estimators, and makes three predictions that run-to-failure data can test. (i) A sensor-free predictor that uses only the age should be competitive when the sensors are weak (Theorem~\ref{thm:bound}(c)). (ii) An integrating encoder accumulates error and an observation-corrected one does not (Proposition~\ref{prop:accum}). (iii) Learned encoders have a training variance that must be measured before differences between HIs are interpreted.
 
-\paragraph{Design} The data are battery cells from the NASA Prognostics Center of Excellence (PCoE) and from the Center for Advanced Life Cycle Engineering (CALCE, CS2 cells, in sets of four and six); bearings from the FEMTO-ST institute (PRONOSTIA, conditions 1 to 3) and from the NASA Center for Intelligent Maintenance Systems (IMS); and the four C-MAPSS subsets FD001 to FD004, of which FD001 and FD003 have one operating regime and FD002 and FD004 six. Three simple HIs are compared with three learned encoders. The simple HIs are the first principal component (PCA-HI), a linear combination optimised for the sum of the geometric criteria monotonicity, trendability and prognosability (Geo-opt HI), and a supervised ridge regression (ridge HI). The learned encoders are a $\beta$-variational autoencoder ($\beta$-VAE), a variational information bottleneck without physics prior (VIB), and the PGIB of Appendix~\ref{sec:pgib} with its Kalman-corrected (PGIB-KF) and regime-aware (PGIB-KFR) variants. All HIs feed the \emph{same} calibrated predictor of Appendix~\ref{sec:fusion}; the \emph{age-only baseline} is that predictor without the HI, that is, the lifetime distribution of the training units conditioned on survival to the current age. Evaluation is leave-one-unit-out for the small sets and uses the official test engines for C-MAPSS. Data, protocols, their history and the evidence tiers (which results are independent confirmations and which are development results) are given in Appendix~\ref{app:data}, and full tables in Appendix~\ref{app:results}.
+\paragraph{Design} Three simple HIs (the first principal component, PCA-HI; a combination optimised for the geometric criteria monotonicity, trendability and prognosability, Geo-opt HI; and a supervised ridge regression, ridge HI) are compared with three learned encoders (a $\beta$-variational autoencoder, $\beta$-VAE; a variational information bottleneck without physics prior, VIB; and the PGIB with its Kalman-corrected variant PGIB-KF and its regime-aware variant PGIB-KFR, Appendix~\ref{sec:pgib}). All HIs feed the \emph{same} calibrated predictor (Appendix~\ref{sec:fusion}); the \emph{age-only baseline} is that predictor without the HI, that is, the lifetime distribution of the training units conditioned on survival to the current age. The data are battery cells (NASA PCoE, CALCE CS2) and bearings (FEMTO-ST, IMS) with three to seven units each, evaluated leave-one-unit-out, and the four C-MAPSS subsets, evaluated on the official test engines. Appendix~\ref{app:data} gives the data, the evidence tiers (independent confirmations and development results) and the protocol history; the full tables and the initial protocol are in the benchmark-details document of the repository.
 
 \paragraph{Age-only baseline with few training units (prediction i)} With two to six training units no method is best everywhere (Figure~\ref{fig:small}): the age-only baseline has the lowest RMSE on both FEMTO conditions and is within a factor of $1.5$ of the best method on six of the seven sets. On C-MAPSS the sensors are far more informative: the age-only baseline has an RMSE of $36.6$ to $54.7$ cycles, against $21.8$ to $29.7$ for the best simple HI. The age-only baseline is thus a competitive baseline where the sensors are weak, and it must be reported.
 
@@ -464,7 +442,7 @@ Section~\ref{sec:realdata} tests the theory with generic HIs. This section asks 
 \label{tab:var10}
 \end{table}
 
-\paragraph{Effect of the age fusion} The age fusion lowers the RMSE of most HIs considerably (for example PCA-HI on CALCE with four cells from $186$ to $51$ cycles) but not always (NASA), and it narrows the differences between HIs. Without fusion, the PGIB has the lowest RMSE on CALCE and FEMTO condition 2, VIB on FEMTO condition 1, the $\beta$-VAE on FEMTO condition 3 and PCA-HI on NASA and IMS (Table~\ref{tab:fusion}). The conclusion that no learned encoder is superior therefore holds for the common age-fused predictor and is less consistent for HI-only predictors, for which the information in the HI is less obscured by the age prior.
+\paragraph{Effect of the age fusion} The age fusion lowers the RMSE of most HIs and narrows the differences between them; without it the ranking of the learned encoders is less consistent across data sets (benchmark-details document). The conclusion that no learned encoder is superior is therefore stated for the common age-fused predictor.
 
 \section{Engineering guidance}
 \label{sec:guidance}
@@ -508,7 +486,7 @@ How much can a better HI still gain? & Under a fitted Wiener model, compare the 
 \section*{Funding}
 This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
 \section*{Data availability}
-NASA PCoE, NASA IMS, C-MAPSS, CALCE CS2, FEMTO-ST/PRONOSTIA, HUST, MATR and Tongji data are publicly available (NASA Prognostics Data Repository, CALCE Battery Group, IEEE 2012 Prognostics and Health Management data challenge, BatteryLife repository on Zenodo). The code, the stored results and the per-unit outputs used to generate all tables and figures, and a Python package for computing the information lower bound on new data, are available at \url{https://github.com/HuyHoangLe0201/information-budget-health-indicator-rul}.
+NASA PCoE, NASA IMS, C-MAPSS, CALCE CS2, FEMTO-ST/PRONOSTIA, HUST, MATR and Tongji data are publicly available (NASA Prognostics Data Repository, CALCE Battery Group, IEEE 2012 Prognostics and Health Management data challenge, BatteryLife repository on Zenodo). The code, the stored results and the per-unit outputs used to generate all tables and figures, a Python package for computing the information lower bound on new data, and the benchmark-details document (learned encoders, protocols, detailed benchmark tables and the initial protocol) are available at \url{https://github.com/HuyHoangLe0201/information-budget-health-indicator-rul}.
 \section*{Acknowledgements}
 The authors thank the editor and the anonymous reviewers for their time and constructive comments.
 
@@ -616,123 +594,31 @@ Here $\sigma_B^2$ is the aleatoric and $\sigma_{\mu,t}^2\tau$ the epistemic cont
 
 \subsection{Observation-corrected and regime-aware encoders}
 \label{sec:kf}
-The encoder above integrates a positive velocity, $H_k=H_{k-1}+u_\theta\Delta t+\dots$, so nothing anchors the level to the observations (Section~\ref{sec:accum}). The observation-corrected encoder, PGIB-KF (KF: Kalman filter), therefore adds a direct level estimate $l_k=f_l(\mathbf h_k)$ and a learned gain $\omega_k=\mathrm{sig}(f_\omega(\mathbf h_k))\in(0,1)$ to the encoder features $\mathbf h_k$ (here $\mathrm{sig}$ is the logistic function and $\epsilon_k\sim\mathcal N(0,1)$ the encoder noise),
+The encoder above integrates a positive velocity, so nothing anchors the level to the observations (Section~\ref{sec:accum}). The observation-corrected encoder, PGIB-KF (KF: Kalman filter), adds a direct level estimate $l_k=f_l(\mathbf h_k)$ and a learned gain $\omega_k=\mathrm{sig}(f_\omega(\mathbf h_k))\in(0,1)$ to the encoder features $\mathbf h_k$ ($\mathrm{sig}$ is the logistic function, $\epsilon_k\sim\mathcal N(0,1)$ the encoder noise),
 \begin{equation}
 H_k=(1-\omega_k)\big(H_{k-1}+u_k+s_k\epsilon_k\big)+\omega_k\,l_k .
 \end{equation}
-Given $H_{k-1}$ this is again a Gaussian transition with drift $u^{\rm eff}_k=(1-\omega_k)u_k+\omega_k(l_k-H_{k-1})$ and standard deviation $s^{\rm eff}_k=(1-\omega_k)s_k$, so Proposition~\ref{prop:kl} applies unchanged: the bottleneck now prices the use of the observation beyond what the physics prior allows ($\beta\to\infty$ gives $\omega\to0$, a pure integrator). The HI is no longer monotone by construction.
-
-The error accumulation of an integrating encoder and its correction by the gain $\omega$ are analysed in Proposition~\ref{prop:accum}.
-
-By Proposition~\ref{prop:regime}, a regime-blind estimator has an error floor, and per-regime normalisation removes the offsets but not the gains. The regime-aware variant, \emph{PGIB-KFR}, therefore places the regime in the \emph{observation} model, where the proposition locates it. The process model is shared, whereas the level estimate $l_k$ and the gain $\omega_k$ use regime-specific linear heads on the encoder features, $l_k=\mathbf h_k^\top\mathbf W^{l}_{r_k}+b^{l}_{r_k}$ and $\omega_k=\mathrm{sig}(\mathbf h_k^\top\mathbf W^{\omega}_{r_k}+b^{\omega}_{r_k})$, where $r_k$ is the regime, which is also an input of the encoder. The regimes are the clusters of the standardised operating settings. With a single regime PGIB-KFR reduces to PGIB-KF, which we check on the single-regime subsets.
+Given $H_{k-1}$ this is again a Gaussian transition, with drift $(1-\omega_k)u_k+\omega_k(l_k-H_{k-1})$ and standard deviation $(1-\omega_k)s_k$, so Proposition~\ref{prop:kl} applies unchanged; $\beta\to\infty$ gives $\omega\to0$, a pure integrator. The regime-aware variant PGIB-KFR (Proposition~\ref{prop:regime}) uses regime-specific linear heads for $l_k$ and $\omega_k$; with a single regime it reduces to PGIB-KF.
 
 \subsection{Calibrated predictive distribution with age fusion}
 \label{sec:fusion}
-Because the age is always known (Theorem~\ref{thm:bound}(c)), the HI-based distribution $p_{\rm HI}(\tau)$, which is (\ref{eq:mixig}) with diffusion $c\,v_t$ and drift variance $c\,v_t/w_t$, is pooled log-linearly \cite{genest1986,hinton2002} with an age-based lifetime distribution. Here $v_t$ is the variance of the HI increments over the trailing window of length $w_t$ for non-learned HIs and the learned $\sigma_B^2$ for the bottleneck models, and $c>0$ is a calibration multiplier. The age-based distribution is $p_{\rm age}(\tau\mid t)=f_L(t+\tau)/S_L(t)$, the log-normal lifetime density $f_L$ with survival function $S_L$ \cite{meeker1998}, fitted on training lifetimes (log-scale floor $0.15$) conditioned on survival to age $t$. The pooled distribution is
+Because the age is always known (Theorem~\ref{thm:bound}(c)), the HI-based distribution $p_{\rm HI}(\tau)$, which is (\ref{eq:mixig}) with diffusion $c\,v_t$ and drift variance $c\,v_t/w_t$ ($v_t$ is the variance of the HI increments over a trailing window of length $w_t$, or the learned $\sigma_B^2$ for the bottleneck models, and $c>0$ a calibration multiplier), is pooled log-linearly \cite{genest1986,hinton2002} with the age-based distribution $p_{\rm age}(\tau\mid t)=f_L(t+\tau)/S_L(t)$, the log-normal lifetime density $f_L$ with survival function $S_L$ \cite{meeker1998} of the training lifetimes, conditioned on survival to age $t$:
 \begin{equation}
 p(\tau)\;\propto\;p_{\rm HI}(\tau)^{w_{\rm h}}\;p_{\rm age}(\tau\mid t)^{w_{\rm a}},\qquad (c,w_{\rm h},w_{\rm a})\in\mathcal G,
 \end{equation}
-on a finite grid $\mathcal G$ ($c\in[10^{-2},10^{2}]$ on a log scale, ten pairs $(w_{\rm h},w_{\rm a})$ including $(1,0)$ and $(0,1)$). The parameters minimise the negative log-likelihood of the true RUL, a strictly proper scoring rule \cite{gneiting2007}, on HI paths produced \emph{out of sample}: each HI construction is fitted on all but one training unit and applied to the left-out unit; the test unit is never used. The family contains the plain HI-based distribution and the age-only distribution, so in-sample the pooled distribution cannot do worse than either. Weights below one temper the corresponding distribution and widen the predictive interval, which the otherwise under-covering plain distribution requires. The pooling is a calibration procedure, not a Bayes-exact fusion, which would also require conditional independence of the HI and the age given the RUL, and division by the marginal distribution of the RUL. The same predictor is used for every HI, and a variant without fusion ($w_{\rm a}=0$) is reported for each HI, so that the effects of the HI and of the fusion can be separated.
+on a finite grid $\mathcal G$ that includes the plain HI distribution $(1,0)$ and the age-only distribution $(0,1)$. The parameters minimise the negative log-likelihood of the true RUL, a strictly proper scoring rule \cite{gneiting2007}, on HI paths produced \emph{out of sample} (each HI construction is fitted on all but one training unit and applied to the left-out unit; the test unit is never used). The pooling is a calibration procedure, not a Bayes-exact fusion. The same predictor is used for every HI.
 
-\section{Data, protocols and evidence tiers}
+\section{Benchmark data and evidence tiers}
 \label{app:data}
-\paragraph{Data} Public run-to-failure collections were used: NASA PCoE cells B0005, B0006, B0007 and B0018 \cite{saha2007}; CALCE CS2 cells \cite{he2011}; the FEMTO-ST/PRONOSTIA bearings \cite{nectoux2012}; the NASA IMS bearings \cite{lee2007,qiu2006}; and the C-MAPSS turbofan engines \cite{saxena2008}. For batteries, the capacity is used only to define the EOL and is never an input. The EOL is the first cycle at which the rolling-median capacity falls to $75\%$ (NASA) or $80\%$ (CALCE) of the initial capacity; an absolute threshold of $1.4$~Ah was not used because cell B0007 never reaches it. The lifetimes are $127$, $73$, $162$ and $100$ cycles (NASA) and $542$, $499$, $572$ and $600$ cycles (CS2\_35 to CS2\_38); the data are truncated at the EOL, and CALCE features are averaged over blocks of $4$ cycles. Six per-cycle features are extracted from the charge and discharge records: constant-current time, constant-voltage time, height and voltage of the incremental-capacity peak, mean discharge temperature (NASA) or voltage drop at discharge onset (CALCE), and the discharge voltage at a fixed time ($600$~s for NASA, $1200$~s for CALCE).
+\paragraph{Data} Public run-to-failure collections were used: NASA PCoE cells B0005, B0006, B0007 and B0018 \cite{saha2007}; CALCE CS2 cells (four cells CS2\_35 to CS2\_38, and a six-cell set with the protocol-heterogeneous cells CS2\_33 and CS2\_34) \cite{he2011}; the FEMTO-ST/PRONOSTIA bearings of conditions 1 to 3 (seven, seven and three units) \cite{nectoux2012}; the NASA IMS bearings (four units that failed) \cite{lee2007,qiu2006}; and the C-MAPSS turbofan engines FD001 to FD004 \cite{saxena2008}. For batteries the capacity only defines the end of life (the first cycle at which the rolling-median capacity falls to $75\%$ for NASA or $80\%$ for CALCE of the initial capacity) and is never an input; for bearings the end of life is the last snapshot. Inclusion rules were fixed before running any model (scripts and outputs are supplied). Evaluation is leave-one-unit-out for the small sets (metrics in the window $40$--$90\%$ of life, pooled over the held-out units) and uses the official test engines for C-MAPSS, with the training engines split by identifier into fitting and calibration engines.
 
-Further cells were screened by inclusion rules fixed before running any model (scripts and outputs are supplied). A NASA cell had to be at $24^\circ$C, have at least $100$ discharge cycles, be discharged at a roughly constant $1.4$ to $2.1$~A, start between $1.5$ and $2.1$~Ah and reach the $75\%$ EOL; only the four cells above qualify. Among the CALCE cells, CS2\_5, 24 and 25 are partial-discharge tests, CS2\_9 is discharged at a rate of $2$C (twice the nominal capacity per hour), and CS2\_3, 6 and 7 are short or follow other protocols, so none was used. CS2\_33 and CS2\_34 have the same chemistry and run to the EOL ($485$ and $479$ cycles) but are discharged at $0.55$~A; they are used only in a separate six-cell experiment, labelled protocol-heterogeneous, and the four-cell set remains the primary one.
+\paragraph{Methods} To isolate the effect of HI construction, every HI is mapped affinely to $0$ at the start and $1$ at the end of life with the \emph{training} units only, and passed to the same calibrated predictor of Appendix~\ref{sec:fusion}; the standardisation, the PCA direction, the weights of the Geo-opt HI (differential evolution), the encoders and the affine map are all fitted on the training units and applied unchanged to the test unit. The parameters $(c,w_{\rm h},w_{\rm a})$ are chosen on HI paths that are out of sample for the HI construction. For the bottleneck models the compression weight $\beta\in\{0.03,0.3,3,30\}$ and the encoder are selected by validation on training units only. All details are in the benchmark-details document of the repository.
 
-For bearings, each run ends at failure, so EOL is the last snapshot. Condition 1 (nominally $1800$~rpm, $4000$~N; Bearing1\_1--1\_7) and condition 2 ($1650$~rpm, $4200$~N; Bearing2\_1--2\_7) are evaluated separately, each with $7$ units from the learning and the full test sets; condition 3 has only $3$ units and was not used. The lifetimes are $2803$, $871$, $2375$, $1428$, $2463$, $2448$, $2259$ snapshots (condition 1) and $911$, $797$, $1955$, $751$, $2311$, $701$, $230$ snapshots (condition 2), each snapshot covering $0.1$~s of $25.6$~kHz acceleration every $10$~s. Eight features are computed per snapshot: logarithm of the root mean square (RMS), kurtosis, crest factor and spectral entropy of the horizontal and of the vertical channel. Features are averaged over blocks of $20$ (condition 1) or $8$ (condition 2) snapshots, and the RUL is reported in snapshots.
+\paragraph{Protocol history and evidence tiers} The study proceeded in five protocols, which determine how the numbers can be read. P1 showed that the integrating encoder under-covers and that the age-only baseline is competitive. P2 added out-of-sample calibration, age fusion and a prediction grid independent of the test unit; it was frozen, with the file hash recorded, before it was run on the confirmation sets (FEMTO condition 3 and IMS). On C-MAPSS FD001, P2 showed that the integrating encoder is considerably worse than simple HIs even with $80$ training engines. The diagnosis of Proposition~\ref{prop:accum} led to P3, the observation-corrected PGIB-KF, which was frozen and run once on FD003, a subset not used before, and then, with regime-wise preprocessing, once on FD002 and FD004. P4 added the regime-aware encoder and a regime-specific ridge baseline and was run once on each subset, the choice between PGIB-KF and PGIB-KFR and of $\beta$ being made on the calibration engines only; FD002 and FD004 are therefore development sets for P4, and no independent multi-regime data set was available (the successor N-CMAPSS has only six to ten units per subset). Because the differences between learned encoders and simple HIs were of the size of the seed-to-seed variability, P5 retrained the learned encoders on the four subsets with ten fresh seeds, keeping architecture, $\beta$ and calibration fixed; it supersedes the three-seed results where they disagree. The evidence tiers are: (i) \emph{independent confirmation}: C-MAPSS FD003, FD002 and FD004 for P3 (not for P4), and FEMTO condition 3 and IMS for P2 (not for P3); (ii) \emph{development}: NASA, CALCE (four and six cells), FEMTO conditions 1 and 2 and C-MAPSS FD001, which informed the design and whose results are therefore not unbiased estimates of out-of-sample performance.
 
-Evaluation is leave-one-unit-out: each unit in turn is held out, the remaining units are used for training (three for NASA and four-cell CALCE, five for six-cell CALCE, six for each bearing condition), and metrics are computed at every step in the window $40$--$90\%$ of life and pooled over the held-out units.
-
-
-\paragraph{Further collections} FEMTO condition 3 ($1500$~rpm, $5000$~N; Bearing3\_1--3\_3, with $515$, $1637$ and $434$ snapshots, block length $10$) and the NASA IMS bearings were reserved and used only as confirmation sets. For IMS the four bearings that failed (Test~1 bearings 3 and 4, Test~2 bearing 1, Test~3 bearing 3; $2156$, $2156$, $984$ and $6324$ snapshots of $1$~s at $20$~kHz every $10$~min) are used with one accelerometer channel each and four features per snapshot (log RMS, kurtosis, crest factor, spectral entropy), averaged over blocks of $20$ snapshots. For C-MAPSS we use the single-condition subsets FD001 and FD003 ($100$ training engines run to failure and $100$ truncated test engines with the official RUL labels each); the $14$ informative sensors are standardised with training statistics. The $100$ training engines are split by identifier into $80$ engines to fit the HI constructions and $20$ (identifier divisible by five) to select the bottleneck configuration and to calibrate the predictor; the test engines are predicted once at their last observed cycle, and $95\%$ bootstrap intervals are computed over engines. The multi-regime subsets FD002 ($260$ training and $259$ test engines) and FD004 ($249$ and $248$) have six operating regimes; for them the only change is that sensors are standardised within regime, the six regimes being the clusters of the standardised operating settings found on the fitting engines (the clusters recover the six discrete settings exactly), the same preprocessing being applied to every method; the split is by identifier as above, with $208$ and $200$ fitting engines.
-
-\paragraph{Methods} To isolate the effect of HI construction, every HI is mapped to the same scale and passed to the same calibrated predictor of Appendix~\ref{sec:fusion}. The sensor features are standardised, and each HI is mapped by an affine map $H\mapsto(H-H_{\rm s})/(H_{\rm e}-H_{\rm s})$, where $H_{\rm s}$ and $H_{\rm e}$ are the averages, over the \emph{training} units only, of the mean of the first five and of the last five HI values of a unit (the end of life of a training unit is known); the standardisation, the PCA direction, the combination weights of the Geo-opt HI, the encoders and the affine map are all fitted on the training units and applied unchanged to the test unit, whose own end-of-life value is never used. The PGIB scale is set by its end-of-life penalty on the training units. The predictor of Appendix~\ref{sec:fusion} then uses: the mixed inverse-Gaussian distribution (\ref{eq:mixig}) with the drift taken from the slope of the smoothed HI over a trailing window of $\max(10,0.25t)$ steps, pooled with the age-based distribution. The parameters $(c,w_{\rm h},w_{\rm a})$ are chosen on HI paths that are out of sample for the HI construction (leave-one-training-unit-out for the small sets, the $20$ calibration engines for C-MAPSS). Implementation details of the compared HIs: the Geo-opt HI is found by differential evolution; the $\beta$-VAE uses a causal gated recurrent unit (GRU) encoder with a one-dimensional latent variable and a Gaussian prior; VIB is the PGIB with a zero-drift prior, that is, without physics; the PGIB has the state-dependent drift $\nu(H;\phi)=\phi_1\exp(\phi_2H)$ (Appendix~\ref{sec:kf} for PGIB-KF). For the bottleneck models, the compression weight $\beta\in\{0.03,0.3,3,30\}$ and the encoder (GRU or causal feed-forward window network) are selected by inner leave-one-training-unit-out validation of the predictive negative log-likelihood, with at most three inner folds when more than five training units are available; for PGIB-KF only $\beta\in\{0.03,0.3,3\}$ is searched. The held-out unit is never used. Learned models use three seeds, and the other HIs are deterministic. The sensor-free reference is the age-based distribution $p_{\rm age}$ of Appendix~\ref{sec:fusion}. The metrics are the RMSE and the mean absolute error (MAE) of the median prediction, the prediction interval coverage probability (PICP) and normalised average width (PINAW) of the $95\%$ interval, and the continuous ranked probability score (CRPS) \cite{gneiting2007}. For C-MAPSS the asymmetric score is $\sum_i(e^{-d_i/13}-1)$ for $d_i<0$ and $\sum_i(e^{d_i/10}-1)$ for $d_i\ge0$, summed over engines, with $d_i$ the predicted minus the true RUL \cite{saxena2008}.
-
-\paragraph{Protocol history and evidence tiers} The study proceeded in five protocols, which determine how the numbers can be read. P1 (Appendix~\ref{app:initial}) showed that the integrating encoder under-covers and that the age-only baseline is competitive. P2 added out-of-sample calibration, age fusion and a prediction grid independent of the test unit; it was frozen, with the file hash recorded, before it was run on the confirmation sets (FEMTO condition 3 and IMS). On C-MAPSS FD001, P2 showed that the integrating encoder is considerably worse than simple HIs even with $80$ training engines. The diagnosis of Proposition~\ref{prop:accum} led to P3, the observation-corrected PGIB-KF, which was frozen and run once on FD003, a subset not used before, and then, with regime-wise preprocessing, once on FD002 and FD004. (A first launch used only the first $100$ training engines because the identifier list was fixed in the script; it was stopped before any result was produced, and the script and the recorded hash were corrected.) P4 added the regime-aware encoder and a regime-specific ridge baseline and was run once on each subset, the choice between PGIB-KF and PGIB-KFR and of $\beta$ being made on the calibration engines only; FD002 and FD004 are therefore development sets for P4, and no independent multi-regime data set was available (the successor N-CMAPSS has only six to ten units per subset). Because the differences between learned encoders and simple HIs were of the size of the seed-to-seed variability, P5 retrained the learned encoders on the four subsets with ten fresh seeds, keeping architecture, $\beta$ and calibration fixed; it supersedes the three-seed results where they disagree. The evidence tiers are: (i) \emph{independent confirmation}: C-MAPSS FD003, FD002 and FD004 for P3 (not for P4), and FEMTO condition 3 and IMS for P2 (not for P3); (ii) \emph{development}: NASA, CALCE (four and six cells), FEMTO conditions 1 and 2 and C-MAPSS FD001, which informed the design and whose results are therefore not unbiased estimates of out-of-sample performance.
-
-\begin{table}
-\caption{Algorithm 1: training of the PGIB and Bayesian FHT prognostics (Appendix~\ref{sec:pgib}).}
-\centering
-\begin{tabular}{p{0.95\textwidth}}
-\hline
-\textbf{Input:} training sequences $\{\mathbf{X}^{(n)}_{1:T_n},T^{(n)}\}$, threshold $D_{\rm fail}=1$, compression weight $\beta$, step $\Delta t$. \textbf{Output:} $q_{\theta^*}$, $(\phi^*,\sigma_B^*)$, predictive distribution (\ref{eq:mixig}).\\
-\hline
-1. Causal encoder (temporal convolutional network or GRU): $u_\theta,s_\theta\leftarrow\mathrm{softplus}(\cdot)$ from $\mathbf{X}_{1:k}$.\\
-2. Sample the path by reparametrisation: $H_k=H_{k-1}+u_\theta\Delta t+s_\theta\sqrt{\Delta t}\,\epsilon_k$, $\epsilon_k\sim\mathcal N(0,1)$, $H_0=0$.\\
-3. Conjugate drift update from $\Delta H_{1:t}$ to obtain $(\hat\mu_t,\sigma^2_{\mu,t})$.\\
-4. $\mathcal{L}_{\rm FHT}=-\ln p(T_t\mid H_{1:t})$ from (\ref{eq:mixig}); $\mathcal{L}_{\rm KL}$ from Proposition~\ref{prop:kl}.\\
-5. Update $(\theta,\phi,\sigma_B)$ with the AdamW optimiser on $\mathcal{L}_{\rm FHT}+\beta\mathcal{L}_{\rm KL}$ (plus a penalty on $H_{T_{\rm EOL}}-D_{\rm fail}$ at the EOL).\\
-\hline
-\end{tabular}
-\end{table}
-
-\section{Detailed benchmark results}
+\section{Information lower bound on the small data sets}
 \label{app:results}
-This appendix gives the tables behind Section~\ref{sec:empirical}: protocol P2 on the development and confirmation sets (Tables~\ref{tab:dev} and \ref{tab:conf}), the C-MAPSS subsets (Tables~\ref{tab:fd003}, \ref{tab:fd001}, \ref{tab:fd002} and \ref{tab:fd004}), the effect of the age fusion (Table~\ref{tab:fusion}), an ablation of the integrating PGIB (Table~\ref{tab:ablfd003}) and the information lower bounds (Tables~\ref{tab:cert2} and \ref{tab:certage}). Protocols and evidence tiers are described in Appendix~\ref{app:data}.
-
-\begin{table}
-\caption{Protocol P2, development sets. RMSE, MAE and CRPS in cycles (batteries) or $10$~s snapshots (bearings); mean $\pm$ standard deviation over seeds; bold: lowest RMSE.}
-\centering\small
-\input{results/tab2_dev}
-\label{tab:dev}
-\end{table}
-
-\begin{table}
-\caption{Protocol P2, confirmation sets (snapshots). PGIB-KF is exploratory here.}
-\centering\small
-\input{results/tab2_conf}
-\label{tab:conf}
-\end{table}
-
-\begin{table}
-\caption{C-MAPSS FD003 (independent confirmation set of P3; PGIB-KFR and regime-specific ridge rows are development results). RMSE: single models, mean over seeds; seed-avg.: RMSE of the seed-averaged prediction with $95\%$ bootstrap interval over engines.}
-\centering\small
-\adjustbox{max width=\linewidth}{\input{results/tab_cmapss_fd003}}
-\label{tab:fd003}
-\end{table}
-
-\begin{table}
-\caption{C-MAPSS FD001 (development set; same layout as Table~\ref{tab:fd003}).}
-\centering\small
-\adjustbox{max width=\linewidth}{\input{results/tab_cmapss_fd001}}
-\label{tab:fd001}
-\end{table}
-
-\begin{table}
-\caption{C-MAPSS FD002 (multi-regime; confirmation set for P3, development set for P4; same layout as Table~\ref{tab:fd003}).}
-\centering\small
-\adjustbox{max width=\linewidth}{\input{results/tab_cmapss_fd002}}
-\label{tab:fd002}
-\end{table}
-
-\begin{table}
-\caption{C-MAPSS FD004 (multi-regime; confirmation set for P3, development set for P4; same layout as Table~\ref{tab:fd003}).}
-\centering\small
-\adjustbox{max width=\linewidth}{\input{results/tab_cmapss_fd004}}
-\label{tab:fd004}
-\end{table}
-
-\begin{table}
-\caption{Effect of the age fusion: RMSE with fusion / without fusion (after recalibration with $w_{\rm a}=0$).}
-\centering\small
-\adjustbox{max width=\linewidth}{\input{results/tab2_fusion}}
-\label{tab:fusion}
-\end{table}
-
-\begin{table}
-\caption{Ablation of the integrating PGIB on C-MAPSS FD003 (age-fused predictor; mean $\pm$ standard deviation over three seeds). PICP, PINAW: coverage and normalised width of the $95\%$ interval; CRPS: continuous ranked probability score.}
-\centering\scriptsize
-\adjustbox{max width=\linewidth}{\input{results/tab_abl_fd003}}
-\label{tab:ablfd003}
-\end{table}
-
-\begin{table}
-\caption{Protocol P2, lower bound on the information implied by the achieved error (nats); $<0$: uninformative. $h(T)$: entropy of the pooled held-out RUL.}
-\centering\small
-\adjustbox{max width=\linewidth}{\input{results/tab_cert2}}
-\label{tab:cert2}
-\end{table}
+Table~\ref{tab:certage} gives the model-based age-conditional information lower bound of the seven small battery and bearing sets under a fitted log-normal lifetime distribution (Section~\ref{sec:cert}).
 
 \begin{table}
 \caption{Age-conditional information lower bound (nats) under a fitted log-normal lifetime model; $\bar h(T\mid t)$: mean conditional entropy. A positive value for the age-only predictor shows that the model overestimates $h(T\mid t)$.}
@@ -740,49 +626,6 @@ This appendix gives the tables behind Section~\ref{sec:empirical}: protocol P2 o
 \input{results/tab_cert_age}
 \label{tab:certage}
 \end{table}
-
-\section{Initial benchmark protocol (P1)}
-\label{app:initial}
-The first benchmark used a simpler protocol (P1). Every HI was calibrated on in-sample training paths, the plain first-hitting-time distribution (\ref{eq:mixig}) was used without age fusion, and the predictive grid extended to three times the held-out unit's own life, which leaks the length of the test unit into the support of the predictive distribution (removed in P2). The pilot on NASA B0005, the results below and the observation that the age-only baseline is competitive motivated P2. The P1 results are reported for completeness and are not used for the conclusions of the main text.
-
-\paragraph{Pilot run} A pilot on the NASA B0005 fold, with a GRU-only encoder and $\beta\in\{0.003,0.03,0.3\}$, gave a PGIB RMSE of $56.3$ cycles and zero interval coverage, with the selected $\beta$ at the edge of the grid. The selection grid was therefore extended and the feed-forward encoder added as a candidate. Both changes are chosen per fold by inner validation, but the decision to introduce them was made after seeing a held-out result for one fold. No baseline was modified, and no change was made after the full runs reported below; the bearing experiments were run once with the final protocol.
-
-\begin{table}
-\caption{Protocol P1, battery benchmarks, leave-one-unit-out (mean $\pm$ standard deviation over seeds). RMSE, MAE and CRPS in cycles.}
-\centering\small
-\adjustbox{max width=\linewidth}{\input{results/tab_bench_nasa}}\\[4pt]
-\adjustbox{max width=\linewidth}{\input{results/tab_bench_calce}}\\[4pt]
-\adjustbox{max width=\linewidth}{\input{results/tab_bench_calce6}}
-\label{tab:benchv1}
-\end{table}
-
-\begin{table}
-\caption{Protocol P1, FEMTO bearing benchmarks. RMSE, MAE and CRPS in $10$~s snapshots.}
-\centering\small
-\adjustbox{max width=\linewidth}{\input{results/tab_bench_femto1}}\\[4pt]
-\adjustbox{max width=\linewidth}{\input{results/tab_bench_femto2}}
-\label{tab:benchbv1}
-\end{table}
-
-\begin{table}
-\caption{Protocol P1, lower bound on the information implied by the achieved error (Theorem~\ref{thm:bound}(b)), in nats; $<0$: uninformative. $h(T)$: entropy of the pooled held-out RUL.}
-\centering\small
-\input{results/tab_cert}
-\label{tab:certv1}
-\end{table}
-
-\begin{figure}[!tb]
-\centering
-\includegraphics[width=\textwidth]{figs/fig_bench}
-\caption{Example RUL predictions with $95\%$ intervals on one held-out unit per data set (NASA B0005, CALCE CS2\_35, FEMTO Bearing1\_1), for PCA-HI (left) and PGIB (right); each panel gives the RMSE and the coverage on that unit.}
-\label{fig:benchv1}
-\end{figure}
-
-\paragraph{Results under P1} The outcome depends on the data set (Tables~\ref{tab:benchv1} and \ref{tab:benchbv1}, Figure~\ref{fig:benchv1}), and the age-only baseline is needed to read it. On NASA the RMSE of the age-only baseline is $39.8$ cycles; PCA-HI ($17.8$), the Geo-opt HI ($21.9$), the $\beta$-VAE ($30.8$) and VIB ($33.3$) outperform it, whereas the PGIB ($47.6$) does not, and its intervals cover only $42\%$ of the true RULs. On CALCE the RMSE of the age-only baseline is $49.3$; only the PGIB ($33.0$) outperforms it clearly, while PCA-HI, the Geo-opt HI and the $\beta$-VAE ($117$ to $164$) are considerably worse than the age-only baseline. With the two $0.5$C-discharge cells added, the PGIB keeps the lowest RMSE ($50.4$) but its margin over the age-only baseline ($54.7$) is only $8\%$. On bearings the RMSE of the age-only baseline ($602$ and $664$ snapshots for conditions 1 and 2) is comparable to the standard deviation of the pooled RUL, and most HIs do no better: the PGIB has the lowest RMSE in condition 1 ($524.5$, $13\%$ below the age-only baseline) but gives almost no benefit in condition 2 ($621.8$ against $664$). Two long-lived units dominate the pooled error in condition 2.
-
-The ablations (in the supplied result files) support the bottleneck on all five sets (for example RMSE $54.4\to47.6$ on NASA and $42.3\to33.0$ on CALCE) and the epistemic drift variance for coverage (for example $14\to42\%$ on NASA). The physics prior helps on CALCE and FEMTO condition 1 but not on NASA or FEMTO condition 2. With only three to six training units per fold, the validation signal that selects the encoder is itself noisy; on NASA it chose the strongest compression ($\beta=30$), at the edge of the grid, in all eight selections.
-
-\paragraph{Geometric scores versus error} Across the five HIs of each data set, the rank correlation between the geometric score $\Mon+\mathrm{Tre}+\mathrm{Pro}$ and the RMSE is $+0.90$ on NASA (a higher geometric score goes with a larger error), $-1.00$ on CALCE, $-0.90$ on six-cell CALCE, $-0.60$ on FEMTO condition 1 and $+0.60$ on condition 2. The geometric criteria therefore did not rank the HIs consistently by prognostic error. This is an association over five methods per data set and not evidence for the mechanism of Theorem~\ref{thm:paradox}: the VIB and PGIB HIs have $\Mon\approx\mathrm{Tre}\approx1$ because their velocity is constrained to be positive, not because of a squeeze.
 
 \section{Efficiency estimation on real data}
 \label{app:p1}
@@ -814,7 +657,7 @@ A direct estimate of $I(T;H)$ with the Kraskov--St\"ogbauer--Grassberger estimat
 
 \paragraph{Template shrinkage} The template is the mean ridge HI at each cycle over the training engines of the fold, and the noise standard deviation is $\sigma_2=\Delta m/(\sqrt2\cdot1.645)$ with $\Delta m$ the mean template increment over the first half of the median lifetime. $\mathrm{Mon}_\infty$ is predicted as the mean of $2\Phi_{\mathcal N}(\Delta m_k/(\sqrt2\sigma_2))-1$ over the template increments $\Delta m_k$ up to the median lifetime, where $\Phi_{\mathcal N}$ is the standard normal distribution function. Because the template slope varies along life, the predicted limit is lower than for a constant slope.
 
-\paragraph{Stages} Level and velocity are the summaries of the out-of-fold ridge HI, standardised over all pairs; the target is the RUL. Stages are bins of the life fraction ($0.2$ to $1$, edges $0.2,0.35,0.5,0.65,0.8$; oracle stages) or equal-count bins of the age (observable stages). Within a stage, the free direction is the linear least-squares fit on both features, level-only and velocity-only use one feature, and a static direction (grid of $5^\circ$) is a fixed combination of the two features with a stage-specific affine map; the static direction minimises the sum of the out-of-fold MSEs over stages. The tables give the worst-stage RMSE ratio to the direction chosen separately at each stage.
+\paragraph{Stages} Level and velocity are the summaries of the out-of-fold ridge HI, standardised over all pairs; the target is the RUL. Stages are bins of the life fraction ($0.2$ to $1$, edges $0.2,0.35,0.5,0.65,0.8$; oracle stages) or equal-count bins of the age (observable stages). Within a stage, the free direction is the linear least-squares fit on both features, level-only and velocity-only use one feature, and a static direction (grid of $5^\circ$) is a fixed combination of the two features with a stage-specific affine map; the static direction minimises the sum of the out-of-fold MSEs over stages. Figure~\ref{fig:rdb}(c) gives the worst-stage RMSE ratio to the direction chosen separately at each stage.
 
 \paragraph{Official test engines} The information lower bound uses the observed cycles of each test engine as its age, the lifetime distribution of the training engines, and the predictions of the methods of Section~\ref{sec:empirical} (ten-seed ensembles for the learned encoders); the age-only baseline is the control. It assumes that the test truncation is independent of the lifetime, which the control checks.
 
@@ -823,20 +666,6 @@ A direct estimate of $I(T;H)$ with the Kraskov--St\"ogbauer--Grassberger estimat
 \centering\scriptsize
 \adjustbox{max width=\linewidth}{\input{results/tab_rd_cert}}
 \label{tab:rdcert}
-\end{table}
-
-\begin{table}[!htbp]
-\caption{Template shrinkage of the ridge HI: monotonicity and information lower bound (nats).}
-\centering\small
-\adjustbox{max width=\linewidth}{\input{results/tab_rd_squeeze}}
-\label{tab:rdsqueeze}
-\end{table}
-
-\begin{table}[!htbp]
-\caption{Direction of a scalar linear HI: range of stage-optimal angles, best static angle, and worst-stage RMSE ratios to the direction chosen separately at each stage.}
-\centering\small
-\adjustbox{max width=\linewidth}{\input{results/tab_rd_stage}}
-\label{tab:rdstage}
 \end{table}
 
 \begin{table}[!htbp]

@@ -1,4 +1,4 @@
-.PHONY: figs paper bib all test install
+.PHONY: figs paper bib all test install supp
 install:
 	pip install -e ".[models,test]"
 test:
@@ -10,3 +10,6 @@ figs:
 	cd code && python3 make_all_figs.py
 paper: bib
 	pdflatex -interaction=nonstopmode main.tex && pdflatex -interaction=nonstopmode main.tex && pdflatex -interaction=nonstopmode main.tex
+
+supp:
+	cd supp && pdflatex -interaction=nonstopmode Benchmark_details.tex && pdflatex -interaction=nonstopmode Benchmark_details.tex
