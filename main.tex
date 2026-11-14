@@ -72,7 +72,7 @@ Engineers who build an HI face five practical questions that these bodies of wor
 The paper answers these questions as follows.
 \begin{enumerate}
 \item \textbf{An information lower bound in nats} (Section~\ref{sec:limits}). The entropy-power bound on the RUL error turns the held-out error of any predictor into a lower bound on the information that the HI retains beyond the age (Theorem~\ref{thm:bound}). For Wiener degradation the error splits into an irreducible floor and a part that a better HI can remove (Section~\ref{sec:physbound}).
-\item \textbf{Four ways in which an HI loses information} (Section~\ref{sec:losses}): template shrinkage toward a template trajectory, projection on a static scalar, regime-blind estimation, and integration without observation correction. Each is stated as a result with its engineering consequence.
+\item \textbf{Four ways in which an HI loses information} (Section~\ref{sec:losses}): template shrinkage, projection on a static scalar, regime-blind estimation, and integration without observation correction. Each is stated as a result with its engineering consequence.
 \item \textbf{Tests on real data and a benchmark} (Sections~\ref{sec:realdata} and \ref{sec:empirical}) on turbofan engines and lithium-ion cells, including the number of run-to-failure units that the bound requires, and a comparison of learned encoders with simple indicators.
 \item \textbf{Engineering guidance} (Section~\ref{sec:guidance}): a decision table and a four-step workflow.
 \end{enumerate}
@@ -114,7 +114,7 @@ I(T_t;H_{1:t},t)=I(T_t;t)+I(T_t;H_{1:t}\mid t),\qquad I(T_t;H_{1:t}\mid t)\ge\E_
 \end{proof}
 Theorem~\ref{thm:bound} is the classical entropy-power bound on the error of an estimator \cite[Sect.~8.6]{cover2006}, used here to turn HI construction into an information budget; wherever the Bayesian Cram\'er--Rao bound applies, it is not weaker (Remark~\ref{rem:bcrb} in Appendix~\ref{app:proofs}).
 
-\paragraph{Interpretation} Because $\Binfo=e^{2h(T_t)-2I}/(2\pi e)$, an HI that retains $I$ nats about the RUL cannot support an RMSE below $e^{-I}$ times the bound for an HI that retains none: every $0.1$~nat lowers the bound on the RMSE by about $10\%$. Part (b) turns the held-out MSE of any predictor into a number of nats, the \emph{information lower bound}, which needs only the one-dimensional entropy $h(T_t)$, ranks HIs in the same order as the MSE and is negative, hence uninformative, when the predictor is inaccurate. Part (c) gives the relevant baseline. Since the age is always known, the reference for an HI is the RUL given the age, not the marginal RUL. A sensor-free predictor that uses only the age is a necessary baseline and a negative control, because it cannot attain a positive lower bound on the information beyond the age (Appendix~\ref{app:data}). If the predictor uses the age, bound (b) already contains the age, and the difference between the bounds of an HI-and-age predictor and of an age-only predictor is a difference of two lower bounds that bounds nothing about the information the HI adds; only (c) does. The efficiency $\etaPIE$ could in principle be estimated before any predictor is trained, but mutual-information estimates are unreliable on small data sets \cite{paninski2003,mcallester2020} (Appendix~\ref{app:p1}).
+\paragraph{Interpretation} Because $\Binfo=e^{2h(T_t)-2I}/(2\pi e)$, an HI that retains $I$ nats about the RUL cannot support an RMSE below $e^{-I}$ times the bound for an HI that retains none: every $0.1$~nat lowers the bound on the RMSE by about $10\%$. Part (b) turns the held-out MSE of any predictor into a number of nats, the \emph{information lower bound}, which needs only the one-dimensional entropy $h(T_t)$, ranks HIs in the same order as the MSE and is negative, hence uninformative, when the predictor is inaccurate. Part (c) gives the relevant baseline. Since the age is always known, the reference for an HI is the RUL given the age, not the marginal RUL. A sensor-free predictor that uses only the age is a necessary baseline and a negative control, because it cannot attain a positive lower bound on the information beyond the age (Section~\ref{sec:cert}). If the predictor uses the age, bound (b) already contains the age, and the difference between the bounds of an HI-and-age predictor and of an age-only predictor is a difference of two lower bounds that bounds nothing about the information the HI adds; only (c) does. The efficiency $\etaPIE$ could in principle be estimated before any predictor is trained, but mutual-information estimates are unreliable on small data sets \cite{paninski2003,mcallester2020} (Appendix~\ref{app:p1}).
 
 \section{A physics-constrained error budget}
 \label{sec:physbound}
@@ -177,7 +177,7 @@ A strictly monotone bijection $\varrho$ satisfies $I(T_t;\varrho(H_{1:t}))=I(T_t
 \begin{equation}
 \begin{gathered}\tilde H_k^{\gamma}=m_k+(1-\gamma)(H_k-m_k)+\xi^{(2)}_k,\\ \xi^{(2)}_k\sim\mathcal N(0,\sigma_2^2)\ \text{independent and identically distributed (i.i.d.)}\end{gathered}
 \end{equation}
-For every linear functional $\vartheta$ of the latent state, for example the current velocity $V_t$,, $\mathcal I^\vartheta_{\rm tot}(\gamma):=I(\vartheta;\tilde H^\gamma_{1:t})$ is non-increasing in $\gamma$ and
+For every linear functional $\vartheta$ of the latent state, for example the current velocity $V_t$, $\mathcal I^\vartheta_{\rm tot}(\gamma):=I(\vartheta;\tilde H^\gamma_{1:t})$ is non-increasing in $\gamma$ and
 \begin{equation}
 \mathcal I^\vartheta_{\rm tot}(\gamma)\xrightarrow[\gamma\to1]{}0.
 \end{equation}
@@ -223,7 +223,7 @@ Theorem~\ref{thm:physics} concerns the information budget of an arbitrary HI. We
 \begin{equation}
 \mathbf g=\nabla m(\bar{\mathbf z})=-\frac{1}{\bar V}\Big(1,\ \frac{\bar a}{\bar V}\Big)^{\!\top},\qquad \bar a=D_{\rm fail}-\bar D,
 \end{equation}
-is a fixed vector, and $m_L(\mathbf z)=m(\bar{\mathbf z})+\mathbf g^\top(\mathbf z-\bar{\mathbf z})$ is a fixed linear functional of $\mathbf z$. All statements of this section are exact for $m_L$; the error of replacing $m$ by $m_L$ is not covered by the theorems and is examined numerically in Section~\ref{sec:angnum}. A scalar \emph{linear} HI built from the sufficient statistic, with fixed weights $\mathbf u$, is $h_{\mathbf u}=\mathbf u^\top\hat{\mathbf z}$. Define the signal-to-noise ratio $\rho=\mathbf g^\top\boldsymbol\Lambda\mathbf g/\mathbf g^\top\mathbf P\mathbf g$ and the $\boldsymbol\Lambda$-angle $\psi\in[0,\pi/2]$ between $\mathbf g$ and $\mathbf u$,
+is a fixed vector, and $m_L(\mathbf z)=m(\bar{\mathbf z})+\mathbf g^\top(\mathbf z-\bar{\mathbf z})$ is a fixed linear functional of $\mathbf z$. All statements of this section are exact for $m_L$; the error of replacing $m$ by $m_L$ is not covered by the theorems and is examined numerically below. A scalar \emph{linear} HI built from the sufficient statistic, with fixed weights $\mathbf u$, is $h_{\mathbf u}=\mathbf u^\top\hat{\mathbf z}$. Define the signal-to-noise ratio $\rho=\mathbf g^\top\boldsymbol\Lambda\mathbf g/\mathbf g^\top\mathbf P\mathbf g$ and the $\boldsymbol\Lambda$-angle $\psi\in[0,\pi/2]$ between $\mathbf g$ and $\mathbf u$,
 \begin{equation}
 \cos\psi=\frac{|\mathbf g^\top\boldsymbol\Lambda\mathbf u|}{\sqrt{(\mathbf g^\top\boldsymbol\Lambda\mathbf g)(\mathbf u^\top\boldsymbol\Lambda\mathbf u)}}.
 \end{equation}
@@ -392,7 +392,7 @@ Excluding the $33$ of the $130$ recorded Tongji cells that never reached the end
 \begin{figure}[!tb]
 \centering
 \includegraphics[width=\textwidth]{figs/fig_realdata_b}
-\caption{(a) Information lower bounds of the benchmark methods on the official turbofan test engines (hollow markers: age-only control fails). (b) Optimal direction of a scalar linear HI per age stage; dotted: best static direction. (c) Worst-stage RMSE ratio to the free direction.}
+\caption{(a) Information lower bounds of the benchmark methods on the official turbofan test engines (hollow markers: age-only control fails). (b) Optimal direction of a scalar linear HI per age stage; dotted: best static direction. (c) Worst-stage RMSE ratio to the direction chosen separately at each stage.}
 \label{fig:rdb}
 \end{figure}
 
@@ -429,7 +429,7 @@ Section~\ref{sec:realdata} tests the theory with generic HIs. This section asks 
 \paragraph{Training variability (prediction iii)} The RMSE of a single learned encoder has a standard deviation of $1.5$ to $7.6$ units over seeds, as much as the differences between competing HIs (Table~\ref{tab:var10}), which calls for variance-aware comparisons \cite{bouthillier2021}. A three-seed ensemble on FD003 suggested that PGIB-KF outperforms the best simple HI ($19.4$ against $21.9$), but with ten seeds \cite{lakshminarayanan2017} the difference vanishes ($23.3$; paired difference $+1.4$, interval $-1.6$ to $4.5$). With ten seeds, PGIB-KF is statistically indistinguishable from the best simple or supervised HI on FD001 to FD003, worse on FD004, and never significantly better. The regime-aware variant is worse than PGIB-KF on the single-regime subsets and better only on FD004, where the difference is not significant.
 
 \begin{table}
-\caption{C-MAPSS, ten seeds per learned encoder. Single: RMSE, mean $\pm$ standard deviation over seeds; ens.\ 10: ten-seed ensemble; last column: paired difference of PGIB-KF from the best simple HI with $95\%$ bootstrap interval over engines \cite{efron1993}.}
+\caption{C-MAPSS, ten seeds per learned encoder. Single: RMSE, mean $\pm$ standard deviation over seeds; ens.\ 10: ten-seed ensemble; the best simple HI includes the regime-specific ridge regression; last column: paired difference of PGIB-KF from the best simple HI with $95\%$ bootstrap interval over engines \cite{efron1993}.}
 \centering\small
 \adjustbox{max width=\linewidth}{\input{results/tab_var10}}
 \label{tab:var10}

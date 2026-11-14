@@ -258,7 +258,7 @@ def fig_realdata():
     def worst(fd, key): st = Rr[fd]['stage_age']['stages']; return max(np.sqrt(s['mse'][key]/s['mse']['both']) for s in st)
     for k, (key, lab, col) in enumerate([('static', 'static direction', GREEN), ('level', 'level only', BLUE), ('velocity', 'velocity only', ORANGE)]):
         c.bar(x0+(k-1)*wd, [worst(fd, key) for fd in FDs], wd, color=col, label=lab)
-    c.axhline(1, color='k', lw=.8); c.set_xticks(x0); c.set_xticklabels(FDs, fontsize=6, rotation=45, ha='right'); c.set_ylim(0.95, 1.6); c.set_ylabel('worst-stage RMSE ratio to free direction'); c.legend(fontsize=6.3, loc='upper left')
+    c.axhline(1, color='k', lw=.8); c.set_xticks(x0); c.set_xticklabels(FDs, fontsize=6, rotation=45, ha='right'); c.set_ylim(0.95, 1.6); c.set_ylabel('worst-stage RMSE ratio to stage-wise direction'); c.legend(fontsize=6.3, loc='upper left')
     save(fig, 'fig_realdata_b')
 
 if __name__ == '__main__':
